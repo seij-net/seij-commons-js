@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "clean": {},
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
+    "lint": { "outputs": [] },
+    "test": { "dependsOn": ["^build"], "outputs": ["coverage/**", "junit/**"] },
+    "dev": { "cache": false, "persistent": true },
+    "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] }
+  }
+}

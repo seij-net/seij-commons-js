@@ -1,0 +1,35 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2022", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@seij/common-services": ["libs/common-services/src/index.ts"],
+      "@seij/common-types": ["libs/common-types/src/index.ts"],
+      "@seij/common-ui": ["libs/common-ui/src/index.ts"],
+      "@seij/common-ui-auth": ["libs/common-ui-auth/src/index.ts"],
+      "@seij/common-ui-csv-export": ["libs/common-ui-csv-export/src/index.ts"],
+      "@seij/common-ui-markdown": ["libs/common-ui-markdown/src/index.ts"],
+      "@seij/common-validation": ["libs/common-validation/src/index.ts"],
+      "@seij/entity-graph": ["libs/entity-graph/src/index.ts"],
+      "@seij/entity-storage": ["libs/entity-storage/src/index.ts"],
+      "@seij/entity-validation": ["libs/entity-validation/src/index.ts"],
+      "@seij/extension-platform": ["libs/extension-platform/src/index.ts"],
+      "@seij/extension-tooling": ["libs/extension-tooling/src/index.ts"],
+      "@seij/gen-ui": ["libs/gen-ui/src/index.ts"],
+      "@seij/gen-ui-csv-export": ["libs/gen-ui-csv-export/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

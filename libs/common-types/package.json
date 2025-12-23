@@ -1,0 +1,34 @@
+{
+  "name": "@seij/common-types",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "vite build -c vite.config.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit",
+    "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
+  },
+  "dependencies": {
+    "lodash-es": "workspace:*",
+    "luxon": "workspace:*",
+    "date-fns": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "workspace:*",
+    "@types/luxon": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**",
+    "README.md",
+    "LICENSE"
+  ]
+}
