@@ -1,0 +1,49 @@
+name: Publish libraries
+
+on:
+  push:
+    tags:
+      - libs/*/v*
+
+env:
+  PNPM_VERSION: 10.9.0
+  NODE_VERSION: 20
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install
+
+      - name: Derive package info
+        id: pkg
+        run: |
+          # tag format: libs/<dir>/vX.Y.Z
+          TAG="${GITHUB_REF_NAME}"
+          PKG_DIR="$(dirname "${TAG}")"          # libs/common-types
+          VERSION="${TAG##*/}"                   # v0.1.0
+          PKG_NAME=$(jq -r '.name' "${PKG_DIR}/package.json")
+          echo "pkg_dir=${PKG_DIR}" >> $GITHUB_OUTPUT
+          echo "pkg_name=${PKG_NAME}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: Build
+        run: pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" build
+
+      - name: Publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+          pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" npm publish --access public
