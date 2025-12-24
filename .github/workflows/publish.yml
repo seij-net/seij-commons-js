@@ -7,7 +7,7 @@ on:
 
 env:
   PNPM_VERSION: 10.9.0
-  NODE_VERSION: 20
+  NODE_VERSION: 24
 
 jobs:
   publish:
@@ -28,6 +28,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm install
 
