@@ -63,4 +63,4 @@ jobs:
       - name: Publish
         env:
           NPM_CONFIG_PROVENANCE: true
-        run: pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" publish --provenance --access public --no-git-checks
+        run: pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" exec npm publish --provenance --access public --no-git-checks
