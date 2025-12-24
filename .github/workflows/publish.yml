@@ -17,6 +17,8 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
         with:
@@ -28,6 +30,20 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - run: pnpm install
+
+      - name: Debug git state (temporary)
+        # prints HEAD/ref info so you can confirm detached vs attached HEAD in CI
+        run: |
+          echo "GITHUB_REF=${GITHUB_REF}"
+          echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
+          echo "GITHUB_SHA=${GITHUB_SHA}"
+          git rev-parse --abbrev-ref HEAD || true
+          git status --porcelain --branch || true
+          git show-ref --heads || true
+        env:
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
 
       - name: Derive package info
         id: pkg
@@ -47,4 +63,4 @@ jobs:
       - name: Publish
         env:
           NPM_CONFIG_PROVENANCE: true
-        run: pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" publish --provenance --access public
+        run: pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" publish --provenance --access public --no-git-checks
