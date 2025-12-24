@@ -22,7 +22,7 @@ export function externalFrom(pkgDir: string) {
 }
 
 export function makeConfig(options: {
-  projectRoot: string; // ex: __dirname dans le package
+  projectRoot: string; // ex: __dirname in the package
   type: "lib" | "lib-ui";
   entry?: string; // ex: "src/index.ts"
   outDir?: string; // ex: "dist"
@@ -63,7 +63,17 @@ export function makeConfig(options: {
       rollupOptions: {
         // External packages that should not be bundled into your library.
         external: externalFrom(projectRoot),
-        output: { assetFileNames: "assets/[name]-[hash][extname]" },
+        output: { 
+          // Tells rollup to create one .js file for each found module
+          preserveModules: true,
+          // In dist/ preserves hierarchy, so we can keep src/ hierarchy as-is
+          preserveModulesRoot: path.join(projectRoot, "src"),
+          // Keep readable file names (otherwise Rollup will add hash everywhere)
+          entryFileNames: "[name].js",
+          // Name of final assets filename for CDN builds
+          assetFileNames: "assets/[name]-[hash][extname]",
+          chunkFileNames: "chunks/[name]-[hash].js",
+        },
         /*output: {
           preserveModules: true,
           preserveModulesRoot: "src",
