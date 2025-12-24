@@ -27,7 +27,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          registry-url: https://registry.npmjs.org
 
       - run: pnpm install
 
@@ -63,4 +62,4 @@ jobs:
       - name: Publish
         env:
           NPM_CONFIG_PROVENANCE: true
-        run: pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" exec npm publish --provenance --access public --no-git-checks
+        run: pnpm --filter "${{ steps.pkg.outputs.pkg_name }}" exec npm publish --provenance --access public
