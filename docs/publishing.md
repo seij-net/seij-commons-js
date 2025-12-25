@@ -12,7 +12,13 @@
 - git tag libs/common-services/v0.0.1
 - git push origin libs/common-services/v0.0.1
 - Action on github will fail because GitHub can only push on already created repo on npm
-- 
+- pnpm login
+- pnpm --filter @seij/common-services publish --access public
+- check on npm that package is published in version 0.0.1 and that package.json file resolves all version numbers
+- if there are dependencies on other seij-commons, check that dependencies version numbers are correctly resolved
+- Change version number on package.json for this package
+- Retag with libs/common-services/v0.1.0 or whatever version number should be there (see below)
+- Check on GitHub that everything runs, actions should now publish
 
 # Tagging
 
