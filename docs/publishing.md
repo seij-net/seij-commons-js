@@ -1,5 +1,14 @@
 # Publishing the packages to NPM registry
 
+## Adding new package
+
+- Add package into libs/
+- Copy the same structure as other libs (vite builds a mutual between packages, as linting and other things)
+- pnpm run lint
+- pnpm run test
+- pnpm run build
+
+
 # Tagging
 
 npm adduser

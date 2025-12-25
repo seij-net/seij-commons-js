@@ -139,6 +139,19 @@ importers:
         specifier: 3.2.4
         version: 3.2.4(@types/node@20.11.24)(jiti@2.4.2)(jsdom@22.1.0)(terser@5.44.1)
 
+  libs/common-services:
+    dependencies:
+      '@seij/common-types':
+        specifier: workspace:*
+        version: link:../common-types
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.22
+    devDependencies:
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+
   libs/common-types:
     dependencies:
       date-fns:

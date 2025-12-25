@@ -1,0 +1,36 @@
+{
+  "name": "@seij/common-services",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seij-net/seij-commons-js.git"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "vite build -c vite.config.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit",
+    "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
+  },
+  "dependencies": {
+    "lodash-es": "workspace:*",
+    "@seij/common-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**",
+    "README.md",
+    "LICENSE"
+  ]
+}
