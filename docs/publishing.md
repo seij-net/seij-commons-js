@@ -29,6 +29,7 @@
 - Check on GitHub that everything runs, actions should now publish directly on Npm
 - Go to Npm UI, check that package is deployed with new version number
 - Check that versions numbers in `package.json` are correctly resolved
+- In another project, import the lib in the project's `package.json`
 
 # Tagging
 
