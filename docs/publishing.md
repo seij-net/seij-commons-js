@@ -4,6 +4,8 @@
 
 - Make sure that before adding in `seij-commons` the package dependencies already exists when importing from other repos.
 - Add package into `libs/`
+- Add licence to `package.json`
+- Add Git repo to `package.json`
 - Copy the same structure as other libs (vite builds a mutual between packages, as linting and other things)
 - `pnpm install` (if imported from another repo)
 - make sure version for this packages is `0.0.1` for the moment (we will change later)

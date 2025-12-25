@@ -171,6 +171,19 @@ importers:
         specifier: ^3.6.2
         version: 3.7.1
 
+  libs/common-validation:
+    dependencies:
+      '@seij/common-types':
+        specifier: workspace:*
+        version: link:../common-types
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.22
+    devDependencies:
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+
 packages:
 
   '@adobe/css-tools@4.4.4':
