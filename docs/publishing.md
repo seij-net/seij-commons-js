@@ -4,6 +4,8 @@
 
 - Add package into libs/
 - Copy the same structure as other libs (vite builds a mutual between packages, as linting and other things)
+- pnpm install (if imported from another repo)
+- make sure version is 0.0.1
 - pnpm run lint
 - pnpm run test
 - pnpm run build
