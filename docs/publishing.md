@@ -9,6 +9,7 @@
 - Copy the same structure as other libs (vite builds a mutual between packages, as linting and other things)
 - `pnpm install` (if imported from another repo)
 - make sure version for this packages is `0.0.1` for the moment (we will change later)
+- `pnpm run format`
 - `pnpm run lint`
 - `pnpm run test`
 - `pnpm run build`
