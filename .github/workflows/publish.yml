@@ -5,6 +5,10 @@ on:
     tags:
       - libs/*/v*
 
+concurrency:
+  group: publish-libs
+  cancel-in-progress: false
+
 env:
   PNPM_VERSION: 10.9.0
   NODE_VERSION: 24
