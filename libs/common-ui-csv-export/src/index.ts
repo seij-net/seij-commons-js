@@ -1,2 +1,2 @@
 export { downloadCsv } from "./downloadcsv"
-export { CSVColumnDefinition } from "./types"
+export { type CSVColumnDefinition } from "./types"
