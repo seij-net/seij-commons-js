@@ -39,7 +39,12 @@
 
 ```
 pnpm -r --filter "./libs/*" exec pnpm version patch --no-git-tag-version
+git add . --all
+git commit -m "Bumped versions of all packages"
+git push
 for pkg in libs/*; do ver=$(jq -r .version "$pkg/package.json"); tag="libs/$(basename "$pkg")/v$ver"; git tag "$tag"; done
+git push --tags
+
 
 ```
 
