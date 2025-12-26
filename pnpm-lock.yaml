@@ -226,6 +226,14 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
 
+  libs/extension-platform:
+    dependencies:
+      '@seij/extension-tooling':
+        specifier: workspace:*
+        version: link:../extension-tooling
+
+  libs/extension-tooling: {}
+
 packages:
 
   '@adobe/css-tools@4.4.4':
