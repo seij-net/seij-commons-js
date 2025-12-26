@@ -16,10 +16,9 @@
     "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
   },
   "dependencies": {
-    "@seij/extension-tooling":"workspace:*"
+    "@seij/extension-tooling": "workspace:*"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "exports": {
     ".": {
       "import": "./dist/index.js",
