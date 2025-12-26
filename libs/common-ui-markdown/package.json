@@ -1,0 +1,53 @@
+{
+  "name": "@seij/common-ui-markdown",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seij-net/seij-commons-js.git"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "vite build -c vite.config.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit",
+    "watch": "tsc -p tsconfig.lib.json --noEmit --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "hast-util-sanitize": "workspace:*",
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.22",
+    "react-markdown": "workspace:*",
+    "rehype-highlight": "workspace:*",
+    "rehype-katex": "workspace:*",
+    "rehype-sanitize": "workspace:*",
+    "remark-gfm": "workspace:*",
+    "remark-math": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "workspace:*",
+    "react-dom": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": {
+      "import": "./dist/styles.js"
+    }
+  },
+  "sideEffects": [
+    "dist/styles.js",
+    "**/*.css"
+  ],
+  "files": [
+    "dist/**",
+    "README.md",
+    "LICENSE"
+  ]
+}
