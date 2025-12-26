@@ -12,6 +12,7 @@
 - `pnpm run lint`
 - `pnpm run test`
 - `pnpm run build`
+- Commit and push if needed
 - `git tag libs/common-services/v0.0.1`
 - `git push origin libs/common-services/v0.0.1`
 - Action on github will fail because GitHub can only push on already created repo on npm
