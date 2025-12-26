@@ -39,6 +39,8 @@ export function makeConfig(options: {
       entryRoot: "src",
       tsconfigPath: tsconfigLib,
       outDir: outDir,
+      // Keep @seij/* imports as package specifiers in generated .d.ts
+      aliasesExclude: [/^@seij\//],
     }),
   );
 
