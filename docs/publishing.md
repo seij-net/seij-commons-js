@@ -35,6 +35,14 @@
 - Check that versions numbers in `package.json` are correctly resolved
 - In another project, import the lib in the project's `package.json`
 
+## Bump all versions
+
+```
+pnpm -r --filter "./libs/*" exec pnpm version patch --no-git-tag-version
+for pkg in libs/*; do ver=$(jq -r .version "$pkg/package.json"); tag="libs/$(basename "$pkg")/v$ver"; git tag "$tag"; done
+
+```
+
 # Tagging
 
 npm adduser
