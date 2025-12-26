@@ -52,9 +52,5 @@ git push origin libs/common-types/v0.1.0
 ## Retag
 
 ```bash
-export TAG="libs/common-types/v0.1.0";
-git tag -d $TAG;
-git push origin --delete $TAG;
-git tag $TAG;
-git push origin $TAG
+export TAG="libs/common-types/v0.1.0"; git tag -d $TAG; git push origin --delete $TAG; git tag $TAG; git push origin $TAG
 ```
