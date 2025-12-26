@@ -262,6 +262,52 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
 
+  libs/entity-graph:
+    dependencies:
+      '@seij/common-types':
+        specifier: workspace:*
+        version: link:../common-types
+      '@seij/common-validation':
+        specifier: workspace:*
+        version: link:../common-validation
+      '@seij/extension-platform':
+        specifier: workspace:*
+        version: link:../extension-platform
+      '@seij/extension-tooling':
+        specifier: workspace:*
+        version: link:../extension-tooling
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.22
+    devDependencies:
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+
+  libs/entity-storage:
+    dependencies:
+      '@seij/common-types':
+        specifier: workspace:*
+        version: link:../common-types
+      '@seij/extension-platform':
+        specifier: workspace:*
+        version: link:../extension-platform
+      '@seij/extension-tooling':
+        specifier: workspace:*
+        version: link:../extension-tooling
+
+  libs/entity-validation:
+    dependencies:
+      '@seij/common-validation':
+        specifier: workspace:*
+        version: link:../common-validation
+      '@seij/entity-graph':
+        specifier: workspace:*
+        version: link:../entity-graph
+      '@seij/extension-platform':
+        specifier: workspace:*
+        version: link:../extension-platform
+
   libs/extension-platform:
     dependencies:
       '@seij/extension-tooling':
