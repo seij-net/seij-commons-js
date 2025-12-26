@@ -27,7 +27,11 @@ export function makeConfig(props: {
       host: "localhost",
       proxy: props.preview.proxy,
     },
-    plugins: [react(), tsconfigPaths(), visualizer({filename: "dist/stats/index.html", gzipSize: true, brotliSize: true})],
+    plugins: [
+      react(),
+      tsconfigPaths(),
+      visualizer({ filename: "dist/stats/index.html", gzipSize: true, brotliSize: true }),
+    ],
     build: {
       outDir: "dist",
       emptyOutDir: true,

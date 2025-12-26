@@ -1,7 +1,6 @@
 import { createComparator, createComparatorMessageToken } from "./comparator";
 import { ComparisonType } from "@seij/common-validation";
 
-
 interface TestCase {
   fn: ComparisonType;
   symbol: string;

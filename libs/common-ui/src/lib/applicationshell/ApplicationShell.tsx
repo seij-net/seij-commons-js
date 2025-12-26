@@ -5,7 +5,7 @@ import {
   NavDrawerBody,
   NavDrawerHeader,
   tokens,
-  Tooltip
+  Tooltip,
 } from "@fluentui/react-components";
 import { ReactNode, useMemo, useState } from "react";
 import { Navigation } from "../navigation/Navigation";

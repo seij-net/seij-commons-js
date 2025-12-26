@@ -26,7 +26,7 @@ export const valid: ValidationResult = { valid: true, error: null, severity: "WA
 export const invalid = (message: string, severity?: RuleConstraintValueSeverity): ValidationResult => ({
   valid: false,
   error: message,
-  severity: defaultTo(severity, "BLOCKER")
+  severity: defaultTo(severity, "BLOCKER"),
 });
 
 /**
@@ -36,9 +36,8 @@ export const invalid = (message: string, severity?: RuleConstraintValueSeverity)
 export const invalidWarning = (message: string): ValidationResult => ({
   valid: false,
   error: message,
-  severity: "WARNING"
+  severity: "WARNING",
 });
-
 
 /**
  *
@@ -51,7 +50,6 @@ export const invalidWarning = (message: string): ValidationResult => ({
 export const combineValidationResults = (results: ValidationResult[]): ValidationResult => {
   return defaultTo(
     find(results, (it) => !it.valid),
-    valid
+    valid,
   );
 };
-

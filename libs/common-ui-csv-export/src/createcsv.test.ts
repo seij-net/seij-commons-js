@@ -30,7 +30,7 @@ const items: ItemSample[] = [
 
 const expected = `"Column A","unnamed","total"\r
 "20","testB","23"\r
-"10","testB ""2""","14"`
+"10","testB ""2""","14"`;
 
 describe("createCSV", () => {
   it("generates sample", () => {

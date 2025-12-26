@@ -12,7 +12,10 @@ export type ConnectionConfig = {
 };
 
 export class Connection {
-  constructor(private apiBase: string, private getApiAccessToken: () => string | null) {}
+  constructor(
+    private apiBase: string,
+    private getApiAccessToken: () => string | null,
+  ) {}
 
   reconfigure(config: ConnectionConfig) {
     this.apiBase = config.apiBaseUrl;
@@ -186,4 +189,4 @@ function createProblem(resp: Response) {
  * Le singleton est reconfigurable par les applications qui souhaitent
  * l'utiliser en utilisant defaultConnection.reconfigure(apiConfig);
  */
-export const defaultConnection = createConnection("", () => null)
+export const defaultConnection = createConnection("", () => null);

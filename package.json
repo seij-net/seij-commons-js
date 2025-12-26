@@ -33,6 +33,7 @@
     "jsdom": "~22.1.0",
     "postcss": "8.5.6",
     "postcss-simple-vars": "^7.0.1",
+    "prettier": "^3.7.4",
     "react-test-renderer": "18.2.0",
     "rollup-plugin-visualizer": "^6.0.3",
     "storybook": "9.1.2",

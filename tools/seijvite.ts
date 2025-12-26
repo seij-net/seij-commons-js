@@ -27,7 +27,7 @@ export function makeConfig(options: {
   entry?: string; // ex: "src/index.ts"
   outDir?: string; // ex: "dist"
   tsconfigLib?: string; // ex: "./tsconfig.lib.json"
-  otherEntries?: Record<string, string>
+  otherEntries?: Record<string, string>;
 }) {
   const { type, projectRoot, entry = "src/index.ts", outDir = "dist", tsconfigLib = "./tsconfig.lib.json" } = options;
 
@@ -50,7 +50,7 @@ export function makeConfig(options: {
         // Could also be a dictionary or array of multiple entry points.
         entry: {
           index: "src/index.ts",
-          ...options.otherEntries
+          ...options.otherEntries,
         },
         // Change this to the formats you want to support.
         // Don't forget to update your package.json as well.
@@ -63,7 +63,7 @@ export function makeConfig(options: {
       rollupOptions: {
         // External packages that should not be bundled into your library.
         external: externalFrom(projectRoot),
-        output: { 
+        output: {
           // Tells rollup to create one .js file for each found module
           preserveModules: true,
           // In dist/ preserves hierarchy, so we can keep src/ hierarchy as-is

@@ -1,8 +1,7 @@
 import { CSVColumnDefinition } from "./types";
 
 export function createCSV<T>(columns: CSVColumnDefinition<T>[], items: T[]) {
-
-    // Prepare CSV header
+  // Prepare CSV header
   const header = columns
     .map((col) => {
       const headerLabel = col.label ?? col.code;
@@ -30,7 +29,7 @@ export function createCSV<T>(columns: CSVColumnDefinition<T>[], items: T[]) {
         // Escape double quotes for CSV
         return `"${String(value ?? "").replace(/"/g, '""')}"`;
       })
-      .join(",")
+      .join(","),
   );
 
   // Combine header and rows

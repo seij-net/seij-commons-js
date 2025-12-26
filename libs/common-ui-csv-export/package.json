@@ -15,10 +15,8 @@
     "typecheck": "tsc -p tsconfig.lib.json --noEmit",
     "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
   },
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "exports": {
     ".": {
       "import": "./dist/index.js",

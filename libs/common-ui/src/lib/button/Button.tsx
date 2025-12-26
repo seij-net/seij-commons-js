@@ -19,7 +19,7 @@ export function Button({
    * When button is clicked
    */
   onClick: () => void;
-}& PropsWithChildren) {
+} & PropsWithChildren) {
   let mantineVariant: ButtonProps["appearance"] | undefined = undefined;
   if (variant === "secondary") mantineVariant = "secondary";
   else if (variant === "primary") mantineVariant = "primary";
