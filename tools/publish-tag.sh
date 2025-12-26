@@ -49,3 +49,24 @@ git tag -d "${tag}" >/dev/null 2>&1 || true
 git push origin --delete "${tag}" >/dev/null 2>&1 || true
 git tag "${tag}"
 git push origin "${tag}"
+
+timeout_seconds=300
+interval_seconds=15
+elapsed=0
+
+echo "Waiting for ${package_name}@${version} to be published on npm (timeout: ${timeout_seconds}s, interval: ${interval_seconds}s)..."
+
+while (( elapsed < timeout_seconds )); do
+  if npm view "${package_name}@${version}" version >/dev/null 2>&1; then
+    echo "Published: ${package_name}@${version} is now available on npm."
+    exit 0
+  fi
+
+  remaining=$(( timeout_seconds - elapsed ))
+  echo "Still not published. Retrying in ${interval_seconds}s (remaining: ${remaining}s)..."
+  sleep "${interval_seconds}"
+  elapsed=$(( elapsed + interval_seconds ))
+done
+
+echo "Timeout: ${package_name}@${version} not published after ${timeout_seconds}s." >&2
+exit 1
