@@ -6,7 +6,7 @@ export function createQueryKeySearchSummary<SEARCH_DTO extends {}>(apiResourceNa
   return [
     "entity",
     apiResourceName,
-    "search_sumary",
+    "search_summary",
     ...Object.entries(req)
       .flat()
       .map((it) => "" + it),
