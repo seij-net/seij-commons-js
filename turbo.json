@@ -5,6 +5,8 @@
     "lint": { "outputs": [] },
     "test": { "dependsOn": ["^build"], "outputs": ["coverage/**", "junit/**"] },
     "dev": { "cache": false, "persistent": true },
+    "storybook": { "cache": false, "persistent": true },
+    "build-storybook": { "dependsOn": ["^build"], "outputs": ["storybook-static/**"] },
     "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] }
   }
 }
