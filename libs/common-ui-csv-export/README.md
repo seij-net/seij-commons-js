@@ -1,11 +1,9 @@
-# common-types
+# common-ui-csv-export
 
-This library was generated with [Nx](https://nx.dev).
+Small helper library to generate and download CSV files from UI data.
 
-## Building
+## What it provides
 
-Run `nx build common-types` to build the library.
-
-## Running unit tests
-
-Run `nx test common-types` to execute the unit tests via [Vitest](https://vitest.dev/).
+- `createCSV`: build a CSV string from column definitions and data rows.
+- `downloadCsv`: create a CSV file and trigger a browser download.
+- `CSVColumnDefinition`: column metadata with label and renderer.

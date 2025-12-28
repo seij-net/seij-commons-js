@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
+# This script tags a module for publishing and waits for it to be available on npm.
+#
+# It performs the following steps:
+# 1. Validates the module exists and has a package.json with name and version.
+# 2. Checks if the version is already published on npm.
+# 3. Deletes existing local and remote tags for this module/version (if any).
+# 4. Creates a new git tag in the format: libs/<module>/v<version>
+# 5. Pushes the tag to the remote repository.
+# 6. Polls npm until the new version is available (up to 5 minutes).
+#
+# Usage: ./tools/publish-tag.sh <module-name>
+# Example: ./tools/publish-tag.sh common-types
+
 set -euo pipefail
 
 usage() {

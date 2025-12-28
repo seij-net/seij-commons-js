@@ -25,7 +25,7 @@ export function searchFilter<T extends Record<string, any>>(
   });
 }
 /**
- * Normalize diatrical marks for search and puts everything in lowercase
+ * Normalize diacritical marks for search and puts everything in lowercase
  * @param text input text
  * @returns normalized text
  */

@@ -1,5 +1,15 @@
 # Publishing the packages to NPM registry
 
+## Overview
+
+A package is published on the NPM registry when the project is tagged with a version number.
+
+Tags are following this format: `libs/<package-name>/v<version-number>`.
+
+When tagging the project with such tag, the GitHub action [publish.yml](../.github/workflows/publish.yml) will be triggered.
+
+This action will build the matching module, then publish the package on the NPM registry.
+
 ## Adding new package
 
 - Make sure that before adding in `seij-commons` the package dependencies already exists when importing from other repos.
@@ -35,35 +45,16 @@
 - Check that versions numbers in `package.json` are correctly resolved
 - In another project, import the lib in the project's `package.json`
 
-## Bump all versions
+## Publishing a new version
 
-```
-pnpm -r --filter "./libs/*" exec pnpm version patch --no-git-tag-version
-git add . --all
-git commit -m "Bumped versions of all packages"
-git push
-for pkg in libs/*; do ver=$(jq -r .version "$pkg/package.json"); tag="libs/$(basename "$pkg")/v$ver"; git tag "$tag"; done
-git push --tags
-
-
-```
-
-# Tagging
-
-npm adduser
-pnpm --filter @seij/common-types publish --access public
-
-- Go to NPM Registry > package = @seij/common-types > settings
-- Add GitHub as a Trusted publisher
-  - organization: seij-net
-  - repo: seij-commons-js
-  - workflow: publish.yml
-  - environment: publishing
-
-git tag libs/common-types/v0.1.0
-git push origin libs/common-types/v0.1.0
+- make sure that all dependent modules are published on npm with the correct version.
+- check that your module's package.json has the correct **next** version number.
+- make sure everything is committed and pushed.
+- run `./tools/publish-tag.sh <module-name>`: this will publish the module by tagging, then wait that GitHub actions are successful by checking the module is published on NPM.
 
 ## Retag
+
+Use this command to retag the project (remove old tag and create a new one). This will trigger the publish process:
 
 ```bash
 export TAG="libs/common-types/v0.1.0"; git tag -d $TAG; git push origin --delete $TAG; git tag $TAG; git push origin $TAG
