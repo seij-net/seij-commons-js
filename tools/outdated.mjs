@@ -1,5 +1,16 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
+
+/**
+ * Script that checks versions of oudated packages.
+ *
+ * This is necessary since in a monorepo, "pnpm outdated" doesn't check
+ * overrides and recursive check for installed packages is hell.
+ *
+ * Note that a file named `outdated-cache.json` is stored at the root of the
+ * project (and added to .gitignore) so that package resolution via npm is
+ * done only once per day per package.
+ */
+
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
