@@ -17,10 +17,10 @@ export interface I18n {
   formatNumber(n: number, style?: string): string;
   formatList(items: string[], style?: string): string;
   formatRelative(d: Date | number): string;
-  localDatePlaceholder: string;
-  localDateInputMask: string;
+  localDatePlaceholder(): string;
+  localDateInputMask(): string;
   localDateFormattedToISO: (str: string) => string;
   localDateISOToFormattedInput: (str: string) => string;
-  monthList: { code: number; label: string }[];
+  monthList(): { code: number; label: string }[];
   getLocale(): string;
 }

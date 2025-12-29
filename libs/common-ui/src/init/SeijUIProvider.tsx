@@ -27,13 +27,8 @@ interface SeijUIProviderProps extends PropsWithChildren {
 }
 
 export function SeijUIProvider({ children, initialLocale }: SeijUIProviderProps) {
-  const loader = async (locale: string) => {
-    if (locale === "fr") return (await import("../locales/fr")).default;
-    if (locale === "en") return (await import("../locales/en")).default;
-    return (await import("../locales/en")).default;
-  };
   return (
-    <I18nProvider initialLocale={initialLocale} load={loader}>
+    <I18nProvider initialLocale={initialLocale}>
       <FluentProvider theme={theme}>
         {children}
         <ErrorManager />

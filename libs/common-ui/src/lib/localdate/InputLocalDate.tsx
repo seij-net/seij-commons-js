@@ -87,7 +87,7 @@ export const InputLocalDate = forwardRef<HTMLInputElement, InputLocalDateProps>(
     >
       {({ value, onChange }) => (
         <Input
-          placeholder={localDatePlaceholder}
+          placeholder={localDatePlaceholder()}
           className={classNames.root}
           value={value}
           onChange={onChange}

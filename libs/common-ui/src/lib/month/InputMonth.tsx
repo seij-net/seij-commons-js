@@ -20,7 +20,7 @@ export const InputMonth: React.FC<InputMonthProps> = (props) => {
   const { value, onValueChange, required, ...other } = props;
   const { monthList, t } = useI18n();
   const options = useMemo(() => {
-    const months = monthList.map((it) => ({ code: "" + it.code, label: it.label }));
+    const months = monthList().map((it) => ({ code: "" + it.code, label: it.label }));
     const emptyValueSelect = t("InputSelect_select");
     return [{ code: "", label: "-- " + emptyValueSelect + " --" }, ...months];
   }, [monthList, t]);
