@@ -23,4 +23,5 @@ export interface I18n {
   localDateISOToFormattedInput: (str: string) => string;
   monthList(): { code: number; label: string }[];
   getLocale(): string;
+  registerNamespace(key:string, resources: Record<string, any>): void
 }

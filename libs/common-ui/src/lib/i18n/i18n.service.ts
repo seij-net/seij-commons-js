@@ -137,6 +137,12 @@ export class I18nService implements I18n {
   monthList = () => {
     return getMonthNames(this.language());
   }
+
+  registerNamespace = (key: string, resources: Record<string, any>): void => {
+    for (const lang of Object.keys(resources)) {
+      i18NextInstance.addResources(lang, key, resources[lang])
+    }
+  }
 }
 
 function getMonthNames(locale: string): { code: number; label: string }[] {
