@@ -1,18 +1,29 @@
 import { format, formatISO, isDate, isValid, parse } from "date-fns";
 import i18next from "i18next";
+import type { i18n } from "i18next";
 import ICU from "i18next-icu";
-
-import fr from "../../locales/fr";
-import en from "../../locales/en";
-import { I18n } from "./i18n.types";
 import { isString } from "lodash-es";
+import en from "../../locales/en";
+import fr from "../../locales/fr";
+import { I18n } from "./i18n.types";
+import LanguageDetector from "i18next-browser-languagedetector";
 
-const i18NextInstance = i18next.createInstance();
-const i18NextinstanceInitPromise = i18NextInstance.use(ICU).init({
-  debug: true,
-  resources: { fr: { translation: fr.messages }, en: { translation: en.messages } },
-  interpolation: { escapeValue: false },
-});
+export const i18NextInstance: i18n = i18next.createInstance();
+const i18NextinstanceInitPromise = await i18NextInstance
+  .use(ICU)
+  .use(LanguageDetector)
+  .init({
+    debug: true,
+    fallbackLng: "en",
+    resources: { fr: { translation: fr.messages }, en: { translation: en.messages } },
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ["querystring", "localStorage", "navigator"],
+      lookupQuerystring: "lng",
+      lookupLocalStorage: "lng",
+      caches: ["localStorage"],
+    },
+  });
 
 export class I18nService implements I18n {
   readyPromise = i18NextinstanceInitPromise;
@@ -43,30 +54,30 @@ export class I18nService implements I18n {
 
   nf = (style?: string) => {
     return new Intl.NumberFormat(this.language(), (style && this.formats().number[style]) || undefined);
-  }
+  };
 
   lf = (style?: string) => {
     return new Intl.ListFormat(
       this.language(),
       (style && this.formats().list[style]) || { type: "conjunction", style: "long" },
     );
-  }
+  };
 
   rtf = () => {
     return new Intl.RelativeTimeFormat(this.language(), { numeric: "auto" });
-  }
+  };
 
   formatDate = (d: Date | number, style?: string): string => {
     return this.dtf(style).format(d);
-  }
+  };
 
-  formatNumber =(n: number, style?: string): string => {
+  formatNumber = (n: number, style?: string): string => {
     return this.nf(style).format(n);
-  }
+  };
 
   formatList = (items: string[], style?: string): string => {
     return this.lf(style).format(items);
-  }
+  };
 
   formatRelative = (d: Date | number): string => {
     const diff = (Number(d) - Date.now()) / 1000;
@@ -96,15 +107,15 @@ export class I18nService implements I18n {
                 ? Math.round(diff / 2592000)
                 : Math.round(diff / 31536000);
     return this.rtf().format(value, unit as Intl.RelativeTimeFormatUnit);
-  }
+  };
 
   localDatePlaceholder = (): string => {
     return this.formats().localdate.placeholder;
-  }
+  };
 
   localDateInputMask = (): string => {
     return this.formats().localdate.inputmask;
-  }
+  };
 
   localDateFormattedToISO = (str: string): string => {
     const inputMask = this.formats().localdate.inputmask;
@@ -116,7 +127,7 @@ export class I18nService implements I18n {
     );
     if (!isDate(parsed) || !isValid(parsed)) return "";
     return formatISO(parsed, { representation: "date" });
-  }
+  };
 
   localDateISOToFormattedInput = (str: string): string => {
     const inputMask = this.formats().localdate.inputmask;
@@ -132,17 +143,17 @@ export class I18nService implements I18n {
       result = "";
     }
     return result;
-  }
+  };
 
   monthList = () => {
     return getMonthNames(this.language());
-  }
+  };
 
   registerNamespace = (key: string, resources: Record<string, any>): void => {
     for (const lang of Object.keys(resources)) {
-      i18NextInstance.addResources(lang, key, resources[lang])
+      i18NextInstance.addResources(lang, key, resources[lang]);
     }
-  }
+  };
 }
 
 function getMonthNames(locale: string): { code: number; label: string }[] {

@@ -1,7 +1,5 @@
 // i18n/I18nProvider.tsx
-import i18next from "i18next";
 import React, { createContext, useContext, useMemo, useState } from "react";
-import { detectClientLocale, normalize } from "./i18n.detect";
 import { I18nService, I18nServiceInstance } from "./i18n.service";
 import { I18n } from "./i18n.types";
 
@@ -13,25 +11,12 @@ const I18nCtx = createContext<I18nCtxType>({ i18nService: I18nServiceInstance, l
 
 export interface I18nProviderProps {
   children: React.ReactNode;
-  /** SSR hydrate */
-  initialLocale?: string;
 }
 
-export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
+export function I18nProvider({ children }: I18nProviderProps) {
   // Detects the locale: first used the forced one, then initial, then use autodetection
 
   const [instanceTs, setInstanceTs] = useState(0);
-  useMemo(() => {
-    const language = normalize(initialLocale || detectClientLocale());
-    if (language !== i18next.language) {
-      I18nServiceInstance.readyPromise.then(() => {
-        i18next.changeLanguage(language, () => {
-          setInstanceTs(new Date().getTime());
-        });
-      });
-    }
-  }, [initialLocale]);
-
   const value: I18nCtxType = useMemo(
     () => ({
       i18nService: I18nServiceInstance,

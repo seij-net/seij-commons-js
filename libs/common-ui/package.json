@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-ui",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -21,6 +21,7 @@
     "@fluentui/react-components": "workspace:*",
     "@fluentui/react-icons": "workspace:*",
     "@seij/common-types": "workspace:*",
+    "i18next-browser-languagedetector": "workspace:*",
     "date-fns": "workspace:*",
     "i18next": "workspace:*",
     "i18next-icu": "workspace:*",
