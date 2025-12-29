@@ -9,7 +9,7 @@ import { I18n } from "./i18n.types";
 import LanguageDetector from "i18next-browser-languagedetector";
 
 export const i18NextInstance: i18n = i18next.createInstance();
-const i18NextinstanceInitPromise = await i18NextInstance
+const i18NextinstanceInitPromise = i18NextInstance
   .use(ICU)
   .use(LanguageDetector)
   .init({
