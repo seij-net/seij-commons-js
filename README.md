@@ -80,7 +80,7 @@ flowchart LR
 - TypeScript-first libraries consumed as packages
 - UI overlays on Fluent UI with React (`common-ui-*` modules), with a goal of
   framework agnosticism
-- [common-ui](libs/common-ui) provides icon tooling to have backend defined icons and multi-provider icons
+- [common-ui-icons](libs/common-ui-icons) provides icon tooling to have backend defined icons and multi-provider icons
 - OpenID Connect integration via `react-oidc-context` and `oidc-client-ts`
   (`common-ui-auth` module)
 - Markdown tooling based on `remark`/`rehype`
