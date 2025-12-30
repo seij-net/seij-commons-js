@@ -5,12 +5,10 @@ import {
   NavItem,
   NavSubItem,
   NavSubItemGroup,
-  Text,
 } from "@fluentui/react-components";
 
 import { createContext, useContext, useMemo } from "react";
 import {
-  NavigationTreeIconName,
   NavigationTreeItem,
   NavigationTreeItemDivider,
   NavigationTreeItemGroup,
@@ -64,7 +62,7 @@ function NavigationTreeItemGroupComponent({ item }: { item: NavigationTreeItemGr
   const itemChildren = ctx.findChildren(item.id);
   return (
     <NavCategory value={item.id}>
-      <NavCategoryItem icon={<NavigationIcon iconName={item.icon} />}>{item.label}</NavCategoryItem>
+      <NavCategoryItem icon={<Icon name={item.icon ?? "empty"} size={20} />}>{item.label}</NavCategoryItem>
       <NavSubItemGroup>
         {itemChildren.map((child) => {
           const page = child as NavigationTreeItemPage;
@@ -80,17 +78,8 @@ function NavigationTreeItemGroupComponent({ item }: { item: NavigationTreeItemGr
 }
 function NavigationTreeItemPageComponent({ item }: { item: NavigationTreeItemPage }) {
   return (
-    <NavItem value={item.id} icon={<NavigationIcon iconName={item.icon} />}>
-      <Text>{item.label}</Text>
+    <NavItem value={item.id} icon={<Icon name={item.icon ?? "empty"} size={20} />}>
+      {item.label}
     </NavItem>
   );
 }
-
-// -----------------------------------------------------------------------------
-// Gestion des icones
-// -----------------------------------------------------------------------------
-
-const NavigationIcon = ({ iconName }: { iconName?: NavigationTreeIconName | null | undefined }) => {
-  if (!iconName) return <Icon name="empty" />;
-  return <Icon name={iconName} />;
-};

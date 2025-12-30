@@ -1,18 +1,19 @@
-import { lazy, Suspense } from "react";
+import { lazy, PropsWithChildren, Suspense } from "react";
 import type { IconName } from "./iconNames";
 import { iconLoaders } from "./iconLoaders";
 import { IconProps } from "./IconProps";
 
-export function Icon({ name, ...iconProps }: { name: IconName; } & IconProps) {
+export function Icon({ name, ...iconProps }: { name: IconName } & IconProps) {
   const LazyIcon = lazy(iconLoaders[name]);
+  const { size = 20, ...restProps } = iconProps;
   return (
-    <Suspense fallback={<Placeholder {...iconProps} />}>
-      <LazyIcon {...iconProps} />
+    <Suspense fallback={<Placeholder size={size} {...iconProps} />}>
+      <LazyIcon size={size} {...restProps} />
     </Suspense>
   );
 }
 
-function Box({ size = 24, children }: { size?: number; children?: React.ReactNode }) {
+function Box({ size, children }: { size: number } & PropsWithChildren) {
   return (
     <span
       style={{
@@ -31,7 +32,7 @@ function Box({ size = 24, children }: { size?: number; children?: React.ReactNod
   );
 }
 
-function Placeholder({ size }: { size?: number }) {
+function Placeholder({ size }: { size: number }) {
   return (
     <Box size={size}>
       <span style={{ width: "100%", height: "100%", opacity: 0 }} />

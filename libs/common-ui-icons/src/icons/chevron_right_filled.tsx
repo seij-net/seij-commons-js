@@ -1,8 +1,8 @@
 // icons/add.tsx
-import { ChevronRight24Filled } from "@fluentui/react-icons";
+import { ChevronRightFilled as FluentIcon } from "@fluentui/react-icons";
 import { IconProps } from "../IconProps";
 import { toFluentProps } from "../iconFluentAdapter";
 
-export default function ChevronRightFilled(props: IconProps) {
-  return <ChevronRight24Filled {...toFluentProps(props)} />;
+export default function ChevronRightFilledIcon(props: IconProps) {
+  return <FluentIcon {...toFluentProps(props)} />;
 }

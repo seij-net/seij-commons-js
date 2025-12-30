@@ -1,5 +1,4 @@
 import { IconProps } from "../IconProps";
-import { toFluentProps } from "../iconFluentAdapter";
 
 export default function SearchIcon(props: IconProps) {
   const { size } = props;

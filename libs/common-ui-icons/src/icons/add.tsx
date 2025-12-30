@@ -1,8 +1,8 @@
 // icons/add.tsx
-import { Add24Regular } from "@fluentui/react-icons";
+import { AddRegular } from "@fluentui/react-icons";
 import { IconProps } from "../IconProps";
 import { toFluentProps } from "../iconFluentAdapter";
 
 export default function AddIcon(props: IconProps) {
-  return <Add24Regular {...toFluentProps(props)} />;
+  return <AddRegular {...toFluentProps(props)} />;
 }

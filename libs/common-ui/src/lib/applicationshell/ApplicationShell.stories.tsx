@@ -8,6 +8,9 @@ const meta = {
   title: "Shell/ApplicationShell",
   component: ApplicationShell,
   decorators: [SeijUIProviderDecorator],
+  parameters: {
+    layout: "fullscreen",
+  }
 } satisfies Meta<typeof ApplicationShell>;
 export default meta;
 
