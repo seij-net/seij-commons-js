@@ -21,6 +21,7 @@
       "@seij/common-ui": ["libs/common-ui/src/index.ts"],
       "@seij/common-ui-auth": ["libs/common-ui-auth/src/index.ts"],
       "@seij/common-ui-csv-export": ["libs/common-ui-csv-export/src/index.ts"],
+      "@seij/common-ui-icons": ["libs/common-ui-icons/src/index.ts"],
       "@seij/common-ui-markdown": ["libs/common-ui-markdown/src/index.ts"],
       "@seij/common-validation": ["libs/common-validation/src/index.ts"],
       "@seij/entity-graph": ["libs/entity-graph/src/index.ts"],

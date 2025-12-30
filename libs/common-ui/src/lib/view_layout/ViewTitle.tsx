@@ -8,9 +8,10 @@ import {
   MenuTrigger,
   Title3,
 } from "@fluentui/react-components";
-import { AddSquareRegular, ArrowLeftFilled, DeleteRegular, MoreVerticalFilled } from "@fluentui/react-icons";
+
 import { isFunction } from "lodash-es";
 import { ReactNode } from "react";
+import { Icon } from "@seij/common-ui-icons";
 
 export interface Action {
   id: string;
@@ -85,7 +86,7 @@ export function ViewTitle({
     <div className={styles.root}>
       {displayBackButton && (
         <div className={styles.backButton}>
-          <Button icon={<ArrowLeftFilled />} appearance="subtle" onClick={handleBack} />
+          <Button icon={<Icon name={"back"} />} appearance="subtle" onClick={handleBack} />
         </div>
       )}
       <div className={styles.title}>
@@ -109,7 +110,7 @@ export function ViewTitle({
         {additionalList.length > 0 && (
           <Menu positioning={{ autoSize: true }}>
             <MenuTrigger disableButtonEnhancement>
-              <Button icon={<MoreVerticalFilled />} />
+              <Button icon={<Icon name="more_menu_vertical"/>} />
             </MenuTrigger>
             <MenuPopover>
               <MenuList>
@@ -125,21 +126,17 @@ export function ViewTitle({
   );
 }
 
-function EmptyIcon() {
-  return <span />;
-}
-
 function AdditionalActionMenuItem({ action, onClick }: { action: Action; onClick: (id: string) => void }) {
-  let Icon: any;
+  let icon: any;
   if (action.icon === "plus") {
-    Icon = AddSquareRegular;
+    icon = <Icon name="add" />;
   } else if (action.icon === "trash") {
-    Icon = DeleteRegular;
+    icon = <Icon name="delete" />;
   } else {
-    Icon = EmptyIcon;
+    icon = <Icon name="empty" />;
   }
   return (
-    <MenuItem disabled={action.disabled} onClick={() => onClick(action.id)} icon={<Icon />}>
+    <MenuItem disabled={action.disabled} onClick={() => onClick(action.id)} icon={icon}>
       {action.label}
     </MenuItem>
   );

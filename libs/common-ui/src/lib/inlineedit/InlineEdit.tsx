@@ -1,7 +1,8 @@
 import { ReactNode, useState } from "react";
 import { Button, Tooltip } from "@fluentui/react-components";
 import { Problem, toProblem } from "@seij/common-types";
-import { EditRegular } from "@fluentui/react-icons";
+import { Icon } from "@seij/common-ui-icons";
+
 
 export function InlineEdit({
   children,
@@ -61,7 +62,7 @@ export function InlineEdit({
         <div>{children}</div>
         <div>
           <Tooltip content="Large with calendar icon only" relationship="label">
-            <Button size="small" icon={<EditRegular />} onClick={handleEdit} />
+            <Button size="small" icon={<Icon name="edit" />} onClick={handleEdit} />
           </Tooltip>
         </div>
       </div>

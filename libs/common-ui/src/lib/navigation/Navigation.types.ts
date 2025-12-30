@@ -1,3 +1,5 @@
+import { IconName } from "@seij/common-ui-icons";
+
 /**
  * All icon names supported by the Navigation menu.
  *
@@ -5,15 +7,7 @@
  * icon next to a navigation entry. Keep this list in sync with the icon set
  * actually available in the navigation component.
  */
-export type NavigationTreeIconName =
-  | "buildingBank"
-  | "dashboard"
-  | "customers"
-  | "users"
-  | "features"
-  | "permissions"
-  | "signin"
-  | "signout";
+export type NavigationTreeIconName = IconName;
 
 /**
  * Kind of a navigation item.

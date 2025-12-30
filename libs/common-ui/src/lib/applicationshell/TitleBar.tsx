@@ -1,7 +1,7 @@
 import { Avatar, makeStyles, Spinner, Text, tokens, useKeyboardNavAttribute } from "@fluentui/react-components";
-import { ChessRegular } from "@fluentui/react-icons";
 import { KeyboardEventHandler, ReactNode } from "react";
 import { UserStatus } from "./ApplicationShell.types";
+import { Icon } from "@seij/common-ui-icons";
 
 const useTitleBarStyles = makeStyles({
   root: {
@@ -93,7 +93,7 @@ function Home({ onClick }: { onClick: () => void }) {
   const onClickHandlers = createClickHandlers(onClick);
   return (
     <a tabIndex={0} {...onClickHandlers} className={styles.home} aria-label="Accueil" ref={ref}>
-      <ChessRegular className={styles.launcher_icon} />
+      <Icon name="genericapp" className={styles.launcher_icon} />
     </a>
   );
 }

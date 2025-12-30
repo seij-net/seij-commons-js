@@ -9,11 +9,11 @@ import {
   Text,
   tokens,
 } from "@fluentui/react-components";
-import { ChevronRightFilled, SearchRegular } from "@fluentui/react-icons";
+
 import { isFunction } from "lodash-es";
 import { ReactNode } from "react";
 import { useI18n } from "../i18n/i18n.react";
-
+import { Icon } from "@seij/common-ui-icons"
 export interface ListItemData {
   id: string;
   label: ReactNode;
@@ -55,7 +55,7 @@ export function ListView<T extends ListItemData>({
       {isSearchEnabled && (
         <Input
           style={{ width: "100%" }}
-          contentBefore={<SearchRegular aria-label={searchMessage} />}
+          contentBefore={<Icon name="search" aria-label={searchMessage} />}
           value={searchText}
           placeholder={searchMessage}
           onChange={(e) => handleChange(e.target.value)}
@@ -131,7 +131,7 @@ function ItemList<T extends ListItemData>({
             <CardHeader
               header={<Text weight="regular">{it.label ?? <span>&nbsp;</span>}</Text>}
               description={<Caption1>{it.description ?? <span>&nbsp;</span>}</Caption1>}
-              action={<ChevronRightFilled />}
+              action={<Icon name="chevron_right_filled" />}
             />
           </Card>
         </ListItem>

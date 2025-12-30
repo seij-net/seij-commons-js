@@ -180,12 +180,12 @@ importers:
       '@fluentui/react-components':
         specifier: ^9.72.9
         version: 9.72.9(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(scheduler@0.27.0)
-      '@fluentui/react-icons':
-        specifier: ^2.0.316
-        version: 2.0.316(react@19.2.3)
       '@seij/common-types':
         specifier: workspace:*
         version: link:../common-types
+      '@seij/common-ui-icons':
+        specifier: workspace:*
+        version: link:../common-ui-icons
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -216,6 +216,18 @@ importers:
         version: 4.17.12
 
   libs/common-ui-csv-export: {}
+
+  libs/common-ui-icons:
+    dependencies:
+      '@fluentui/react-icons':
+        specifier: ^2.0.316
+        version: 2.0.316(react@19.2.3)
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-dom:
+        specifier: 19.2.3
+        version: 19.2.3(react@19.2.3)
 
   libs/common-ui-markdown:
     dependencies:
