@@ -37,7 +37,11 @@ import { createNavigationTreeItemServiceImpl, NavigationTreeItemService } from "
 
 const itemsService = createContext<NavigationTreeItemService>(createNavigationTreeItemServiceImpl([]));
 /**
- * Affiche un menu de navigation
+ * Displays a navigation menu.
+ *
+ * Current implementation is limited to 2 hierarchical levels (direct items or group/items).
+ *
+ * This will be improved later.
  */
 export function Navigation({
   items,

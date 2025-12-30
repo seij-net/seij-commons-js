@@ -2,7 +2,20 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/common-services/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/common-types/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/common-ui-csv-export/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/common-ui-markdown/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/common-ui/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/common-validation/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/entity-graph/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/entity-storage/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/entity-validation/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/extension-platform/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/libs/extension-tooling/.turbo" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
