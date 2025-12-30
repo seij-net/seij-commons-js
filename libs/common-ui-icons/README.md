@@ -28,8 +28,8 @@ This package addresses all of these problems explicitly.
 
 ### 1. Icons are **intentions**, not assets
 
-Applications never choose *where an icon comes from*.  
-They choose *what the icon means*.
+Applications never choose _where an icon comes from_.  
+They choose _what the icon means_.
 
 Examples:
 
@@ -73,7 +73,7 @@ Applications are not allowed to import icon providers directly.
 
 ```ts
 export const iconNames = ["add", "delete", "user", "search"] as const;
-export type IconName = typeof iconNames[number];
+export type IconName = (typeof iconNames)[number];
 ```
 
 This is the public API.
@@ -125,7 +125,7 @@ See [Icon.tsx](src/Icon.tsx)
 This is an example.
 
 ```ts
-type MenuItemDto = { label: string; icon?: string; };
+type MenuItemDto = { label: string; icon?: string };
 ```
 
 The backend sends a string key, nothing more.

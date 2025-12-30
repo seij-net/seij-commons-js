@@ -9,7 +9,7 @@ export interface EntityDefinition<T> {
   defaultValueForCreation(): any;
 }
 
-export interface EntityPropertyDefinition<T>{
+export interface EntityPropertyDefinition<T> {
   type: PropertyDefinitionDto<T>["type"];
   required: boolean;
   create: boolean;

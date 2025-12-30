@@ -20,7 +20,7 @@ export const ErrorBox = ({ error, onClose }: { error: Problem | null | undefined
       </MessageBarBody>
       {!isNil(onClose) && (
         <MessageBarActions
-          containerAction={<Button appearance="transparent" icon={<Icon name="dismiss"/>} onClick={onClose} />}
+          containerAction={<Button appearance="transparent" icon={<Icon name="dismiss" />} onClick={onClose} />}
         ></MessageBarActions>
       )}
     </MessageBar>

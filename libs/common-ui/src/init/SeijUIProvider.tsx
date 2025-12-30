@@ -14,9 +14,7 @@ const theme: Theme = {
     "Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif",
 };
 
-interface SeijUIProviderProps extends PropsWithChildren {
-
-}
+interface SeijUIProviderProps extends PropsWithChildren {}
 
 export function SeijUIProvider({ children }: SeijUIProviderProps) {
   return (

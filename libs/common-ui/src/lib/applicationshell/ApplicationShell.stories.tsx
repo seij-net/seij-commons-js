@@ -10,7 +10,7 @@ const meta = {
   decorators: [SeijUIProviderDecorator],
   parameters: {
     layout: "fullscreen",
-  }
+  },
 } satisfies Meta<typeof ApplicationShell>;
 export default meta;
 

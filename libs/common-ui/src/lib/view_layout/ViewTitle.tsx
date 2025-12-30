@@ -110,7 +110,7 @@ export function ViewTitle({
         {additionalList.length > 0 && (
           <Menu positioning={{ autoSize: true }}>
             <MenuTrigger disableButtonEnhancement>
-              <Button icon={<Icon name="more_menu_vertical"/>} />
+              <Button icon={<Icon name="more_menu_vertical" />} />
             </MenuTrigger>
             <MenuPopover>
               <MenuList>

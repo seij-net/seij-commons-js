@@ -52,7 +52,7 @@ flowchart LR
   CommonMarkdown --> CommonUI
   CommonCsv --> CommonUI
 
-  
+
   GenUI --> EntityStorage
   GenUI --> EntityGraph
   GenUI --> CommonUI
@@ -88,7 +88,7 @@ flowchart LR
 ## Maturity and scope
 
 These libraries are used in production and are considered mature for [Seij](https://www.seij.net)'s
-ecosystem. 
+ecosystem.
 
 They also serve as base tooling for [Medatarun](https://www.medatarun.com) UI.
 

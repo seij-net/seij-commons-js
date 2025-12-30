@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Icon } from "./Icon";
 import { iconPreload } from "./iconPreload";
 
-iconPreload(["add", "delete", "search" , "user", "dismiss"])
+iconPreload(["add", "delete", "search", "user", "dismiss"]);
 
 const meta = {
   title: "Icons",
@@ -55,6 +55,6 @@ export const Dismiss: Story = {
 
 export const Edit: Story = {
   args: {
-    name: "edit"
-  }
-}
+    name: "edit",
+  },
+};

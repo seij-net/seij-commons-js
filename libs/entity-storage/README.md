@@ -1,8 +1,8 @@
 # entity-storage
 
 Runtime storage layer for entity instances, designed to pair with
-`entity-graph`. While `entity-graph` describes *what* exists (entities,
-properties, relationships), `entity-storage` defines *how* to fetch, search,
+`entity-graph`. While `entity-graph` describes _what_ exists (entities,
+properties, relationships), `entity-storage` defines _how_ to fetch, search,
 create, update, and delete the actual data.
 
 ## What it provides
@@ -19,7 +19,7 @@ create, update, and delete the actual data.
 Most applications hardcode a repository or API client per entity, tied to a
 single backend and a fixed schema. This module is different: it routes data
 access by `entityName` at runtime, using contributions that can come from
-multiple bounded contexts. That makes it a storage *platform* rather than a
+multiple bounded contexts. That makes it a storage _platform_ rather than a
 collection of static services.
 
 The real power comes from its link to `entity-graph`: the graph tells the UI
@@ -32,7 +32,7 @@ domains, and faster delivery of baseline screens (lists, detail, edit).
 
 ## Why it matters
 
-- Separates *model discovery* (entity-graph) from *data access* (entity-storage).
+- Separates _model discovery_ (entity-graph) from _data access_ (entity-storage).
 - Lets multiple backends or storage strategies coexist behind one API.
 - Enables dynamic UI to load and mutate entity data without hardcoding
   endpoints.

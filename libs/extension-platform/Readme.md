@@ -59,12 +59,7 @@ Let’s say we want to build a “Hello World” system that aggregates hello me
 from multiple modules.
 
 ```typescript
-import {
-  Extension,
-  ContributionPoint,
-  ServiceConstructorProps,
-  serviceRef
-} from "@seij/extension-platform";
+import { Extension, ContributionPoint, ServiceConstructorProps, serviceRef } from "@seij/extension-platform";
 
 // First, define an interface that all extensions will implement to contribute
 // This is the contract of the contribution point
@@ -104,7 +99,6 @@ const HellosExtension: Extension = {
     context.registerContributionPoint(HelloContributionPoint);
   },
 };
-
 ```
 
 Then another module contributes some hellos:

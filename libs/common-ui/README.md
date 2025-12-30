@@ -16,4 +16,3 @@ for our other applications..
 ## Notes
 
 - This package exposes UI primitives rather than a full design system.
-

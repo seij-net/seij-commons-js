@@ -15,7 +15,7 @@ export const iconNames = [
   "signin",
   "signout",
   "user",
-  "users"
+  "users",
 ] as const;
 export type IconName = (typeof iconNames)[number];
 export function parseIconName(value?: string): IconName | undefined {

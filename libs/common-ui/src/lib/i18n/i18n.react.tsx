@@ -17,7 +17,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
   // Detects the locale: first used the forced one, then initial, then use autodetection
 
   const [instanceTs, setInstanceTs] = useState(0);
-  const [ready, setReady] = useState<boolean>(false)
+  const [ready, setReady] = useState<boolean>(false);
   const value: I18nCtxType = useMemo(
     () => ({
       i18nService: I18nServiceInstance,
@@ -27,12 +27,12 @@ export function I18nProvider({ children }: I18nProviderProps) {
   );
 
   useEffect(() => {
-    I18nServiceInstance.readyPromise.then(()=>{
-      setReady(true)
-    })
-  }, [])
+    I18nServiceInstance.readyPromise.then(() => {
+      setReady(true);
+    });
+  }, []);
 
-  if (!ready) return null
+  if (!ready) return null;
 
   return <I18nCtx.Provider value={value}>{children}</I18nCtx.Provider>;
 }

@@ -16,7 +16,6 @@ export interface PropertyDefinitionDto<T> {
     code: string;
     from: string;
   };
-
 }
 
 export type PropertyDefinitionDtoList<T> = PropertyDefinitionDto<T>[];

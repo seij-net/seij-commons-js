@@ -9,7 +9,6 @@ the same way in every form. A validation result is `{ valid, error, severity }`
 where severity is `BLOCKER` (cannot save) or `WARNING` (show message but allow
 save). This keeps UI validation consistent and easy to share.
 
-
 ## Example: fields with rules
 
 ```ts
@@ -57,10 +56,7 @@ import {
 } from "@seij/common-validation";
 import type { LocalDate } from "@seij/common-types";
 
-type NumberRule =
-  | RuleConstraintValueRequired<number>
-  | RuleConstraintValueMin<number>
-  | RuleConstraintValueMax<number>;
+type NumberRule = RuleConstraintValueRequired<number> | RuleConstraintValueMin<number> | RuleConstraintValueMax<number>;
 
 type DateRule = RuleConstraintValueToday;
 

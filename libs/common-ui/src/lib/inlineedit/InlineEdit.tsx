@@ -3,7 +3,6 @@ import { Button, Tooltip } from "@fluentui/react-components";
 import { Problem, toProblem } from "@seij/common-types";
 import { Icon } from "@seij/common-ui-icons";
 
-
 export function InlineEdit({
   children,
   editor,
