@@ -1,4 +1,3 @@
-// i18n/locale.ts
 export type Locale = string;
 
 const SUPPORTED = ["fr", "en"] as const;

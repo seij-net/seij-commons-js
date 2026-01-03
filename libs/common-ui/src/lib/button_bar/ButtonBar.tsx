@@ -1,5 +1,5 @@
 import { makeStyles, mergeClasses, tokens } from "@fluentui/react-components";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
 const useStyles = makeStyles({
   root: {

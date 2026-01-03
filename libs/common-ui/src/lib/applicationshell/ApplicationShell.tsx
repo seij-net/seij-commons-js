@@ -1,23 +1,13 @@
-import {
-  AppItem,
-  Button,
-  Hamburger,
-  makeStyles,
-  NavDrawer,
-  NavDrawerBody,
-  NavDrawerFooter,
-  NavDrawerHeader,
-  tokens,
-  Tooltip,
-} from "@fluentui/react-components";
+import { makeStyles, tokens } from "@fluentui/react-components";
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { Navigation } from "../navigation/Navigation";
 import { NavigationTreeItem } from "../navigation/Navigation.types";
 import { createNavigationTreeItemServiceImpl } from "../navigation/NavigationService";
 import { UserStatus } from "./ApplicationShell.types";
-import { TitleBar, User } from "./TitleBar";
+import { TitleBar } from "./TitleBar";
 import { useIsMobile } from "../responsive/useMobile";
-import { Icon } from "@seij/common-ui-icons";
+import { Rails } from "./ApplicationShellRails";
+import { Sidebar } from "./ApplicationShellSidebar";
+import { MenuBurger } from "./ApplicationShellHamburger";
 
 const useApplicationShellStyles = makeStyles({
   shell: {
@@ -44,18 +34,6 @@ const useApplicationShellStyles = makeStyles({
     alignItems: "flex-start",
     overflow: "auto",
     backgroundColor: tokens.colorNeutralBackground2,
-  },
-  bugerIcon: {
-    color: tokens.colorNeutralForegroundOnBrand,
-    ":hover": {
-      color: tokens.colorNeutralForegroundOnBrand,
-    },
-  },
-  bugerIcon2: {
-    color: tokens.colorNeutralForegroundOnBrand,
-    ":hover": {
-      color: tokens.colorNeutralForegroundOnBrand,
-    },
   },
 });
 
@@ -183,19 +161,16 @@ export function ApplicationShell({
     }
   }, [isMobile, sidebarMode]);
 
-  // Derived
-
-  const sidebarExpanded = sidebarMode === "expanded";
-
   // Events
 
   const handleClickHamburger = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-
   const handleChangeSidebarMode = () => {
-    if (sidebarMode === "expanded") {setSidebarMode("rails")}
+    if (sidebarMode === "expanded") {
+      setSidebarMode("rails");
+    }
     if (sidebarMode === "rails") {
       setSidebarMode("expanded");
     }
@@ -240,40 +215,33 @@ export function ApplicationShell({
         ) : null}
       </div>
       <div data-e2e-id="shell__main" className={styles.main}>
-        <NavDrawer
-          selectedValue={selectedItem}
-          open={(isMobile && drawerOpen) || !isMobile}
-          density={"small"}
-          type={isMobile ? "overlay" : "inline"}
-          openCategories={openedCategories}
-          onNavItemSelect={(e, data) => {
-            handleClickMenuItem(data.value);
-          }}
-          onNavCategoryItemToggle={(e, data) => {
-            handleClickCategory(data.categoryValue ?? "");
-          }}
-
-        >
-          <NavDrawerHeader>
-            {isMobile ? (
-              <Tooltip content="Navigation" relationship="label">
-                <Hamburger onClick={handleClickHamburger} />
-              </Tooltip>
-            ) : null}
-            <AppItem onClick={onClickHome} icon={<span>{applicationIcon}</span>}>
-              {applicationName}
-            </AppItem>
-          </NavDrawerHeader>
-          <NavDrawerBody>
-            <Navigation items={navigationItems} />
-          </NavDrawerBody>
-          <NavDrawerFooter>
-            <div style={{ display: "flex" }}>
-              <User status={userStatus} />
-              {isMobile ? null : <PanelLeftContract panelState={sidebarMode} onClick={handleChangeSidebarMode} />}
-            </div>
-          </NavDrawerFooter>
-        </NavDrawer>
+        {((!isMobile && sidebarMode === "expanded") || isMobile) && (
+          <Sidebar
+            selectedItem={selectedItem}
+            openedCategories={openedCategories}
+            drawerOpen={drawerOpen}
+            isMobile={isMobile}
+            applicationName={applicationName}
+            applicationIcon={applicationIcon}
+            userStatus={userStatus}
+            navigationItems={navigationItems}
+            onClickHome={onClickHome}
+            onClickHamburger={handleClickHamburger}
+            onClickMenuItem={handleClickMenuItem}
+            onClickCategory={handleClickCategory}
+            onClickPanelReduce={handleChangeSidebarMode}
+          />
+        )}
+        {sidebarMode === "rails" && (
+          <Rails
+            applicationIcon={applicationIcon}
+            navigationItems={navigationItems}
+            userStatus={userStatus}
+            onClickHome={onClickHome}
+            onClickMenuItem={handleClickMenuItem}
+            onClickSidebarExpand={handleChangeSidebarMode}
+          />
+        )}
         <div data-e2e-id="shell__content" className={styles.content}>
           {main}
         </div>
@@ -282,36 +250,8 @@ export function ApplicationShell({
   );
 }
 
-const PanelLeftContract = ({
-  panelState,
-  onClick,
-}: {
-  panelState: "expanded" | "rails";
-  onClick: () => void;
-}) => {
-  return (
-    <Tooltip content="Reduce panel" relationship="label">
-      <Button
-        onClick={onClick}
-        icon={<Icon name={panelState === "expanded" ? "panel_left_reduce" : "panel_left_expand"} />}
-        size="medium"
-        appearance="subtle"
-      />
-    </Tooltip>
-  );
-};
-
-const MenuBurger = ({ onClick }: { onClick: () => void }) => {
-  const styles = useApplicationShellStyles();
-  return (
-    <Tooltip content="Navigation" relationship="label">
-      <Hamburger className={styles.bugerIcon} onClick={onClick} />
-    </Tooltip>
-  );
-};
-
 const initialSidebarModeDetect = () => {
-  const value = localStorage.getItem("sidebarRails");
+  const value = localStorage.getItem("sidebarMode");
   if (value === "expanded") return "expanded";
   if (value === "rails") return "rails";
   return "expanded";

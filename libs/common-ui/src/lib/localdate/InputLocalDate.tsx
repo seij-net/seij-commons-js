@@ -2,7 +2,7 @@ import { Input, makeStyles } from "@fluentui/react-components";
 import { LocalDate } from "@seij/common-types";
 import { forwardRef, InputHTMLAttributes, useCallback, useEffect, useState } from "react";
 import { Rifm } from "rifm";
-import { useI18n } from "../i18n/i18n.react";
+import { useI18n } from "../i18n";
 
 const useStyles = makeStyles({
   root: {
