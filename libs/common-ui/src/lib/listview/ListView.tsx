@@ -12,7 +12,7 @@ import {
 
 import { isFunction } from "lodash-es";
 import { ReactNode } from "react";
-import { useI18n } from "../i18n/i18n.react";
+import { useI18n } from "../i18n";
 import { Icon } from "@seij/common-ui-icons";
 export interface ListItemData {
   id: string;
