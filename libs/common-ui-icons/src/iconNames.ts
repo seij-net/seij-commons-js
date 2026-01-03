@@ -11,6 +11,8 @@ export const iconNames = [
   "empty",
   "genericapp",
   "more_menu_vertical",
+  "panel_left_reduce",
+  "panel_left_expand",
   "search",
   "signin",
   "signout",

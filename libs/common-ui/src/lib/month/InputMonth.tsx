@@ -1,6 +1,6 @@
 import { Month } from "@seij/common-types";
 import React, { useMemo } from "react";
-import { useI18n } from "../i18n/i18n.react";
+import { useI18n } from "../i18n";
 import { InputSelect } from "../select/InputSelect";
 
 type HTMLInputElementCurated = Omit<

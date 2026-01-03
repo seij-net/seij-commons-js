@@ -30,7 +30,11 @@ const useTitleBarStyles = makeStyles({
   },
   launcher_icon: {
     fontSize: "24px",
-    verticalAlign: "middle",
+    "& img": {
+      maxWidth: "32px",
+      maxHeight: "32px",
+      verticalAlign: "text-top"
+    },
   },
   title: {
     height: "48px",
@@ -61,10 +65,12 @@ export function TitleBar({
   hamburger,
   onClickHome,
   userStatus,
-  applicationName: applicationName,
+  applicationName,
+  applicationIcon,
 }: {
   userStatus: UserStatus;
-  applicationName: string;
+  applicationName: ReactNode;
+  applicationIcon?: ReactNode;
   hamburger: ReactNode | null;
   onClickHome: () => void;
 }) {
@@ -74,7 +80,7 @@ export function TitleBar({
       <div className={styles.appBar}>
         {hamburger ? <div className={styles.launcher}>{hamburger}</div> : null}
         <div className={styles.launcher}>
-          <Home onClick={onClickHome} />
+          <Home applicationIcon={applicationIcon} onClick={onClickHome} />
         </div>
         <div className={styles.title}>
           <Text weight="semibold">{applicationName}</Text>
@@ -87,18 +93,18 @@ export function TitleBar({
   );
 }
 
-function Home({ onClick }: { onClick: () => void }) {
+function Home({ applicationIcon, onClick }: { applicationIcon?: ReactNode; onClick: () => void }) {
   const styles = useTitleBarStyles();
   const ref = useKeyboardNavAttribute<HTMLAnchorElement>();
   const onClickHandlers = createClickHandlers(onClick);
   return (
     <a tabIndex={0} {...onClickHandlers} className={styles.home} aria-label="Accueil" ref={ref}>
-      <Icon name="genericapp" className={styles.launcher_icon} />
+      {applicationIcon ? <span className={styles.launcher_icon}>{applicationIcon}</span> : <Icon name="genericapp" className={styles.launcher_icon} />}
     </a>
   );
 }
 
-function User({ status }: { status: UserStatus }) {
+export function User({ status }: { status: UserStatus }) {
   const styles = useTitleBarStyles();
 
   if (status.isLoading) {

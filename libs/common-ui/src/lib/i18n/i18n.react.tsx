@@ -1,6 +1,5 @@
-// i18n/I18nProvider.tsx
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { i18NextInstance, I18nService, I18nServiceInstance } from "./i18n.service";
+import { I18nService, I18nServiceInstance } from "./i18n.service";
 import { I18n } from "./i18n.types";
 
 type I18nCtxType = {

@@ -1,18 +1,13 @@
-import {
-  Hamburger,
-  makeStyles,
-  NavDrawer,
-  NavDrawerBody,
-  NavDrawerHeader,
-  tokens,
-  Tooltip,
-} from "@fluentui/react-components";
-import { ReactNode, useMemo, useState } from "react";
-import { Navigation } from "../navigation/Navigation";
+import { makeStyles, tokens } from "@fluentui/react-components";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { NavigationTreeItem } from "../navigation/Navigation.types";
 import { createNavigationTreeItemServiceImpl } from "../navigation/NavigationService";
 import { UserStatus } from "./ApplicationShell.types";
 import { TitleBar } from "./TitleBar";
+import { useIsMobile } from "../responsive/useMobile";
+import { Rails } from "./ApplicationShellRails";
+import { Sidebar } from "./ApplicationShellSidebar";
+import { MenuBurger } from "./ApplicationShellHamburger";
 
 const useApplicationShellStyles = makeStyles({
   shell: {
@@ -40,12 +35,6 @@ const useApplicationShellStyles = makeStyles({
     overflow: "auto",
     backgroundColor: tokens.colorNeutralBackground2,
   },
-  bugerIcon: {
-    color: tokens.colorNeutralForegroundOnBrand,
-    ":hover": {
-      color: tokens.colorNeutralForegroundOnBrand,
-    },
-  },
 });
 
 /**
@@ -61,7 +50,10 @@ export interface ApplicationShellProps {
    * Example: "Orders Console".
    */
   applicationName: string;
-
+  /**
+   * Icon to display next to the application name
+   */
+  applicationIcon?: ReactNode;
   /**
    * Main content of the page. This is rendered in the scrollable content area on the right
    * of the navigation drawer. Typically the routed page/component for the current URL.
@@ -132,6 +124,7 @@ export interface ApplicationShellProps {
  */
 export function ApplicationShell({
   applicationName,
+  applicationIcon,
   main,
   navigationItems,
   userStatus,
@@ -151,14 +144,36 @@ export function ApplicationShell({
       ? [navigationItemFound.parentId]
       : [];
 
+  // Hooks
+  const isMobile = useIsMobile();
   const styles = useApplicationShellStyles();
-  const [navDrawerOpened, setNavDrawerOpened] = useState<boolean>(true);
+
+  const [sidebarMode, setSidebarMode] = useState<"rails" | "expanded">(initialSidebarModeDetect);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>(navigationItemSelectedFromUrl ?? "");
   const [openedCategories, setOpenCategories] = useState<string[]>(defaultOpenCategory);
-
   const navigationService = useMemo(() => createNavigationTreeItemServiceImpl(navigationItems), [navigationItems]);
+
+  useEffect(() => {
+    // Persist user choice for the rails or sidebar mode
+    if (!isMobile) {
+      localStorage.setItem("sidebarMode", sidebarMode);
+    }
+  }, [isMobile, sidebarMode]);
+
+  // Events
+
   const handleClickHamburger = () => {
-    setNavDrawerOpened(!navDrawerOpened);
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const handleChangeSidebarMode = () => {
+    if (sidebarMode === "expanded") {
+      setSidebarMode("rails");
+    }
+    if (sidebarMode === "rails") {
+      setSidebarMode("expanded");
+    }
   };
 
   const handleClickMenuItem = (itemId: string) => {
@@ -189,9 +204,10 @@ export function ApplicationShell({
   return (
     <div data-e2e-id="shell" className={styles.shell}>
       <div data-e2e-id="shell__menu_top" className={styles.titleBar}>
-        {!navDrawerOpened ? (
+        {isMobile ? (
           <TitleBar
             applicationName={applicationName}
+            applicationIcon={applicationIcon}
             userStatus={userStatus}
             onClickHome={onClickHome}
             hamburger={<MenuBurger onClick={handleClickHamburger} />}
@@ -199,30 +215,33 @@ export function ApplicationShell({
         ) : null}
       </div>
       <div data-e2e-id="shell__main" className={styles.main}>
-        <NavDrawer
-          selectedValue={selectedItem}
-          open={navDrawerOpened}
-          density={"small"}
-          type={"inline"}
-          openCategories={openedCategories}
-          onNavItemSelect={(e, data) => {
-            handleClickMenuItem(data.value);
-          }}
-          onNavCategoryItemToggle={(e, data) => {
-            handleClickCategory(data.categoryValue ?? "");
-          }}
-        >
-          <TitleBar
+        {((!isMobile && sidebarMode === "expanded") || isMobile) && (
+          <Sidebar
+            selectedItem={selectedItem}
+            openedCategories={openedCategories}
+            drawerOpen={drawerOpen}
+            isMobile={isMobile}
             applicationName={applicationName}
+            applicationIcon={applicationIcon}
+            userStatus={userStatus}
+            navigationItems={navigationItems}
+            onClickHome={onClickHome}
+            onClickHamburger={handleClickHamburger}
+            onClickMenuItem={handleClickMenuItem}
+            onClickCategory={handleClickCategory}
+            onClickPanelReduce={handleChangeSidebarMode}
+          />
+        )}
+        {sidebarMode === "rails" && (
+          <Rails
+            applicationIcon={applicationIcon}
+            navigationItems={navigationItems}
             userStatus={userStatus}
             onClickHome={onClickHome}
-            hamburger={<MenuBurger onClick={handleClickHamburger} />}
+            onClickMenuItem={handleClickMenuItem}
+            onClickSidebarExpand={handleChangeSidebarMode}
           />
-          <NavDrawerHeader></NavDrawerHeader>
-          <NavDrawerBody>
-            <Navigation items={navigationItems} />
-          </NavDrawerBody>
-        </NavDrawer>
+        )}
         <div data-e2e-id="shell__content" className={styles.content}>
           {main}
         </div>
@@ -231,11 +250,9 @@ export function ApplicationShell({
   );
 }
 
-const MenuBurger = ({ onClick }: { onClick: () => void }) => {
-  const styles = useApplicationShellStyles();
-  return (
-    <Tooltip content="Navigation" relationship="label">
-      <Hamburger className={styles.bugerIcon} onClick={onClick} />
-    </Tooltip>
-  );
+const initialSidebarModeDetect = () => {
+  const value = localStorage.getItem("sidebarMode");
+  if (value === "expanded") return "expanded";
+  if (value === "rails") return "rails";
+  return "expanded";
 };

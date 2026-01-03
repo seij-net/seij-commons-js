@@ -7,7 +7,7 @@ export function toCurrencySymbolSafe(code: string | null | undefined): string | 
   if (code.length != 3) return code;
   try {
     return toCurrencySymbol(code);
-  } catch (err) {
+  } catch (_) {
     return code;
   }
 }
