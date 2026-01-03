@@ -3,8 +3,20 @@ import type { IconName } from "./iconNames";
 import { iconLoaders } from "./iconLoaders";
 import { IconProps } from "./IconProps";
 
+const lazyIconCache: Partial<Record<IconName, ReturnType<typeof lazy>>> = {};
+
+function getLazyIcon(name: IconName) {
+  const cached = lazyIconCache[name];
+  if (cached) {
+    return cached;
+  }
+  const created = lazy(iconLoaders[name]);
+  lazyIconCache[name] = created;
+  return created;
+}
+
 export function Icon({ name, ...iconProps }: { name: IconName } & IconProps) {
-  const LazyIcon = lazy(iconLoaders[name]);
+  const LazyIcon = getLazyIcon(name);
   const { size = 20, ...restProps } = iconProps;
   return (
     <Suspense fallback={<Placeholder size={size} {...iconProps} />}>
