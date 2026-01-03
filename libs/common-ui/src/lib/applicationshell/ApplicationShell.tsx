@@ -1,18 +1,23 @@
 import {
+  AppItem,
+  Button,
   Hamburger,
   makeStyles,
   NavDrawer,
   NavDrawerBody,
+  NavDrawerFooter,
   NavDrawerHeader,
   tokens,
   Tooltip,
 } from "@fluentui/react-components";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Navigation } from "../navigation/Navigation";
 import { NavigationTreeItem } from "../navigation/Navigation.types";
 import { createNavigationTreeItemServiceImpl } from "../navigation/NavigationService";
 import { UserStatus } from "./ApplicationShell.types";
-import { TitleBar } from "./TitleBar";
+import { TitleBar, User } from "./TitleBar";
+import { useIsMobile } from "../responsive/useMobile";
+import { Icon } from "@seij/common-ui-icons";
 
 const useApplicationShellStyles = makeStyles({
   shell: {
@@ -46,6 +51,12 @@ const useApplicationShellStyles = makeStyles({
       color: tokens.colorNeutralForegroundOnBrand,
     },
   },
+  bugerIcon2: {
+    color: tokens.colorNeutralForegroundOnBrand,
+    ":hover": {
+      color: tokens.colorNeutralForegroundOnBrand,
+    },
+  },
 });
 
 /**
@@ -61,7 +72,10 @@ export interface ApplicationShellProps {
    * Example: "Orders Console".
    */
   applicationName: string;
-
+  /**
+   * Icon to display next to the application name
+   */
+  applicationIcon?: ReactNode;
   /**
    * Main content of the page. This is rendered in the scrollable content area on the right
    * of the navigation drawer. Typically the routed page/component for the current URL.
@@ -132,6 +146,7 @@ export interface ApplicationShellProps {
  */
 export function ApplicationShell({
   applicationName,
+  applicationIcon,
   main,
   navigationItems,
   userStatus,
@@ -151,14 +166,39 @@ export function ApplicationShell({
       ? [navigationItemFound.parentId]
       : [];
 
+  // Hooks
+  const isMobile = useIsMobile();
   const styles = useApplicationShellStyles();
-  const [navDrawerOpened, setNavDrawerOpened] = useState<boolean>(true);
+
+  const [sidebarMode, setSidebarMode] = useState<"rails" | "expanded">(initialSidebarModeDetect);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>(navigationItemSelectedFromUrl ?? "");
   const [openedCategories, setOpenCategories] = useState<string[]>(defaultOpenCategory);
-
   const navigationService = useMemo(() => createNavigationTreeItemServiceImpl(navigationItems), [navigationItems]);
+
+  useEffect(() => {
+    // Persist user choice for the rails or sidebar mode
+    if (!isMobile) {
+      localStorage.setItem("sidebarMode", sidebarMode);
+    }
+  }, [isMobile, sidebarMode]);
+
+  // Derived
+
+  const sidebarExpanded = sidebarMode === "expanded";
+
+  // Events
+
   const handleClickHamburger = () => {
-    setNavDrawerOpened(!navDrawerOpened);
+    setDrawerOpen(!drawerOpen);
+  };
+
+
+  const handleChangeSidebarMode = () => {
+    if (sidebarMode === "expanded") {setSidebarMode("rails")}
+    if (sidebarMode === "rails") {
+      setSidebarMode("expanded");
+    }
   };
 
   const handleClickMenuItem = (itemId: string) => {
@@ -189,9 +229,10 @@ export function ApplicationShell({
   return (
     <div data-e2e-id="shell" className={styles.shell}>
       <div data-e2e-id="shell__menu_top" className={styles.titleBar}>
-        {!navDrawerOpened ? (
+        {isMobile ? (
           <TitleBar
             applicationName={applicationName}
+            applicationIcon={applicationIcon}
             userStatus={userStatus}
             onClickHome={onClickHome}
             hamburger={<MenuBurger onClick={handleClickHamburger} />}
@@ -201,9 +242,9 @@ export function ApplicationShell({
       <div data-e2e-id="shell__main" className={styles.main}>
         <NavDrawer
           selectedValue={selectedItem}
-          open={navDrawerOpened}
+          open={(isMobile && drawerOpen) || !isMobile}
           density={"small"}
-          type={"inline"}
+          type={isMobile ? "overlay" : "inline"}
           openCategories={openedCategories}
           onNavItemSelect={(e, data) => {
             handleClickMenuItem(data.value);
@@ -211,17 +252,27 @@ export function ApplicationShell({
           onNavCategoryItemToggle={(e, data) => {
             handleClickCategory(data.categoryValue ?? "");
           }}
+
         >
-          <TitleBar
-            applicationName={applicationName}
-            userStatus={userStatus}
-            onClickHome={onClickHome}
-            hamburger={<MenuBurger onClick={handleClickHamburger} />}
-          />
-          <NavDrawerHeader></NavDrawerHeader>
+          <NavDrawerHeader>
+            {isMobile ? (
+              <Tooltip content="Navigation" relationship="label">
+                <Hamburger onClick={handleClickHamburger} />
+              </Tooltip>
+            ) : null}
+            <AppItem onClick={onClickHome} icon={<span>{applicationIcon}</span>}>
+              {applicationName}
+            </AppItem>
+          </NavDrawerHeader>
           <NavDrawerBody>
             <Navigation items={navigationItems} />
           </NavDrawerBody>
+          <NavDrawerFooter>
+            <div style={{ display: "flex" }}>
+              <User status={userStatus} />
+              {isMobile ? null : <PanelLeftContract panelState={sidebarMode} onClick={handleChangeSidebarMode} />}
+            </div>
+          </NavDrawerFooter>
         </NavDrawer>
         <div data-e2e-id="shell__content" className={styles.content}>
           {main}
@@ -231,6 +282,25 @@ export function ApplicationShell({
   );
 }
 
+const PanelLeftContract = ({
+  panelState,
+  onClick,
+}: {
+  panelState: "expanded" | "rails";
+  onClick: () => void;
+}) => {
+  return (
+    <Tooltip content="Reduce panel" relationship="label">
+      <Button
+        onClick={onClick}
+        icon={<Icon name={panelState === "expanded" ? "panel_left_reduce" : "panel_left_expand"} />}
+        size="medium"
+        appearance="subtle"
+      />
+    </Tooltip>
+  );
+};
+
 const MenuBurger = ({ onClick }: { onClick: () => void }) => {
   const styles = useApplicationShellStyles();
   return (
@@ -238,4 +308,11 @@ const MenuBurger = ({ onClick }: { onClick: () => void }) => {
       <Hamburger className={styles.bugerIcon} onClick={onClick} />
     </Tooltip>
   );
+};
+
+const initialSidebarModeDetect = () => {
+  const value = localStorage.getItem("sidebarRails");
+  if (value === "expanded") return "expanded";
+  if (value === "rails") return "rails";
+  return "expanded";
 };
