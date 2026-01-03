@@ -33,7 +33,7 @@ const useTitleBarStyles = makeStyles({
     "& img": {
       maxWidth: "32px",
       maxHeight: "32px",
-      verticalAlign: "text-top"
+      verticalAlign: "text-top",
     },
   },
   title: {
@@ -99,7 +99,11 @@ function Home({ applicationIcon, onClick }: { applicationIcon?: ReactNode; onCli
   const onClickHandlers = createClickHandlers(onClick);
   return (
     <a tabIndex={0} {...onClickHandlers} className={styles.home} aria-label="Accueil" ref={ref}>
-      {applicationIcon ? <span className={styles.launcher_icon}>{applicationIcon}</span> : <Icon name="genericapp" className={styles.launcher_icon} />}
+      {applicationIcon ? (
+        <span className={styles.launcher_icon}>{applicationIcon}</span>
+      ) : (
+        <Icon name="genericapp" className={styles.launcher_icon} />
+      )}
     </a>
   );
 }

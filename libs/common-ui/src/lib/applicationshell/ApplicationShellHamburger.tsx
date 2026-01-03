@@ -5,7 +5,7 @@ const useApplicationShellStyles = makeStyles({
     ":hover": {
       color: tokens.colorNeutralForegroundOnBrand,
     },
-  }
+  },
 });
 export const MenuBurger = ({ onClick }: { onClick: () => void }) => {
   const styles = useApplicationShellStyles();
