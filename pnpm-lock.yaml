@@ -214,6 +214,37 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
 
+  libs/common-ui-auth:
+    dependencies:
+      '@seij/common-types':
+        specifier: workspace:*
+        version: link:../common-types
+      '@seij/common-ui':
+        specifier: workspace:*
+        version: link:../common-ui
+      '@seij/common-ui-icons':
+        specifier: workspace:*
+        version: link:../common-ui-icons
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.22
+      oidc-client-ts:
+        specifier: 3.3.0
+        version: 3.3.0
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-dom:
+        specifier: 19.2.3
+        version: 19.2.3(react@19.2.3)
+      react-oidc-context:
+        specifier: 3.3.0
+        version: 3.3.0(oidc-client-ts@3.3.0)(react@19.2.3)
+    devDependencies:
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+
   libs/common-ui-csv-export: {}
 
   libs/common-ui-icons:
@@ -3133,6 +3164,10 @@ packages:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
 
+  jwt-decode@4.0.0:
+    resolution: {integrity: sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==}
+    engines: {node: '>=18'}
+
   katex@0.16.27:
     resolution: {integrity: sha512-aeQoDkuRWSqQN6nSvVCEFvfXdqo1OQiCmmW1kc9xSdjutPv7BGO7pqY9sQRJpMOGrEdfDgF2TfRXe5eUAD2Waw==}
     hasBin: true
@@ -3463,6 +3498,10 @@ packages:
   obug@2.1.1:
     resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
 
+  oidc-client-ts@3.3.0:
+    resolution: {integrity: sha512-t13S540ZwFOEZKLYHJwSfITugupW4uYLwuQSSXyKH/wHwZ+7FvgHE7gnNJh1YQIZ1Yd1hKSRjqeXGSUtS0r9JA==}
+    engines: {node: '>=18'}
+
   open@8.4.2:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
@@ -3623,6 +3662,13 @@ packages:
     resolution: {integrity: sha512-qKxVopLT/TyA6BX3Ue5NwabOsAzm0Q7kAPwq6L+wWDwisYs7R8vZ0nRXqq6rkueboxpkjvLGU9fWifiX/ZZFxQ==}
     peerDependencies:
       '@types/react': '>=18'
+      react: 19.2.3
+
+  react-oidc-context@3.3.0:
+    resolution: {integrity: sha512-302T/ma4AOVAxrHdYctDSKXjCq9KNHT564XEO2yOPxRfxEP58xa4nz+GQinNl8x7CnEXECSM5JEjQJk3Cr5BvA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      oidc-client-ts: 3.3.0
       react: 19.2.3
 
   react-refresh@0.18.0:
@@ -8084,6 +8130,8 @@ snapshots:
       object.assign: 4.1.7
       object.values: 1.2.1
 
+  jwt-decode@4.0.0: {}
+
   katex@0.16.27:
     dependencies:
       commander: 8.3.0
@@ -8632,6 +8680,10 @@ snapshots:
 
   obug@2.1.1: {}
 
+  oidc-client-ts@3.3.0:
+    dependencies:
+      jwt-decode: 4.0.0
+
   open@8.4.2:
     dependencies:
       define-lazy-prop: 2.0.0
@@ -8815,6 +8867,11 @@ snapshots:
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
+
+  react-oidc-context@3.3.0(oidc-client-ts@3.3.0)(react@19.2.3):
+    dependencies:
+      oidc-client-ts: 3.3.0
+      react: 19.2.3
 
   react-refresh@0.18.0: {}
 
