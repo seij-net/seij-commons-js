@@ -1,0 +1,46 @@
+{
+  "name": "@seij/common-ui-auth",
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seij-net/seij-commons-js.git"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "vite build -c vite.config.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit",
+    "watch": "tsc -p tsconfig.lib.json --noEmit --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@seij/common-types": "workspace:*",
+    "@seij/common-ui": "workspace:*",
+    "@seij/common-ui-icons": "workspace:*",
+    "lodash-es": "workspace:*",
+    "oidc-client-ts": "workspace:*",
+    "react-oidc-context": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "workspace:*",
+    "react-dom": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**",
+    "README.md",
+    "LICENSE"
+  ]
+}
