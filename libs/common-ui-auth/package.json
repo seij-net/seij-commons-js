@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-ui-auth",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -18,19 +18,19 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@seij/common-types": "workspace:*",
-    "@seij/common-ui": "workspace:*",
-    "@seij/common-ui-icons": "workspace:*",
-    "lodash-es": "workspace:*",
-    "oidc-client-ts": "workspace:*",
-    "react-oidc-context": "workspace:*"
+    "@seij/common-types": "workspace:^",
+    "@seij/common-ui": "workspace:^",
+    "@seij/common-ui-icons": "workspace:^",
+    "lodash-es": "workspace:^",
+    "oidc-client-ts": "workspace:^",
+    "react-oidc-context": "workspace:^"
   },
   "devDependencies": {
-    "@types/lodash-es": "workspace:*"
+    "@types/lodash-es": "workspace:^"
   },
   "peerDependencies": {
-    "react": "workspace:*",
-    "react-dom": "workspace:*"
+    "react": "workspace:^",
+    "react-dom": "workspace:^"
   },
   "exports": {
     ".": {

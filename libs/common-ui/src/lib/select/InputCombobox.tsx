@@ -1,5 +1,11 @@
-import { Combobox, useComboboxFilter } from "@fluentui/react-components";
+import {
+  Combobox,
+  type ComboboxProps,
+  useComboboxFilter,
+} from "@fluentui/react-components";
+import { useState } from "react";
 import { useI18n } from "../i18n/i18n.react";
+
 export interface InputComboboxProps<T> {
   /**
    * The value of the text input.
@@ -29,6 +35,10 @@ export interface InputComboboxProps<T> {
    * The function to call when the user selects an option from the dropdown.
    */
   onValueChange: (value: string) => void;
+  /**
+   * Called when the user presses Enter inside the combobox input.
+   */
+  onEnter?: () => void;
 }
 /**
  * A text input combobox with a dropdown list of options.
@@ -42,6 +52,7 @@ export interface InputComboboxProps<T> {
  *   noOptionsMessage="No options found"
  *   onValueChangeQuery={(value) => setSearchQuery(value)}
  *   onValueChange={(value) => setSelectedOption(value)}
+ *   onEnter={()=>{}}
  * />
  */
 export function InputCombobox<T extends { code: string; label: string }>({
@@ -52,18 +63,35 @@ export function InputCombobox<T extends { code: string; label: string }>({
   noOptionsMessage,
   onValueChangeQuery,
   onValueChange,
+  onEnter,
 }: InputComboboxProps<T>) {
   const { t } = useI18n();
+
+  // Some keyboards used to compose characters in languages as Japaneses send and event
+  // that tells that the user is composing a character. We must take that in account
+  // when managing the Enter key
+  const [isComposing, setIsComposing] = useState(false);
+
   const noresult = t("InputCombobox_noresult");
+
+  const handleOptionSelect: ComboboxProps["onOptionSelect"] = (_, data) => {
+    onValueChangeQuery(data.optionText ?? "");
+    onValueChange(data.optionValue ?? "");
+  };
+
   return (
     <Combobox
       style={{ width: "100%" }}
       value={searchQuery}
-      onOptionSelect={(event, data) => {
-        onValueChangeQuery(data.optionText ?? "");
-        onValueChange(data.optionValue ?? "");
-      }}
+      onOptionSelect={handleOptionSelect}
       onChange={(ev) => onValueChangeQuery(ev.target.value)}
+      onCompositionStart={() => setIsComposing(true)}
+      onCompositionEnd={() => setIsComposing(false)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" && !isComposing) {
+          onEnter?.();
+        }
+      }}
       clearable
       placeholder={placeholder}
       disabled={disabled}

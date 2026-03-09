@@ -1,6 +1,6 @@
 {
   "name": "@seij/extension-platform",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -16,7 +16,7 @@
     "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
   },
   "dependencies": {
-    "@seij/extension-tooling": "workspace:*"
+    "@seij/extension-tooling": "workspace:^"
   },
   "devDependencies": {},
   "exports": {

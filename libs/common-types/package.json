@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-types",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -16,12 +16,12 @@
     "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
   },
   "dependencies": {
-    "lodash-es": "workspace:*",
-    "luxon": "workspace:*",
-    "date-fns": "workspace:*"
+    "lodash-es": "workspace:^",
+    "luxon": "workspace:^",
+    "date-fns": "workspace:^"
   },
   "devDependencies": {
-    "@types/lodash-es": "workspace:*",
+    "@types/lodash-es": "workspace:^",
     "@types/luxon": "workspace:*"
   },
   "exports": {

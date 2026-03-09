@@ -1,6 +1,6 @@
 {
   "name": "@seij/entity-storage",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -16,9 +16,9 @@
     "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
   },
   "dependencies": {
-    "@seij/common-types": "workspace:*",
-    "@seij/extension-tooling": "workspace:*",
-    "@seij/extension-platform": "workspace:*"
+    "@seij/common-types": "workspace:^",
+    "@seij/extension-tooling": "workspace:^",
+    "@seij/extension-platform": "workspace:^"
   },
   "devDependencies": {},
   "exports": {
