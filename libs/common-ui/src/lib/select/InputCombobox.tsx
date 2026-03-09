@@ -1,8 +1,4 @@
-import {
-  Combobox,
-  type ComboboxProps,
-  useComboboxFilter,
-} from "@fluentui/react-components";
+import { Combobox, type ComboboxProps, useComboboxFilter } from "@fluentui/react-components";
 import { useState } from "react";
 import { useI18n } from "../i18n";
 
