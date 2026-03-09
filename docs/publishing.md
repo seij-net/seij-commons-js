@@ -52,6 +52,25 @@ This action will build the matching module, then publish the package on the NPM 
 - make sure everything is committed and pushed.
 - run `./tools/publish-tag.sh <module-name>`: this will publish the module by tagging, then wait that GitHub actions are successful by checking the module is published on NPM.
 
+## Publish packages in order
+
+```
+./tools/publish-tag.sh extension-tooling
+./tools/publish-tag.sh extension-platform
+./tools/publish-tag.sh common-types
+./tools/publish-tag.sh common-services
+./tools/publish-tag.sh common-validation
+./tools/publish-tag.sh common-ui-icons
+./tools/publish-tag.sh common-ui
+./tools/publish-tag.sh common-entity-graph
+./tools/publish-tag.sh entity-graph
+./tools/publish-tag.sh entity-storage
+./tools/publish-tag.sh entity-validation
+./tools/publish-tag.sh common-ui-markdown
+./tools/publish-tag.sh common-ui-csv-export
+./tools/publish-tag.sh common-ui-auth
+```
+
 ## Retag
 
 Use this command to retag the project (remove old tag and create a new one). This will trigger the publish process:
