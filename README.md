@@ -22,6 +22,7 @@ flowchart LR
   CommonValidation[common-validation]
   CommonServices[common-services]
   CommonUI[common-ui]
+  CommonUIAuth[common-ui-auth]
   CommonUIIcons[common-ui-icons]
   CommonMarkdown[common-ui-markdown]
   CommonCsv[common-ui-csv-export]
@@ -51,6 +52,7 @@ flowchart LR
 
   CommonMarkdown --> CommonUI
   
+  CommonUIAuth --> CommonUI
 
 
   GenUI --> EntityStorage
