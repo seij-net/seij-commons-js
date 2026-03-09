@@ -30,7 +30,7 @@ flowchart LR
   EntityValidation[entity-validation]
   GenUI["gen-ui (upcoming)"]
 
-  ExtensionTooling --> ExtensionPlatform
+  ExtensionPlatform --> ExtensionTooling
   CommonValidation --> CommonTypes
   CommonServices --> CommonTypes
 
