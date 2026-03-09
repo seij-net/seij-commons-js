@@ -4,7 +4,7 @@ import {
   useComboboxFilter,
 } from "@fluentui/react-components";
 import { useState } from "react";
-import { useI18n } from "../i18n/i18n.react";
+import { useI18n } from "../i18n";
 
 export interface InputComboboxProps<T> {
   /**
