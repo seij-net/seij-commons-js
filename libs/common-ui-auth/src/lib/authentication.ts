@@ -63,6 +63,14 @@ interface CurrentAuthentication {
    */
   activeNavigator: AuthState["activeNavigator"] | null;
   /**
+   * Issuer: qui a émis le user. N'est présent que si l'authentification a réussi
+   */
+  issuer: string | null,
+  /**
+   * Subject: "sub" du token
+   */
+  subject: string | null,
+  /**
    * Nom de l'utilisateur à afficher
    */
   userDisplayName: string | "";
@@ -105,6 +113,8 @@ export function useAuthentication(): CurrentAuthentication {
     error: auth.error ?? null,
     activeNavigator: auth.activeNavigator ?? null,
     userDisplayName: auth.user?.profile?.name ?? "",
+    issuer: auth.user?.profile?.iss ?? null,
+    subject: auth.user?.profile?.sub ?? null,
     signOut: () => {
       auth.removeUser();
     },
