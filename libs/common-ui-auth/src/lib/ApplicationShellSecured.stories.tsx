@@ -4,9 +4,8 @@ import { SeijUIProviderDecorator } from "../stories/utils/SeijUIProviderDecorato
 import { ApplicationShellSecured } from "./ApplicationShellSecured";
 import { SeijUIProvider } from "@seij/common-ui";
 import { AuthenticationProvider } from "./AuthenticationProvider";
-import { AuthenticationConfig, createAuthenticationConfig } from "./authentication";
+import { AuthenticationConfig, createAuthenticationConfig, OIDCBaseConfig } from "./authentication";
 import { AuthenticationPaths } from "./authpaths";
-import { AuthProviderProps } from "react-oidc-context";
 
 const meta = {
   title: "Views/ApplicationShellSecured",
@@ -23,7 +22,7 @@ type Story = StoryObj<typeof AuthenticationStatusView>;
 
 export const Authenticating: Story = {
   render: () => {
-    const props: AuthProviderProps = {
+    const props: OIDCBaseConfig = {
       redirect_uri: "http://localhost:6006/" + AuthenticationPaths.callback,
       authority: "http://localhost/oidc/authority",
       client_id: "my_client_id",

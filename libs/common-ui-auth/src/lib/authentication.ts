@@ -6,14 +6,55 @@ export interface OIDCBaseConfig {
   authority: string;
   client_id: string;
   redirect_uri: string;
+  scope?: string;
 }
 
-// See [react-oidc-context.AuthProviderProps]
+/**
+ * Those parameters match [oidc-client-ts/OidcClientSettings]
+ * and [react-oidc-context/AuthProviderProps]
+ */
 export interface AuthenticationConfig {
+  /** The URL of the OIDC/OAuth2 provider */
   authority: string;
+  /**
+   * Your client application's identifier as registered with the OIDC/OAuth2
+   *
+   * Implementation notes: from [oidc-client-ts]
+   **/
   client_id: string;
+  /**
+   * The redirect URI of your client application to receive a response from the OIDC/OAuth2 provider
+   *
+   * Implementation notes: from [oidc-client-ts]
+   */
   redirect_uri: string;
+  /**
+   * The scope being requested from the OIDC/OAuth2 provider (default: "openid")
+   *
+   * Implementation notes: from [oidc-client-ts]
+   */
+  scope?: string;
+  /**
+   * On sign in callback hook. Can be a async function.
+   * Here you can remove the code and state parameters from the url when you are redirected from the authorize page.
+   *
+   * ```jsx
+   * const onSigninCallback = (_user: User | undefined): void => {
+   *     window.history.replaceState(
+   *         {},
+   *         document.title,
+   *         window.location.pathname
+   *     )
+   * }
+   * ```
+   */
   onSigninCallback: (_user: User | void) => void;
+  /**
+   * Gets the current access token. For usage in APIs.
+   *
+   * Implementation notes: specific method from this module that gets the token from the localStorage, for usage outside
+   * a React context, used for API calls.
+   */
   getCurrentAccessToken: () => string | null;
 }
 
@@ -33,6 +74,7 @@ export function createAuthenticationConfig(env: OIDCBaseConfig): AuthenticationC
     authority: env.authority,
     client_id: env.client_id,
     redirect_uri: env.redirect_uri,
+    scope: env.scope,
     onSigninCallback: (_user: User | void): void => {
       window.history.replaceState({}, document.title, window.location.pathname);
     },
@@ -65,11 +107,11 @@ interface CurrentAuthentication {
   /**
    * Issuer: qui a émis le user. N'est présent que si l'authentification a réussi
    */
-  issuer: string | null,
+  issuer: string | null;
   /**
    * Subject: "sub" du token
    */
-  subject: string | null,
+  subject: string | null;
   /**
    * Nom de l'utilisateur à afficher
    */
