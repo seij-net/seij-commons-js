@@ -1,10 +1,10 @@
 import { SeijUIProvider } from "@seij/common-ui";
-import { StoryFn } from "@storybook/react-vite";
+import { Decorator } from "@storybook/react-vite";
 
-export function SeijUIProviderDecorator(Story: StoryFn) {
+export const SeijUIProviderDecorator: Decorator = (Story) => {
   return (
     <SeijUIProvider>
       <Story />
     </SeijUIProvider>
   );
-}
+};

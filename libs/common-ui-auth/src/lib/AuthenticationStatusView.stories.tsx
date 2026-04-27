@@ -1,8 +1,20 @@
-import { Meta, StoryContext, StoryFn, StoryObj } from "@storybook/react-vite";
+import { Meta, StoryFn, StoryObj } from "@storybook/react-vite";
+import type { Decorator } from "@storybook/react-vite";
 import { AuthenticationStatusView } from "./AuthenticationStatusView";
 import { SeijUIProviderDecorator } from "../stories/utils/SeijUIProviderDecorator";
 import { AuthContext, AuthContextProps } from "react-oidc-context";
 import { useI18n } from "@seij/common-ui";
+
+const LocaleDecorator: Decorator = (Story) => {
+  const { getLocale } = useI18n();
+  const locale = getLocale();
+  return (
+    <div>
+      <div>Lang: {locale}</div>
+      <Story />
+    </div>
+  );
+};
 
 const meta = {
   title: "Views/AuthenticationStatusView",
@@ -88,14 +100,3 @@ export const NotAuthenticated: Story = {
     </AuthContext.Provider>
   ),
 };
-
-function LocaleDecorator(Story: StoryFn, context: StoryContext<{ lang: "en" | "fr" }>) {
-  const { getLocale } = useI18n();
-  const locale = getLocale();
-  return (
-    <div>
-      <div>Lang: {locale}</div>
-      <Story />
-    </div>
-  );
-}
