@@ -1,9 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { AuthenticationStatusView } from "./AuthenticationStatusView";
+import { ApplicationShellSecured, AuthenticationProvider, AuthenticationStatusView } from "@seij/common-ui-auth";
 import { SeijUIProviderDecorator } from "../stories/utils/SeijUIProviderDecorator";
-import { ApplicationShellSecured } from "./ApplicationShellSecured";
 import { SeijUIProvider } from "@seij/common-ui";
-import { AuthenticationProvider } from "./AuthenticationProvider";
 import { AuthenticationConfig, createAuthenticationConfig, OIDCBaseConfig } from "./authentication";
 import { AuthenticationPaths } from "./authpaths";
 

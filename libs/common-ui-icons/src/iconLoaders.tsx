@@ -11,6 +11,7 @@ export const iconLoaders: Record<IconName, () => Promise<{ default: React.Compon
   dismiss: () => import("./icons/dismiss"),
   edit: () => import("./icons/edit"),
   empty: () => import("./icons/empty"),
+  error: () => import("./icons/error"),
   genericapp: () => import("./icons/genericapp"),
   more_menu_vertical: () => import("./icons/more_menu_vertical"),
   panel_left_expand: () => import("./icons/panel_left_expand"),

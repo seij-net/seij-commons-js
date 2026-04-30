@@ -1,5 +1,10 @@
 # CHANGELOG.md
 
+## v0.2.0
+
+- Fixed stories
+- Included new user menu
+
 ## v0.1.3
 
 ### Added

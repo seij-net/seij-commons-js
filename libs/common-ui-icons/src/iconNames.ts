@@ -9,6 +9,7 @@ export const iconNames = [
   "dismiss",
   "edit",
   "empty",
+  "error",
   "genericapp",
   "more_menu_vertical",
   "panel_left_reduce",
