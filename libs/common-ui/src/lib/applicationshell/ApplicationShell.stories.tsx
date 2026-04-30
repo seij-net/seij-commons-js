@@ -46,11 +46,15 @@ const navigationItems: NavigationTreeItem[] = Array(10)
   .flat();
 
 iconPreload(
-  new Set(
-    navigationItems
-      .filter((it) => it.type === "page" || it.type === "group")
-      .map((it: NavigationTreeItemPage | NavigationTreeItemGroup) => it?.icon)
-      .filter((it: IconName | null | undefined) => it !== undefined && it !== null),
+  Array.from(
+    new Set(
+      navigationItems
+        .filter(
+          (it): it is NavigationTreeItemPage | NavigationTreeItemGroup => it.type === "page" || it.type === "group",
+        )
+        .map((it) => it?.icon)
+        .filter((it: IconName | null | undefined) => it !== undefined && it !== null),
+    ),
   ),
 );
 

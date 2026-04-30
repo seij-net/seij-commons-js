@@ -1,9 +1,9 @@
 import { makeStyles, tokens, Tooltip } from "@fluentui/react-components";
-import { User } from "./TitleBar";
 import { ReactNode } from "react";
 import { NavigationTreeItem, NavigationTreeItemGroup, NavigationTreeItemPage, UserStatus } from "@seij/common-ui";
 import { PanelLeftContract } from "./ApplicationShellPanelContract";
 import { Icon, IconName, parseIconName } from "@seij/common-ui-icons";
+import { User } from "./User";
 
 const useStylesRailboxItem = makeStyles({
   container: {

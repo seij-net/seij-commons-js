@@ -8,9 +8,9 @@ import {
   Tooltip,
 } from "@fluentui/react-components";
 import { Navigation, NavigationTreeItem, UserStatus } from "@seij/common-ui";
-import { User } from "./TitleBar";
 import { PanelLeftContract } from "./ApplicationShellPanelContract";
 import { ReactNode } from "react";
+import { User } from "./User";
 
 export function Sidebar({
   selectedItem,

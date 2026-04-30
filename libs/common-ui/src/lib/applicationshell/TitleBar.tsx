@@ -1,7 +1,9 @@
-import { Avatar, makeStyles, Spinner, Text, tokens, useKeyboardNavAttribute } from "@fluentui/react-components";
-import { KeyboardEventHandler, ReactNode } from "react";
+import { makeStyles, Text, tokens, useKeyboardNavAttribute } from "@fluentui/react-components";
+import { ReactNode } from "react";
 import { UserStatus } from "./ApplicationShell.types";
 import { Icon } from "@seij/common-ui-icons";
+import { User } from "./User";
+import { createClickHandlers } from "./clickhandlers";
 
 const useTitleBarStyles = makeStyles({
   root: {
@@ -53,12 +55,6 @@ const useTitleBarStyles = makeStyles({
     height: "100%",
     display: "inline-block",
   },
-  userActionButton: {
-    width: "100%",
-    height: "100%",
-    display: "inline-block",
-    textAlign: "center",
-  },
 });
 
 export function TitleBar({
@@ -107,47 +103,3 @@ function Home({ applicationIcon, onClick }: { applicationIcon?: ReactNode; onCli
     </a>
   );
 }
-
-export function User({ status }: { status: UserStatus }) {
-  const styles = useTitleBarStyles();
-
-  if (status.isLoading) {
-    return <Spinner />;
-  }
-
-  if (status.errorMessage) {
-    return <div>Oops... {status.errorMessage}</div>;
-  }
-
-  if (status.isAuthenticated) {
-    const name = status.userName ?? "";
-    const onClickHandlers = createClickHandlers(status.onClickSignIn);
-    return (
-      <a tabIndex={0} className={styles.userActionButton} {...onClickHandlers}>
-        <Avatar aria-label={name} name={name} />
-      </a>
-    );
-  }
-
-  const onClickHandlers = createClickHandlers(status.onClickSignOut);
-
-  return (
-    <a tabIndex={0} className={styles.userActionButton} {...onClickHandlers}>
-      <Avatar aria-label="Non connecté" />
-    </a>
-  );
-}
-
-const createClickHandlers = (onClick: () => void) => {
-  const handleKeyUp: KeyboardEventHandler<HTMLAnchorElement> = (e) => {
-    const correct = e.key === "Enter" || e.key === " ";
-    if (correct) {
-      onClick();
-      e.preventDefault();
-    }
-  };
-  return {
-    onClick: onClick,
-    onKeyUp: handleKeyUp,
-  };
-};
