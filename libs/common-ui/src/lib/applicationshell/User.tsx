@@ -1,6 +1,7 @@
-import { Avatar, makeStyles, Spinner } from "@fluentui/react-components";
+import { Avatar, makeStyles, Spinner, Tooltip } from "@fluentui/react-components";
 import type { UserStatus } from "./ApplicationShell.types";
 import { createClickHandlers } from "./clickhandlers";
+import { Icon } from "@seij/common-ui-icons";
 
 const useStyles = makeStyles({
   userActionButton: {
@@ -17,8 +18,16 @@ export function User({ status }: { status: UserStatus }) {
     return <Spinner />;
   }
 
+  const onClickHandlers = createClickHandlers(status.onClickSignOut);
+
   if (status.errorMessage) {
-    return <div>Oops... {status.errorMessage}</div>;
+    return (
+      <Tooltip content={status.errorMessage} relationship="description">
+        <a tabIndex={0} className={styles.userActionButton} {...onClickHandlers}>
+          <Avatar aria-label="Erreur de chargement utilisateur" icon={<Icon name={"error"}/>} />
+        </a>
+      </Tooltip>
+    );
   }
 
   if (status.isAuthenticated) {
@@ -31,7 +40,7 @@ export function User({ status }: { status: UserStatus }) {
     );
   }
 
-  const onClickHandlers = createClickHandlers(status.onClickSignOut);
+
 
   return (
     <a tabIndex={0} className={styles.userActionButton} {...onClickHandlers}>
