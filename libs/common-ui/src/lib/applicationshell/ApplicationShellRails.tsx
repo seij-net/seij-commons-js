@@ -5,20 +5,54 @@ import { PanelLeftContract } from "./ApplicationShellPanelContract";
 import { Icon, IconName, parseIconName } from "@seij/common-ui-icons";
 import { User } from "./User";
 
-const useStylesRailboxItem = makeStyles({
-  container: {
+const useStyles = makeStyles({
+  root: {
+    backgroundColor: tokens.colorNeutralBackground4,
+    width: "48px",
+    height: "100%",
     display: "flex",
-    textAlign: "center",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  section: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: tokens.spacingVerticalXS,
+  },
+  topSection: {
+    paddingTop: tokens.spacingVerticalS,
+  },
+  navSection: {
+    flex: 1,
+    paddingTop: tokens.spacingVerticalS,
+  },
+  bottomSection: {
+    paddingBottom: tokens.spacingVerticalS,
+  },
+  item: {
     width: "32px",
     height: "32px",
+    display: "flex",
     alignItems: "center",
-    alignContent: "center",
-    "& > div": {
-      width: "100%",
-    },
+    justifyContent: "center",
+    borderRadius: tokens.borderRadiusMedium,
     "&:hover": {
       cursor: "pointer",
       backgroundColor: tokens.colorNeutralBackground4Hover,
+    },
+  },
+  icon: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  panelButton: {
+    "& button": {
+      width: "32px",
+      minWidth: "32px",
+      height: "32px",
+      padding: "0",
     },
   },
 });
@@ -38,85 +72,66 @@ export function Rails({
   onClickMenuItem: (id: string) => void;
   onClickSidebarExpand: () => void;
 }) {
+  const styles = useStyles();
+
   return (
-    <div
-      style={{
-        backgroundColor: tokens.colorNeutralBackground4,
-        width: "48px",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "start",
-          paddingTop: "0.5em",
-        }}
-      >
+    <div className={styles.root}>
+      <div className={`${styles.section} ${styles.topSection}`}>
         <RailBoxApplicationIcon applicationIcon={applicationIcon} onClick={onClickHome} />
+        <RailBoxPanelLeftExpand onClick={onClickSidebarExpand} />
       </div>
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "start",
-        }}
-      >
+      <div className={`${styles.section} ${styles.navSection}`}>
         {navigationItems.map((it) => (
           <RailBoxNavigationItem key={it.id} item={it} onClick={onClickMenuItem} />
         ))}
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "start",
-        }}
-      >
-        <User status={userStatus} />
-        <RailBoxPanelLeftExpand onClick={onClickSidebarExpand} />
+      <div className={`${styles.section} ${styles.bottomSection}`}>
+        <RailItem>
+          <User status={userStatus} variant="icon" />
+        </RailItem>
       </div>
     </div>
   );
 }
 
-const RailBoxApplicationIcon = ({ applicationIcon, onClick }: { applicationIcon?: ReactNode; onClick: () => void }) => {
-  const styles = useStylesRailboxItem();
+const RailItem = ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => {
+  const styles = useStyles();
   return (
-    <div className={styles.container} onClick={() => onClick()}>
-      <Tooltip content={"Home"} relationship="description">
-        <span>{applicationIcon ? applicationIcon : <Icon name={"dashboard"} />}</span>
-      </Tooltip>
+    <div className={styles.item} onClick={onClick}>
+      {children}
     </div>
+  );
+};
+
+const RailBoxApplicationIcon = ({ applicationIcon, onClick }: { applicationIcon?: ReactNode; onClick: () => void }) => {
+  const styles = useStyles();
+  return (
+    <Tooltip content="Home" relationship="description">
+      <RailItem onClick={onClick}>
+        <span className={styles.icon}>{applicationIcon ? applicationIcon : <Icon name="dashboard" />}</span>
+      </RailItem>
+    </Tooltip>
   );
 };
 const RailBoxPanelLeftExpand = ({ onClick }: { onClick: () => void }) => {
-  const styles = useStylesRailboxItem();
+  const styles = useStyles();
   return (
-    <div className={styles.container} onClick={() => onClick()}>
-      <PanelLeftContract panelState={"rails"} onClick={onClick} />
-    </div>
+    <RailItem>
+      <div className={styles.panelButton}>
+        <PanelLeftContract panelState="rails" onClick={onClick} />
+      </div>
+    </RailItem>
   );
 };
 const RailBoxNavigationItem = ({ item, onClick }: { item: NavigationTreeItem; onClick: (id: string) => void }) => {
-  const styles = useStylesRailboxItem();
   if (item.type === "divider") return null;
   if (item.type === "group") {
     const nav = item as NavigationTreeItemGroup;
     const iconName: IconName | undefined = nav.icon ? parseIconName(nav.icon) : undefined;
     return (
-      <div key={nav.id} className={styles.container} onClick={() => onClick(nav.id)}>
-        <Tooltip content={nav.label} relationship="description">
-          {iconName && <Icon name={iconName} />}
-        </Tooltip>
-      </div>
+      <Tooltip content={nav.label} relationship="description">
+        <RailItem onClick={() => onClick(nav.id)}>{iconName && <Icon name={iconName} />}</RailItem>
+      </Tooltip>
     );
   }
   if (item.type === "page") {
@@ -125,9 +140,7 @@ const RailBoxNavigationItem = ({ item, onClick }: { item: NavigationTreeItem; on
     const iconName: IconName | undefined = nav.icon ? parseIconName(nav.icon) : undefined;
     return (
       <Tooltip content={nav.label} relationship="description">
-        <div key={nav.id} className={styles.container} onClick={() => onClick(nav.id)}>
-          <div>{iconName && <Icon name={iconName} />}</div>
-        </div>
+        <RailItem onClick={() => onClick(nav.id)}>{iconName && <Icon name={iconName} />}</RailItem>
       </Tooltip>
     );
   }

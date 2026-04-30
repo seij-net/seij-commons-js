@@ -8,8 +8,9 @@ export const PanelLeftContract = ({
   panelState: "expanded" | "rails";
   onClick: () => void;
 }) => {
+  const label = panelState == "rails" ? "Expand panel" : "Reduce panel"
   return (
-    <Tooltip content="Reduce panel" relationship="label">
+    <Tooltip content={label} relationship="label">
       <Button
         onClick={onClick}
         icon={<Icon name={panelState === "expanded" ? "panel_left_reduce" : "panel_left_expand"} />}

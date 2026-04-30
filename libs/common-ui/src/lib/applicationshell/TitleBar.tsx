@@ -50,6 +50,18 @@ const useTitleBarStyles = makeStyles({
     display: "flex",
     justifyContent: "space-around",
   },
+  userAction: {
+    width: "48px",
+    minWidth: "48px",
+    height: "48px",
+    ":hover": {
+      background: tokens.colorBrandBackgroundHover,
+      cursor: "pointer",
+    },
+    ":active": {
+      background: tokens.colorBrandBackgroundPressed,
+    },
+  },
   home: {
     width: "100%",
     height: "100%",
@@ -82,7 +94,9 @@ export function TitleBar({
           <Text weight="semibold">{applicationName}</Text>
         </div>
         <div className={styles.actions}>
-          <User status={userStatus} />
+          <div className={styles.userAction}>
+            <User status={userStatus} variant="icon" />
+          </div>
         </div>
       </div>
     </div>
