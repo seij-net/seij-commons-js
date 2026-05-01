@@ -1,4 +1,4 @@
-import { tokens } from "@fluentui/react-components";
+import { makeStyles, tokens } from "@fluentui/react-components";
 import { LinkExtension } from "@lexical/link";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
@@ -16,6 +16,31 @@ import { HorizontalRuleExtension } from "@lexical/extension";
 import { ReactExtension } from "@lexical/react/ReactExtension";
 import { OnChangeJsonExtension } from "./extensions/OnChangeJsonExtension";
 
+const useStyles = makeStyles({
+  strikethrough: {
+    textDecorationLine: "line-through",
+  },
+  underlineStrikethrough: {
+    textDecorationLine: "underline line-through",
+  },
+  editorArea: {
+    border: `1px solid ${tokens.colorNeutralStroke1}`,
+    height: "160px",
+    overflow: "auto",
+    paddingLeft: tokens.spacingHorizontalS,
+    paddingRight: tokens.spacingHorizontalS,
+    paddingTop: tokens.spacingVerticalS,
+    paddingBottom: tokens.spacingVerticalS,
+    "& p": {
+      marginTop: 0,
+      marginBottom: tokens.spacingVerticalS,
+    },
+    "& p:last-child": {
+      marginBottom: 0,
+    },
+  },
+});
+
 export interface RichTextEditorHandle {
   focus: () => void;
 }
@@ -30,6 +55,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
   props: RichTextEditorProps,
   ref: ForwardedRef<RichTextEditorHandle>,
 ) {
+  const styles = useStyles();
   const editorRef = useRef<LexicalEditor | null>(null);
 
   const onChangeRef = useRef(props.onChange);
@@ -47,6 +73,12 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
     () =>
       defineExtension({
         name: "SeijEditorExtension",
+        theme: {
+          text: {
+            strikethrough: styles.strikethrough,
+            underlineStrikethrough: styles.underlineStrikethrough,
+          },
+        },
         dependencies: [
           HistoryExtension,
           ListExtension,
@@ -58,9 +90,8 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
           configExtension(OnChangeJsonExtension, { onChange: (v) => props.onChange(JSON.stringify(v, null, 2)) }),
         ],
       }),
-    [],
+    [styles.strikethrough, styles.underlineStrikethrough],
   );
-
 
   return (
     <LexicalExtensionComposer extension={SeijEditorExtension} contentEditable={null}>
@@ -70,12 +101,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
         aria-placeholder="Enter text"
         placeholder={<div>Enter text</div>}
         spellCheck
-        style={{
-          border: `1px solid ${tokens.colorNeutralStroke1}`,
-          height: 160,
-          overflow: "auto",
-          padding: tokens.spacingHorizontalS,
-        }}
+        className={styles.editorArea}
       />
       <TreeViewPlugin />
     </LexicalExtensionComposer>
