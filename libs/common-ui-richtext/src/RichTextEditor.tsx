@@ -6,7 +6,7 @@ import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPl
 import { RichTextExtension } from "@lexical/rich-text";
 import { CheckListExtension, ListExtension } from "@lexical/list";
 import { configExtension, defineExtension } from "lexical";
-import { type ForwardedRef, forwardRef, useMemo, useRef } from "react";
+import { forwardRef, useMemo, useRef, type ForwardedRef } from "react";
 import { RichTextEditorToolbar } from "./RichTextEditorToolbar";
 import { MARKDOWN_TRANSFORMERS } from "./RichTextEditorBridgePlugin";
 import TreeViewComponent from "./components/TreeViewComponent";
@@ -37,6 +37,7 @@ export interface RichTextEditorProps {
   value: string;
   disabled: boolean;
   onChange: (value: string) => void;
+  debug?: boolean;
 }
 
 export const RichTextEditor = forwardRef(function RichTextEditor(
@@ -49,6 +50,8 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
 
   const onChangeRef = useRef(props.onChange);
   onChangeRef.current = props.onChange;
+
+  const debug = props.debug ?? false;
 
   const SeijEditorExtension = useMemo(
     () =>
@@ -81,7 +84,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
         spellCheck
         className={styles.editorArea}
       />
-      <TreeViewComponent />
+      {debug && <TreeViewComponent />}
     </LexicalExtensionComposer>
   );
 });

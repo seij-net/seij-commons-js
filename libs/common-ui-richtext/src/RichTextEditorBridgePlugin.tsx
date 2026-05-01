@@ -11,7 +11,7 @@ import {
   ORDERED_LIST,
   QUOTE,
   STRIKETHROUGH,
-  Transformer,
+  type Transformer,
   UNORDERED_LIST,
 } from "@lexical/markdown";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -22,13 +22,17 @@ import {
 } from "@lexical/react/LexicalHorizontalRuleNode";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { EditorState, LexicalEditor } from "lexical";
-import { MutableRefObject, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+
+type EditorRef = {
+  current: LexicalEditor | null;
+};
 
 interface RichTextEditorBridgePluginProps {
   value: string;
   disabled: boolean;
   onChange: (value: string) => void;
-  editorRef: MutableRefObject<LexicalEditor | null>;
+  editorRef: EditorRef;
 }
 
 export function RichTextEditorBridgePlugin({ value, disabled, onChange, editorRef }: RichTextEditorBridgePluginProps) {
