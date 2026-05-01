@@ -87,8 +87,18 @@ export const useEditorStyles = makeStyles({
       width: "0.9em",
     },
   },
+  paragraph: {
+    marginTop: 0,
+    marginBottom: tokens.spacingVerticalS,
+    "&:last-child": {
+      marginBottom: 0,
+    },
+  },
+  quote: {
+    marginLeft: tokens.spacingVerticalS,
+    borderLeft: `2px solid ${tokens.colorNeutralStroke2}`
+  }
 });
-
 
 export const useEditorTheme = () => {
   const styles = useEditorStyles();
@@ -105,6 +115,8 @@ export const useEditorTheme = () => {
         listitemChecked: styles.listitemChecked,
         listitemUnchecked: styles.listitemUnchecked,
       },
+      paragraph: styles.paragraph,
+      quote: styles.quote
     }),
     [styles],
   );

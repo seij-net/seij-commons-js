@@ -11,7 +11,7 @@ import type { JSX } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { TreeView } from "@lexical/react/LexicalTreeView";
 
-export default function TreeViewPlugin(): JSX.Element {
+export default function TreeViewComponent(): JSX.Element {
   const [editor] = useLexicalComposerContext();
   return (
     <TreeView

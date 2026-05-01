@@ -9,7 +9,7 @@ import { configExtension, defineExtension, LexicalEditor } from "lexical";
 import { ForwardedRef, forwardRef, useImperativeHandle, useMemo, useRef } from "react";
 import { RichTextEditorToolbar } from "./RichTextEditorToolbar";
 import { MARKDOWN_TRANSFORMERS } from "./RichTextEditorBridgePlugin";
-import TreeViewPlugin from "./plugins/TreeViewPlugin";
+import TreeViewComponent from "./components/TreeViewComponent";
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { HistoryExtension } from "@lexical/history";
 import { HorizontalRuleExtension } from "@lexical/extension";
@@ -28,13 +28,6 @@ const useStyles = makeStyles({
     paddingRight: tokens.spacingHorizontalS,
     paddingTop: tokens.spacingVerticalS,
     paddingBottom: tokens.spacingVerticalS,
-    "& p": {
-      marginTop: 0,
-      marginBottom: tokens.spacingVerticalS,
-    },
-    "& p:last-child": {
-      marginBottom: 0,
-    },
   },
 });
 
@@ -97,7 +90,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
         spellCheck
         className={styles.editorArea}
       />
-      <TreeViewPlugin />
+      <TreeViewComponent />
     </LexicalExtensionComposer>
   );
 });
