@@ -16,12 +16,14 @@ overrides:
   i18next-icu: ^2.3.0
   i18next: ^25.3.4
   i18next-browser-languagedetector: ^8.2.0
+  '@lexical/extension': ^0.44.0
   '@lexical/link': ^0.44.0
   '@lexical/list': ^0.44.0
   '@lexical/markdown': ^0.44.0
   '@lexical/react': ^0.44.0
   '@lexical/rich-text': ^0.44.0
   '@lexical/selection': ^0.44.0
+  '@lexical/history': ^0.44.0
   lexical: ^0.44.0
   lodash-es: ^4.17.23
   luxon: ^3.7.1
@@ -310,6 +312,12 @@ importers:
       '@fluentui/react-icons':
         specifier: ^2.0.325
         version: 2.0.325(react@19.2.4)
+      '@lexical/extension':
+        specifier: ^0.44.0
+        version: 0.44.0
+      '@lexical/history':
+        specifier: ^0.44.0
+        version: 0.44.0
       '@lexical/link':
         specifier: ^0.44.0
         version: 0.44.0

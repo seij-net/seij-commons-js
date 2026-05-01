@@ -20,8 +20,10 @@
   "dependencies": {
     "@fluentui/react-components": "workspace:^",
     "@fluentui/react-icons": "workspace:^",
+    "@lexical/extension": "workspace:^",
     "@lexical/link": "workspace:^",
     "@lexical/list": "workspace:^",
+    "@lexical/history": "workspace:^",
     "@lexical/markdown": "workspace:^",
     "@lexical/react": "workspace:^",
     "@lexical/rich-text": "workspace:^",

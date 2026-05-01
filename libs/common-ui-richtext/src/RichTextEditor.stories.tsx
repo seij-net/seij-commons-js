@@ -1,4 +1,4 @@
-import { Button, Field } from "@fluentui/react-components";
+import { Button, tokens } from "@fluentui/react-components";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { RichTextEditor, RichTextEditorHandle } from "./RichTextEditor";
@@ -44,6 +44,9 @@ export const Basic: Story = {
 };
 
 export const WithFocusHandle: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
   render: (args) => {
     const [value, setValue] = useState(args.value);
     const editorRef = useRef<RichTextEditorHandle>(null);
@@ -52,19 +55,39 @@ export const WithFocusHandle: Story = {
       <div
         style={{
           display: "flex",
-          columnGap: 8,
-          border: "1px solid #CCC",
-          width: "1280px",
-          minWidth: "100%",
-          height: "100%",
+          width: "100vw",
+          height: "100vh",
+          minHeight: 0,
+          overflow: "hidden",
+          backgroundColor: tokens.colorNeutralBackground1,
         }}
       >
-        <div style={{flex:1}}>
-          <RichTextEditor {...args} ref={editorRef} value={value} onChange={setValue} />
-        </div>
-        <div>
+        <div
+          style={{
+            width: 360,
+            minWidth: 280,
+            maxWidth: "40vw",
+            minHeight: 0,
+            overflow: "auto",
+            borderRight: `1px solid ${tokens.colorNeutralStroke2}`,
+            boxSizing: "border-box",
+            padding: tokens.spacingHorizontalM,
+          }}
+        >
           <Button onClick={() => editorRef.current?.focus()}>Focus</Button>
           <RawValue value={value} />
+        </div>
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+            overflow: "auto",
+            boxSizing: "border-box",
+            padding: tokens.spacingHorizontalM,
+          }}
+        >
+          <RichTextEditor {...args} ref={editorRef} value={value} onChange={setValue} />
         </div>
       </div>
     );
