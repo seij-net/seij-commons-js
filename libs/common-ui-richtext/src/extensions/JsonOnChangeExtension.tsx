@@ -1,7 +1,8 @@
-import { defineExtension, HISTORY_MERGE_TAG, safeCast } from "lexical";
+import { defineExtension, HISTORY_MERGE_TAG, safeCast, type SerializedEditorState } from "lexical";
+import { CONTROLLED_VALUE_UPDATE_TAG } from "./ControlledValueUpdateTag";
 
 export type JsonOnChangeExtensionConfig = {
-  onChange: null | ((json: object) => void);
+  onChange: null | ((value: SerializedEditorState) => void);
   ignoreSelectionChange?: boolean;
   ignoreHistoryMergeTagChange?: boolean;
 };
@@ -15,13 +16,19 @@ export const JsonOnChangeExtension = defineExtension({
   }),
   register: (editor, config) => {
     const { ignoreSelectionChange = true, onChange, ignoreHistoryMergeTagChange = true } = config;
+
     return editor.registerUpdateListener((payload) => {
       if (ignoreSelectionChange && payload.dirtyElements.size === 0 && payload.dirtyLeaves.size === 0) return;
       if (ignoreHistoryMergeTagChange && payload.tags.has(HISTORY_MERGE_TAG)) return;
       if (payload.prevEditorState.isEmpty()) return;
-      if (config.onChange !== null) {
+
+      // This update came from props.value. Do not send it back to React as
+      // onChange, otherwise we will get infinite loops of value/onChange.
+      if (payload.tags.has(CONTROLLED_VALUE_UPDATE_TAG)) return;
+
+      if (onChange !== null) {
         const json = payload.editorState.toJSON();
-        config.onChange(json);
+        onChange(json);
       }
     });
   },
