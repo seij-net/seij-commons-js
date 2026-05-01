@@ -19,7 +19,15 @@
   },
   "dependencies": {
     "@fluentui/react-components": "workspace:^",
-    "@seij/common-ui": "workspace:^"
+    "@fluentui/react-icons": "workspace:^",
+    "@lexical/link": "workspace:^",
+    "@lexical/list": "workspace:^",
+    "@lexical/markdown": "workspace:^",
+    "@lexical/react": "workspace:^",
+    "@lexical/rich-text": "workspace:^",
+    "@lexical/selection": "workspace:^",
+    "@seij/common-ui": "workspace:^",
+    "lexical": "workspace:^"
   },
   "peerDependencies": {
     "react": "workspace:^",

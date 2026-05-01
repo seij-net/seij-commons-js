@@ -49,13 +49,24 @@ export const WithFocusHandle: Story = {
     const editorRef = useRef<RichTextEditorHandle>(null);
 
     return (
-      <Field label="Rich text editor">
-        <div style={{ display: "flex", gap: 8 }}>
+      <div
+        style={{
+          display: "flex",
+          columnGap: 8,
+          border: "1px solid #CCC",
+          width: "1280px",
+          minWidth: "100%",
+          height: "100%",
+        }}
+      >
+        <div style={{flex:1}}>
           <RichTextEditor {...args} ref={editorRef} value={value} onChange={setValue} />
-          <Button onClick={() => editorRef.current?.focus()}>Focus</Button>
         </div>
-        <RawValue value={value} />
-      </Field>
+        <div>
+          <Button onClick={() => editorRef.current?.focus()}>Focus</Button>
+          <RawValue value={value} />
+        </div>
+      </div>
     );
   },
 };
