@@ -1,8 +1,8 @@
-import { defineExtension, HISTORY_MERGE_TAG, safeCast, type SerializedEditorState } from "lexical";
+import { defineExtension, HISTORY_MERGE_TAG, safeCast, UpdateListenerPayload } from "lexical";
 import { CONTROLLED_VALUE_UPDATE_TAG } from "./ControlledValueUpdateTag";
 
 export type JsonOnChangeExtensionConfig = {
-  onChange: null | ((value: SerializedEditorState) => void);
+  onChange: null | ((payload: UpdateListenerPayload) => void);
   ignoreSelectionChange?: boolean;
   ignoreHistoryMergeTagChange?: boolean;
 };
@@ -27,8 +27,7 @@ export const JsonOnChangeExtension = defineExtension({
       if (payload.tags.has(CONTROLLED_VALUE_UPDATE_TAG)) return;
 
       if (onChange !== null) {
-        const json = payload.editorState.toJSON();
-        onChange(json);
+        onChange(payload);
       }
     });
   },

@@ -1,7 +1,7 @@
 import { Button, tokens } from "@fluentui/react-components";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
-import { RichTextEditorJson, RichTextEditorRef } from "./RichTextEditor";
+import { RichTextEditorJson, RichTextEditorRef } from "./RichTextEditorJson";
 import { SeijUIProvider } from "@seij/common-ui";
 import type { SerializedEditorState, SerializedParagraphNode, SerializedTextNode } from "lexical";
 

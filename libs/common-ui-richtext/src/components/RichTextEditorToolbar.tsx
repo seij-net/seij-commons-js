@@ -42,7 +42,7 @@ import {
   TextFormatType,
 } from "lexical";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CLEAR_FORMATTING_COMMAND } from "./extensions/ClearFormattingExtension";
+import { CLEAR_FORMATTING_COMMAND } from "../extensions/ClearFormattingExtension";
 
 interface ToolbarState {
   block: "paragraph" | "h2" | "quote" | "bullet" | "number" | "check" | null;
