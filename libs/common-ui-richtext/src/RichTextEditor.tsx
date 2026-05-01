@@ -14,7 +14,7 @@ import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionCompose
 import { HistoryExtension } from "@lexical/history";
 import { HorizontalRuleExtension } from "@lexical/extension";
 import { ReactExtension } from "@lexical/react/ReactExtension";
-import { OnChangeJsonExtension } from "./extensions/OnChangeJsonExtension";
+import { JsonOnChangeExtension } from "./extensions/JsonOnChangeExtension";
 import { ClearFormattingExtension } from "./extensions/ClearFormattingExtension";
 import { useEditorTheme } from "./styles/richtext-editor-styles";
 import { EditorRefExtension, type RichTextEditorRef, useEditorRef } from "./extensions/EditorRefExtension";
@@ -68,7 +68,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
           RichTextExtension,
           ClearFormattingExtension,
           configExtension(ReactExtension, { contentEditable: null, ErrorBoundary: LexicalErrorBoundary }),
-          configExtension(OnChangeJsonExtension, { onChange: (v) => onChangeRef.current(JSON.stringify(v, null, 2)) }),
+          configExtension(JsonOnChangeExtension, { onChange: (v) => onChangeRef.current(JSON.stringify(v, null, 2)) }),
         ],
       }),
     [editorRef, theme],

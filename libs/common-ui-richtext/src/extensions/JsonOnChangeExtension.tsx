@@ -1,14 +1,14 @@
 import { defineExtension, HISTORY_MERGE_TAG, safeCast } from "lexical";
 
-export type OnChangeJsonConfig = {
+export type JsonOnChangeExtensionConfig = {
   onChange: null | ((json: object) => void);
   ignoreSelectionChange?: boolean;
   ignoreHistoryMergeTagChange?: boolean;
 };
 
-export const OnChangeJsonExtension = defineExtension({
-  name: "seij-onchange-json",
-  config: safeCast<OnChangeJsonConfig>({
+export const JsonOnChangeExtension = defineExtension({
+  name: "seij-json-onchange",
+  config: safeCast<JsonOnChangeExtensionConfig>({
     onChange: null,
     ignoreSelectionChange: true,
     ignoreHistoryMergeTagChange: true,
