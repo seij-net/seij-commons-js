@@ -295,6 +295,21 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
 
+  libs/common-ui-richtext:
+    dependencies:
+      '@fluentui/react-components':
+        specifier: ^9.73.8
+        version: 9.73.8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(scheduler@0.27.0)
+      '@seij/common-ui':
+        specifier: workspace:^
+        version: link:../common-ui
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.4
+        version: 19.2.4(react@19.2.4)
+
   libs/common-validation:
     dependencies:
       '@seij/common-types':
