@@ -34,6 +34,8 @@ export interface RichTextEditorBaseProps<EXTERNAL_VALUE> {
   value: EXTERNAL_VALUE;
   disabled: boolean;
   debug?: boolean;
+  onChange: (value: EXTERNAL_VALUE) => void;
+  format: "markdown" | "state";
 }
 
 function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
@@ -62,8 +64,9 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
           ClearFormattingExtension,
           configExtension(ReactExtension, { contentEditable: null, ErrorBoundary: LexicalErrorBoundary }),
           configExtension(JsonOnChangeExtension, {
+            format: props.format,
             onChange: (payload) => {
-              /* TODO() */
+              props.onChange(payload as EXTERNAL_VALUE)
             },
           }),
         ],

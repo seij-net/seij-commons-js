@@ -22,6 +22,8 @@ export const RichTextEditorJson = forwardRef(function RichTextEditorJson(
       disabled={props.disabled}
       debug={props.debug}
       ref={ref}
+      format={"state"}
+      onChange={value => props.onChange(value)}
     />
   );
 });

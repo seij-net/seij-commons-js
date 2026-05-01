@@ -1,10 +1,13 @@
-import { defineExtension, HISTORY_MERGE_TAG, safeCast, UpdateListenerPayload } from "lexical";
+import { defineExtension, HISTORY_MERGE_TAG, safeCast } from "lexical";
 import { CONTROLLED_VALUE_UPDATE_TAG } from "./ControlledValueUpdateTag";
+import { $convertToMarkdownString } from "@lexical/markdown";
+import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
 
 export type JsonOnChangeExtensionConfig = {
-  onChange: null | ((payload: UpdateListenerPayload) => void);
+  onChange: null | ((payload: object | string) => void);
   ignoreSelectionChange?: boolean;
   ignoreHistoryMergeTagChange?: boolean;
+  format: "state" | "markdown";
 };
 
 export const JsonOnChangeExtension = defineExtension({
@@ -13,6 +16,7 @@ export const JsonOnChangeExtension = defineExtension({
     onChange: null,
     ignoreSelectionChange: true,
     ignoreHistoryMergeTagChange: true,
+    format: "state",
   }),
   register: (editor, config) => {
     const { ignoreSelectionChange = true, onChange, ignoreHistoryMergeTagChange = true } = config;
@@ -27,7 +31,11 @@ export const JsonOnChangeExtension = defineExtension({
       if (payload.tags.has(CONTROLLED_VALUE_UPDATE_TAG)) return;
 
       if (onChange !== null) {
-        onChange(payload);
+        let result: object | string = "";
+        if (config.format === "state") result = payload.editorState.toJSON();
+        if (config.format === "markdown")
+          result = payload.editorState.read(() => $convertToMarkdownString(MARKDOWN_TRANSFORMERS));
+        onChange(result);
       }
     });
   },

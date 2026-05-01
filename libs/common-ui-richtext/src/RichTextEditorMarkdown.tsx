@@ -17,5 +17,14 @@ export const RichTextEditorMarkdown = forwardRef(function RichTextEditorJson(
   props: RichTextEditorMarkdownProps,
   ref: ForwardedRef<RichTextEditorRef>,
 ) {
-  return <RichTextEditorBase<string> value={props.value} disabled={props.disabled} debug={props.debug} ref={ref} />;
+  return (
+    <RichTextEditorBase<string>
+      value={props.value}
+      format={"markdown"}
+      disabled={props.disabled}
+      debug={props.debug}
+      ref={ref}
+      onChange={props.onChange}
+    />
+  );
 });
