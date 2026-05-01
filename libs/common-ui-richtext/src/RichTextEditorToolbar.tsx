@@ -3,6 +3,7 @@ import {
   ClipboardTaskListLtrRegular,
   LineHorizontal1Regular,
   LinkRegular,
+  TextClearFormattingRegular,
   TextBoldRegular,
   TextBulletListLtrRegular,
   TextHeader2Regular,
@@ -41,6 +42,7 @@ import {
   TextFormatType,
 } from "lexical";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { CLEAR_FORMATTING_COMMAND } from "./extensions/ClearFormattingExtension";
 
 interface ToolbarState {
   block: "paragraph" | "h2" | "quote" | "bullet" | "number" | "check" | null;
@@ -195,6 +197,12 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
         name="format"
         onClick={() => formatText("strikethrough")}
         value="strikethrough"
+      />
+      <ToolbarButton
+        aria-label="Clear formatting"
+        disabled={disabled}
+        icon={<TextClearFormattingRegular />}
+        onClick={() => editor.dispatchCommand(CLEAR_FORMATTING_COMMAND, undefined)}
       />
       <ToolbarDivider />
       <ToolbarToggleButton

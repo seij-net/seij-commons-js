@@ -15,14 +15,11 @@ import { HistoryExtension } from "@lexical/history";
 import { HorizontalRuleExtension } from "@lexical/extension";
 import { ReactExtension } from "@lexical/react/ReactExtension";
 import { OnChangeJsonExtension } from "./extensions/OnChangeJsonExtension";
+import { ClearFormattingExtension } from "./extensions/ClearFormattingExtension";
+import { useEditorTheme } from "./styles/richtext-editor-styles";
 
 const useStyles = makeStyles({
-  strikethrough: {
-    textDecorationLine: "line-through",
-  },
-  underlineStrikethrough: {
-    textDecorationLine: "underline line-through",
-  },
+
   editorArea: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
     height: "160px",
@@ -57,6 +54,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
 ) {
   const styles = useStyles();
   const editorRef = useRef<LexicalEditor | null>(null);
+  const theme = useEditorTheme();
 
   const onChangeRef = useRef(props.onChange);
   onChangeRef.current = props.onChange;
@@ -73,12 +71,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
     () =>
       defineExtension({
         name: "SeijEditorExtension",
-        theme: {
-          text: {
-            strikethrough: styles.strikethrough,
-            underlineStrikethrough: styles.underlineStrikethrough,
-          },
-        },
+        theme,
         dependencies: [
           HistoryExtension,
           ListExtension,
@@ -86,11 +79,12 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
           LinkExtension,
           HorizontalRuleExtension,
           RichTextExtension,
+          ClearFormattingExtension,
           configExtension(ReactExtension, { contentEditable: null, ErrorBoundary: LexicalErrorBoundary }),
-          configExtension(OnChangeJsonExtension, { onChange: (v) => props.onChange(JSON.stringify(v, null, 2)) }),
+          configExtension(OnChangeJsonExtension, { onChange: (v) => onChangeRef.current(JSON.stringify(v, null, 2)) }),
         ],
       }),
-    [styles.strikethrough, styles.underlineStrikethrough],
+    [theme],
   );
 
   return (
