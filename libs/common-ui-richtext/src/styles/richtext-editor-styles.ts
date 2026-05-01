@@ -96,8 +96,8 @@ export const useEditorStyles = makeStyles({
   },
   quote: {
     marginLeft: tokens.spacingVerticalS,
-    borderLeft: `2px solid ${tokens.colorNeutralStroke2}`
-  }
+    borderLeft: `2px solid ${tokens.colorNeutralStroke2}`,
+  },
 });
 
 export const useEditorTheme = () => {
@@ -116,7 +116,7 @@ export const useEditorTheme = () => {
         listitemUnchecked: styles.listitemUnchecked,
       },
       paragraph: styles.paragraph,
-      quote: styles.quote
+      quote: styles.quote,
     }),
     [styles],
   );

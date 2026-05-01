@@ -1,6 +1,5 @@
 import { defineExtension, HISTORY_MERGE_TAG, safeCast } from "lexical";
 
-
 export type OnChangeJsonConfig = {
   onChange: null | ((json: object) => void);
   ignoreSelectionChange?: boolean;

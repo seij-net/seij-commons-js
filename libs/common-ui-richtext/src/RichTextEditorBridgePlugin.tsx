@@ -12,13 +12,13 @@ import {
   QUOTE,
   STRIKETHROUGH,
   Transformer,
-  UNORDERED_LIST
+  UNORDERED_LIST,
 } from "@lexical/markdown";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   $createHorizontalRuleNode,
   $isHorizontalRuleNode,
-  HorizontalRuleNode
+  HorizontalRuleNode,
 } from "@lexical/react/LexicalHorizontalRuleNode";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { EditorState, LexicalEditor } from "lexical";

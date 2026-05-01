@@ -5,8 +5,8 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { RichTextExtension } from "@lexical/rich-text";
 import { CheckListExtension, ListExtension } from "@lexical/list";
-import { configExtension, defineExtension, LexicalEditor } from "lexical";
-import { ForwardedRef, forwardRef, useImperativeHandle, useMemo, useRef } from "react";
+import { configExtension, defineExtension } from "lexical";
+import { type ForwardedRef, forwardRef, useMemo, useRef } from "react";
 import { RichTextEditorToolbar } from "./RichTextEditorToolbar";
 import { MARKDOWN_TRANSFORMERS } from "./RichTextEditorBridgePlugin";
 import TreeViewComponent from "./components/TreeViewComponent";
@@ -17,9 +17,9 @@ import { ReactExtension } from "@lexical/react/ReactExtension";
 import { OnChangeJsonExtension } from "./extensions/OnChangeJsonExtension";
 import { ClearFormattingExtension } from "./extensions/ClearFormattingExtension";
 import { useEditorTheme } from "./styles/richtext-editor-styles";
+import { EditorRefExtension, type RichTextEditorRef, useEditorRef } from "./extensions/EditorRefExtension";
 
 const useStyles = makeStyles({
-
   editorArea: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
     height: "160px",
@@ -31,9 +31,7 @@ const useStyles = makeStyles({
   },
 });
 
-export interface RichTextEditorHandle {
-  focus: () => void;
-}
+export type { RichTextEditorRef };
 
 export interface RichTextEditorProps {
   value: string;
@@ -43,22 +41,14 @@ export interface RichTextEditorProps {
 
 export const RichTextEditor = forwardRef(function RichTextEditor(
   props: RichTextEditorProps,
-  ref: ForwardedRef<RichTextEditorHandle>,
+  ref: ForwardedRef<RichTextEditorRef>,
 ) {
   const styles = useStyles();
-  const editorRef = useRef<LexicalEditor | null>(null);
+  const editorRef = useEditorRef(ref);
   const theme = useEditorTheme();
 
   const onChangeRef = useRef(props.onChange);
   onChangeRef.current = props.onChange;
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      focus: () => editorRef.current?.focus(),
-    }),
-    [],
-  );
 
   const SeijEditorExtension = useMemo(
     () =>
@@ -66,6 +56,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
         name: "SeijEditorExtension",
         theme,
         dependencies: [
+          configExtension(EditorRefExtension, { editorRef }),
           HistoryExtension,
           ListExtension,
           CheckListExtension,
@@ -77,7 +68,7 @@ export const RichTextEditor = forwardRef(function RichTextEditor(
           configExtension(OnChangeJsonExtension, { onChange: (v) => onChangeRef.current(JSON.stringify(v, null, 2)) }),
         ],
       }),
-    [theme],
+    [editorRef, theme],
   );
 
   return (

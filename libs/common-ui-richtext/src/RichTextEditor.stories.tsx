@@ -1,7 +1,7 @@
 import { Button, tokens } from "@fluentui/react-components";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
-import { RichTextEditor, RichTextEditorHandle } from "./RichTextEditor";
+import { RichTextEditor, RichTextEditorRef } from "./RichTextEditor";
 import { SeijUIProvider } from "@seij/common-ui";
 
 const meta = {
@@ -49,7 +49,7 @@ export const WithFocusHandle: Story = {
   },
   render: (args) => {
     const [value, setValue] = useState(args.value);
-    const editorRef = useRef<RichTextEditorHandle>(null);
+    const editorRef = useRef<RichTextEditorRef>(null);
 
     return (
       <div
