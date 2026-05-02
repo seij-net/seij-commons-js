@@ -14,11 +14,9 @@ export function ExternalValueSync<EXTERNAL_VALUE>({
   valueRevision: number;
   format: "state" | "markdown";
 }) {
-  console.log("ExternalValueSync: entering", valueRevision, format, value);
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
     if (format == "state") {
-      console.log("ExternalValueSync: Updating value", valueRevision, format, value);
       const serialized = value as SerializedEditorState;
       editor.setEditorState(editor.parseEditorState(serialized), {
         tag: CONTROLLED_VALUE_UPDATE_TAG,
