@@ -45,7 +45,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
   ref: ForwardedRef<RichTextEditorRef>,
 ) {
   const styles = useStyles();
-  const editorRef = useEditorRef(ref);
+  const { editorRef, pendingFocusRef } = useEditorRef(ref);
   const theme = useEditorTheme();
 
   // We copy the onChange coming from the props when they change
@@ -61,7 +61,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
         name: "SeijEditorExtension",
         theme,
         dependencies: [
-          configExtension(EditorRefExtension, { editorRef }),
+          configExtension(EditorRefExtension, { editorRef, pendingFocusRef }),
           HistoryExtension,
           ListExtension,
           CheckListExtension,
@@ -78,7 +78,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
           }),
         ],
       }),
-    [editorRef, theme, props.format],
+    [editorRef, pendingFocusRef, theme, props.format],
   );
 
   return (

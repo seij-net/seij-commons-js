@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.2.2
+
+- Fixed: focus issues because of deferred Lexical initialization 
+
 ## v0.2.1
 
 - Fixed: onChange issues
