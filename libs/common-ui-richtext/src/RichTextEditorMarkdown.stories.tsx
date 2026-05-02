@@ -1,9 +1,8 @@
 import { Button, tokens } from "@fluentui/react-components";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
-import { RichTextEditorRef } from "./RichTextEditorJson";
+import { RichTextEditorMarkdown, RichTextEditorRef } from "@seij/common-ui-richtext";
 import { SeijUIProvider } from "@seij/common-ui";
-import { RichTextEditorMarkdown } from "./RichTextEditorMarkdown";
 
 const SAMPLE_MARKDOWN = `
 # Main title
