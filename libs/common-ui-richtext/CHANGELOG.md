@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.2.1
+
+- Fixed: onChange issues
+
 ## v0.2.0
 
 - Npm publication with the trusted publisher flag.

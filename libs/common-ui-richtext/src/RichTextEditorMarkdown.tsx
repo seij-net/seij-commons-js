@@ -3,8 +3,6 @@ import { type RichTextEditorRef } from "./extensions/EditorRefExtension";
 import { RichTextEditorBase } from "./components/RichTextEditorBase";
 import { useExternalValueSyncBarrier } from "./components/ExternalValueSync";
 
-
-
 type Markdown = string;
 
 export interface RichTextEditorMarkdownProps {

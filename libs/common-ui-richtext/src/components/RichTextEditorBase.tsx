@@ -6,7 +6,7 @@ import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPl
 import { RichTextExtension } from "@lexical/rich-text";
 import { CheckListExtension, ListExtension } from "@lexical/list";
 import { configExtension, defineExtension } from "lexical";
-import { type ForwardedRef, forwardRef, type ReactElement, type RefAttributes, useMemo } from "react";
+import { type ForwardedRef, forwardRef, type ReactElement, type RefAttributes, useMemo, useRef } from "react";
 import { RichTextEditorToolbar } from "../components/RichTextEditorToolbar";
 import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
 import TreeViewComponent from "../components/TreeViewComponent";
@@ -48,6 +48,11 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
   const editorRef = useEditorRef(ref);
   const theme = useEditorTheme();
 
+  // We copy the onChange coming from the props when they change
+  // in a stable ref, so that the memoization give a stable extension.
+  const onChangeRef = useRef(props.onChange);
+  onChangeRef.current = props.onChange;
+
   const debug = props.debug ?? false;
 
   const SeijEditorExtension = useMemo(
@@ -68,12 +73,12 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
           configExtension(JsonOnChangeExtension, {
             format: props.format,
             onChange: (payload) => {
-              props.onChange(payload as EXTERNAL_VALUE);
+              onChangeRef.current(payload as EXTERNAL_VALUE);
             },
           }),
         ],
       }),
-    [editorRef, theme],
+    [editorRef, theme, props.format],
   );
 
   return (

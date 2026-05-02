@@ -15,6 +15,21 @@ type EditorRef = {
 export interface RichTextEditorRef {
   /** Move focus into the underlying editor. */
   focus: () => void;
+
+  /**
+   * Returns the underlying Lexical editor instance.
+   *
+   * This is an implementation escape hatch, not an application API. It exists
+   * because Lexical owns its editor state and DOM reconciliation internally,
+   * which makes realistic component tests difficult to write through jsdom
+   * events alone. Tests may use this method to drive Lexical through its own
+   * `editor.update(...)` API and exercise the real change listener path.
+   *
+   * Application code must not depend on this method. Using the raw Lexical
+   * instance in product code couples the caller to this component's current
+   * implementation and bypasses the controlled `value` / `onChange` contract.
+   */
+  getEditor: () => LexicalEditor | null;
 }
 
 /**
@@ -97,8 +112,15 @@ export const EditorRefExtension = defineExtension({
 export function useEditorRef(ref: ForwardedRef<RichTextEditorRef>) {
   const editorRef = useRef<LexicalEditor | null>(null);
 
-  // Expose the command now; resolve the Lexical editor later when invoked.
-  useImperativeHandle(ref, () => ({ focus: () => editorRef.current?.focus() }), []);
+  // Expose commands now; resolve the Lexical editor later when invoked.
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus: () => editorRef.current?.focus(),
+      getEditor: () => editorRef.current,
+    }),
+    [],
+  );
 
   return editorRef;
 }
