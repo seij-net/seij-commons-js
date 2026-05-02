@@ -155,7 +155,13 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
       aria-label="Rich text editor toolbar"
       checkedValues={checkedValues}
       size="small"
-      style={{ backgroundColor: tokens.colorNeutralBackground3 }}
+      style={{
+        borderTop: `1px solid ${tokens.colorNeutralStroke2}`,
+        borderLeft: `1px solid ${tokens.colorNeutralStroke2}`,
+        borderRight: `1px solid ${tokens.colorNeutralStroke2}`,
+        borderTopLeftRadius: tokens.borderRadiusLarge,
+        borderTopRightRadius: tokens.borderRadiusLarge,
+      }}
     >
       <ToolbarToggleButton
         aria-label="Paragraph"
