@@ -5,6 +5,10 @@ type EditorRef = {
   current: LexicalEditor | null;
 };
 
+type PendingFocusRef = {
+  current: boolean;
+};
+
 /**
  * API exposed to callers through `<RichTextEditor ref={...} />`.
  *
@@ -52,6 +56,11 @@ export type EditorRefExtensionConfig = {
    * different times.
    */
   editorRef: EditorRef | null;
+  /**
+   * Stores one focus request made before Lexical has attached its root DOM
+   * element. The request is consumed as soon as the root becomes available.
+   */
+  pendingFocusRef: PendingFocusRef | null;
 };
 
 /**
@@ -66,9 +75,10 @@ export const EditorRefExtension = defineExtension({
   name: "seij-editor-ref",
   config: safeCast<EditorRefExtensionConfig>({
     editorRef: null,
+    pendingFocusRef: null,
   }),
   register: (editor, config) => {
-    const { editorRef } = config;
+    const { editorRef, pendingFocusRef } = config;
 
     if (editorRef === null) {
       return () => {};
@@ -77,7 +87,18 @@ export const EditorRefExtension = defineExtension({
     // From this point on, the public `focus()` handle has a real editor to use.
     editorRef.current = editor;
 
+    const unregisterRootListener = editor.registerRootListener((rootElement) => {
+      if (rootElement === null || pendingFocusRef?.current !== true) return;
+
+      pendingFocusRef.current = false;
+      editor.focus();
+    });
+
+    // We must return a cleanup function that will be called when editor is unmounted
+    // from the DOM
     return () => {
+      unregisterRootListener();
+
       // Clear only the instance registered by this extension run. If React or
       // Lexical has already installed a newer editor, this cleanup must not
       // erase it.
@@ -91,18 +112,27 @@ export const EditorRefExtension = defineExtension({
 /**
  * Builds the two-part ref bridge needed by the editor.
  *
- * Why two refs?
+ * `ref` passed as a parameter is what is expected from the components
+ * that use the editor. This `ref` is owned by the parent and must respond to
+ * a public API with getEditor() and focus().
  *
- * The forwarded `ref` is owned by the parent and must expose the public API
- * immediately. The private `editorRef` is owned by this component and starts
- * empty because Lexical has not provided its editor instance yet.
+ * `editorRef` is owned by this component and represents a reference to Lexical.
+ * and starts empty because Lexical has not provided its editor instance yet,
+ * because Lexical initialization may be deferred.
  *
- * `useImperativeHandle` exposes a stable public `focus()` method. That method
- * reads `editorRef.current` only when it is called, so it can be created before
+ * So we create an `editorRef` and create an object with focus() and getEditor()
+ * using the `useImperativeHandle` React hook, it will expose a stable public `focus()` method.
+ *
+ * That method reads `editorRef.current` only when it is called, so it can be created before
  * Lexical finishes registering the extension.
  *
  * The returned `editorRef` must be passed to `EditorRefExtension`, which will
  * fill it with the Lexical editor instance.
+ *
+ * When focus() will be called, there is a chance that the editor is not yet mounted
+ * (editor.getRootElement()==null). In this case we set `pendingFocusRef` to say
+ * "ok, there is a pending focus request that needs to be fullfilled when the editor
+ * will be ready".
  *
  * Usage:
  * ```
@@ -111,16 +141,28 @@ export const EditorRefExtension = defineExtension({
  */
 export function useEditorRef(ref: ForwardedRef<RichTextEditorRef>) {
   const editorRef = useRef<LexicalEditor | null>(null);
+  const pendingFocusRef = useRef(false);
 
   // Expose commands now; resolve the Lexical editor later when invoked.
   useImperativeHandle(
     ref,
     () => ({
-      focus: () => editorRef.current?.focus(),
+      focus: () => {
+        const editor = editorRef.current;
+        if (editor === null) return;
+
+        // Editor is not ready, we set pendingFocus to true
+        if (editor.getRootElement() === null) {
+          pendingFocusRef.current = true;
+          return;
+        }
+
+        editor.focus();
+      },
       getEditor: () => editorRef.current,
     }),
     [],
   );
 
-  return editorRef;
+  return { editorRef, pendingFocusRef };
 }
