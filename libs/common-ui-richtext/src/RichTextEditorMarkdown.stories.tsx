@@ -3,10 +3,7 @@ import { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { RichTextEditorRef } from "./RichTextEditorJson";
 import { SeijUIProvider } from "@seij/common-ui";
-import type { SerializedParagraphNode, SerializedTextNode } from "lexical";
 import { RichTextEditorMarkdown } from "./RichTextEditorMarkdown";
-
-type RichTextStoryNode = SerializedParagraphNode | SerializedTextNode;
 
 const SAMPLE_MARKDOWN = `
 # Main title

@@ -11,10 +11,9 @@ describe("useExternalValueSyncBarrier", () => {
     const onChange = vi.fn();
     const initialValue = { id: "initial" };
     const changedValue = { id: "changed" };
-    const { result, rerender } = renderHook(
-      ({ value }) => useExternalValueSyncBarrier(value, onChange, Object.is),
-      { initialProps: { value: initialValue } },
-    );
+    const { result, rerender } = renderHook(({ value }) => useExternalValueSyncBarrier(value, onChange, Object.is), {
+      initialProps: { value: initialValue },
+    });
 
     expect(result.current.lastKnownValue).toBe(initialValue);
     expect(result.current.revision).toBe(0);
@@ -36,10 +35,9 @@ describe("useExternalValueSyncBarrier", () => {
     const onChange = vi.fn();
     const initialValue = { id: "initial" };
     const externalValue = { id: "external" };
-    const { result, rerender } = renderHook(
-      ({ value }) => useExternalValueSyncBarrier(value, onChange, Object.is),
-      { initialProps: { value: initialValue } },
-    );
+    const { result, rerender } = renderHook(({ value }) => useExternalValueSyncBarrier(value, onChange, Object.is), {
+      initialProps: { value: initialValue },
+    });
 
     rerender({ value: externalValue });
 
@@ -52,10 +50,9 @@ describe("useExternalValueSyncBarrier", () => {
     const initialValue = { id: "same" };
     const equivalentValue = { id: "same" };
     const equalityFn = (previous: TestValue, next: TestValue) => previous.id === next.id;
-    const { result, rerender } = renderHook(
-      ({ value }) => useExternalValueSyncBarrier(value, onChange, equalityFn),
-      { initialProps: { value: initialValue } },
-    );
+    const { result, rerender } = renderHook(({ value }) => useExternalValueSyncBarrier(value, onChange, equalityFn), {
+      initialProps: { value: initialValue },
+    });
 
     rerender({ value: equivalentValue });
 
