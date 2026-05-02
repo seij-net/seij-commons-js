@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { RichTextEditorJson, RichTextEditorRef } from "./RichTextEditorJson";
 import { SeijUIProvider } from "@seij/common-ui";
 import type { SerializedEditorState, SerializedParagraphNode, SerializedTextNode } from "lexical";
-import { RichTextEditorMarkdown } from "./RichTextEditorMarkdown";
 
 type RichTextStoryNode = SerializedParagraphNode | SerializedTextNode;
 
