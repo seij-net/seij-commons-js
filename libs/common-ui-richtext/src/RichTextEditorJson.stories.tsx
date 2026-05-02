@@ -85,12 +85,12 @@ export const Basic: Story = {
 
 export const JsonValue: Story = {
   parameters: {
-    layout: "fullscreen"
+    layout: "fullscreen",
   },
   render: (args) => {
     const [value, setValue] = useState(args.value);
     const [saved, setSaved] = useState(args.value);
-    const [ debug, setDebug ] = useState(false)
+    const [debug, setDebug] = useState(false);
     const editorRef = useRef<RichTextEditorRef>(null);
 
     return (

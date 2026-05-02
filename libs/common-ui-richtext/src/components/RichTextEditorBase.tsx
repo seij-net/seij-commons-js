@@ -18,6 +18,7 @@ import { ClearFormattingExtension } from "../extensions/ClearFormattingExtension
 import { JsonOnChangeExtension } from "../extensions/JsonOnChangeExtension";
 import { useEditorTheme } from "../styles/richtext-editor-styles";
 import { EditorRefExtension, type RichTextEditorRef, useEditorRef } from "../extensions/EditorRefExtension";
+import { ExternalValueSync } from "./ExternalValueSync";
 
 const useStyles = makeStyles({
   editorArea: {
@@ -32,6 +33,7 @@ const useStyles = makeStyles({
 });
 export interface RichTextEditorBaseProps<EXTERNAL_VALUE> {
   value: EXTERNAL_VALUE;
+  valueRevision: number;
   disabled: boolean;
   debug?: boolean;
   onChange: (value: EXTERNAL_VALUE) => void;
@@ -66,7 +68,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
           configExtension(JsonOnChangeExtension, {
             format: props.format,
             onChange: (payload) => {
-              props.onChange(payload as EXTERNAL_VALUE)
+              props.onChange(payload as EXTERNAL_VALUE);
             },
           }),
         ],
@@ -78,6 +80,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
     <LexicalExtensionComposer extension={SeijEditorExtension} contentEditable={null}>
       <RichTextEditorToolbar disabled={props.disabled} />
       <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />
+      <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
       <ContentEditable
         aria-placeholder="Enter text"
         placeholder={<div>Enter text</div>}
