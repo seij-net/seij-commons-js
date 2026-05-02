@@ -30,7 +30,7 @@ export function ExternalValueSync<EXTERNAL_VALUE>({
   }, [
     // Only add valueRevision here, never add value because we do not
     // want to change on value, but only on revision.
-    valueRevision
+    valueRevision,
   ]);
   return null;
 }
