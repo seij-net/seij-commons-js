@@ -1,4 +1,16 @@
-import { tokens, Toolbar, ToolbarButton, ToolbarDivider, ToolbarToggleButton } from "@fluentui/react-components";
+import {
+  Menu,
+  MenuButton,
+  MenuItemRadio,
+  MenuList,
+  MenuPopover,
+  MenuTrigger,
+  tokens,
+  Toolbar,
+  ToolbarButton,
+  ToolbarDivider,
+  ToolbarToggleButton,
+} from "@fluentui/react-components";
 import {
   ClipboardTaskListLtrRegular,
   LineHorizontal1Regular,
@@ -6,20 +18,24 @@ import {
   TextClearFormattingRegular,
   TextBoldRegular,
   TextBulletListLtrRegular,
-  TextHeader2Regular,
   TextIndentDecreaseLtrRegular,
   TextIndentIncreaseLtrRegular,
   TextItalicRegular,
   TextNumberListLtrRegular,
   TextQuoteRegular,
   TextStrikethroughRegular,
-  TextTRegular,
 } from "@fluentui/react-icons";
 import { TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
 import { $setBlocksType } from "@lexical/selection";
-import { $createHeadingNode, $createQuoteNode, $isHeadingNode, $isQuoteNode } from "@lexical/rich-text";
+import {
+  $createHeadingNode,
+  $createQuoteNode,
+  $isHeadingNode,
+  $isQuoteNode,
+  type HeadingTagType,
+} from "@lexical/rich-text";
 import {
   $isListNode,
   INSERT_CHECK_LIST_COMMAND,
@@ -45,11 +61,23 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CLEAR_FORMATTING_COMMAND } from "../extensions/ClearFormattingExtension";
 
 interface ToolbarState {
-  block: "paragraph" | "h2" | "quote" | "bullet" | "number" | "check" | null;
+  block: "paragraph" | HeadingTagType | "quote" | "bullet" | "number" | "check" | null;
   bold: boolean;
   italic: boolean;
   strikethrough: boolean;
 }
+
+type TextStyleValue = "paragraph" | HeadingTagType;
+
+const textStyles: Array<{ label: string; value: TextStyleValue }> = [
+  { label: "Normal text", value: "paragraph" },
+  { label: "Heading 1", value: "h1" },
+  { label: "Heading 2", value: "h2" },
+  { label: "Heading 3", value: "h3" },
+  { label: "Heading 4", value: "h4" },
+  { label: "Heading 5", value: "h5" },
+  { label: "Heading 6", value: "h6" },
+];
 
 const inactiveToolbarState: ToolbarState = {
   block: null,
@@ -72,6 +100,9 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     }),
     [toolbarState],
   );
+  const selectedTextStyle = getTextStyleValue(toolbarState.block);
+  const selectedTextStyleLabel =
+    textStyles.find((textStyle) => textStyle.value === selectedTextStyle)?.label ?? "Normal text";
 
   const updateToolbarState = useCallback(() => {
     const selection = $getSelection();
@@ -85,8 +116,8 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     let block: ToolbarState["block"] = null;
 
     if (topLevelElement !== null) {
-      if ($isHeadingNode(topLevelElement) && topLevelElement.getTag() === "h2") {
-        block = "h2";
+      if ($isHeadingNode(topLevelElement)) {
+        block = topLevelElement.getTag();
       } else if ($isQuoteNode(topLevelElement)) {
         block = "quote";
       } else if ($isListNode(topLevelElement)) {
@@ -124,15 +155,9 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
   };
 
-  const setParagraph = () => {
+  const setTextStyle = (style: TextStyleValue) => {
     editor.update(() => {
-      $setBlocksType($getSelection(), () => $createParagraphNode());
-    });
-  };
-
-  const setHeading = () => {
-    editor.update(() => {
-      $setBlocksType($getSelection(), () => $createHeadingNode("h2"));
+      $setBlocksType($getSelection(), () => (style === "paragraph" ? $createParagraphNode() : $createHeadingNode(style)));
     });
   };
 
@@ -163,23 +188,28 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
         borderTopRightRadius: tokens.borderRadiusLarge,
       }}
     >
-      <ToolbarToggleButton
-        aria-label="Paragraph"
-        disabled={disabled}
-        icon={<TextTRegular />}
-        name="block"
-        onClick={setParagraph}
-        value="paragraph"
-      />
-      <ToolbarToggleButton
-        aria-label="Heading"
-        disabled={disabled}
-        icon={<TextHeader2Regular />}
-        name="block"
-        onClick={setHeading}
-        value="h2"
-      />
-      <ToolbarDivider />
+      <Menu checkedValues={{ textStyle: [selectedTextStyle] }}>
+        <MenuTrigger disableButtonEnhancement>
+          <MenuButton aria-label="Text style" disabled={disabled} size="small" appearance={"transparent"} style={{width:"9em", justifyContent: "space-between"}}>
+            {selectedTextStyleLabel}
+          </MenuButton>
+        </MenuTrigger>
+        <MenuPopover>
+          <MenuList>
+            {textStyles.map((textStyle) => (
+              <MenuItemRadio
+                key={textStyle.value}
+                name="textStyle"
+                onClick={() => setTextStyle(textStyle.value)}
+                value={textStyle.value}
+              >
+                {textStyle.label}
+              </MenuItemRadio>
+            ))}
+          </MenuList>
+        </MenuPopover>
+      </Menu>
+
       <ToolbarToggleButton
         aria-label="Bold"
         disabled={disabled}
@@ -274,4 +304,12 @@ function getTopLevelElement(node: LexicalNode): LexicalNode | null {
     const parent = parentNode.getParent();
     return parent !== null && $isRootOrShadowRoot(parent);
   });
+}
+
+function getTextStyleValue(block: ToolbarState["block"]): TextStyleValue {
+  if (block === "h1" || block === "h2" || block === "h3" || block === "h4" || block === "h5" || block === "h6") {
+    return block;
+  }
+
+  return "paragraph";
 }

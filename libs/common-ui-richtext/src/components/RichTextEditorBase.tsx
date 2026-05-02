@@ -88,9 +88,10 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
       <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
       <ContentEditable
         aria-placeholder="Enter text"
+        className={`${styles.editorArea} notranslate`}
         placeholder={<div>Enter text</div>}
         spellCheck
-        className={styles.editorArea}
+        translate={"no"}
       />
       {debug && <TreeViewComponent />}
     </LexicalExtensionComposer>
