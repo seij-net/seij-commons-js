@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v0.3.0
+
+- Feature: added code, undo, redo
+- Feature: combobox to select paragraph or headings
+
 ## v0.2.2
 
 - Fixed: focus issues because of deferred Lexical initialization
