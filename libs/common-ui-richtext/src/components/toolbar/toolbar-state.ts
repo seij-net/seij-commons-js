@@ -13,6 +13,7 @@ import {
 } from "lexical";
 import { $isListNode } from "@lexical/list";
 import { $isLinkNode } from "@lexical/link";
+import { $isCodeNode } from "@lexical/code-core";
 
 /**
  * State that indicates
@@ -35,6 +36,7 @@ export type ToolbarStateBlocType =
   | "paragraph"
   | HeadingTagType
   | "quote"
+  | "code"
   | "list_unordered"
   | "list_ordered"
   | "list_todo"
@@ -106,6 +108,8 @@ function $findToolbarBlockType(selection: RangeSelection) {
       block = topLevelElement.getTag();
     } else if ($isQuoteNode(topLevelElement)) {
       block = "quote";
+    } else if ($isCodeNode(topLevelElement)) {
+      block = "code";
     } else if ($isListNode(topLevelElement)) {
       const type = topLevelElement.getListType();
       if (type === "number") {

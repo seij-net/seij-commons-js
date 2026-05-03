@@ -35,6 +35,7 @@ import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
 import { $setBlocksType } from "@lexical/selection";
 import { $createHeadingNode, $createQuoteNode, type HeadingTagType } from "@lexical/rich-text";
 import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from "@lexical/list";
+import { $createCodeNode } from "@lexical/code-core";
 import {
   $createParagraphNode,
   $getSelection,
@@ -49,7 +50,7 @@ import { CLEAR_FORMATTING_COMMAND } from "../../extensions/ClearFormattingExtens
 import { computeToolbarStateSubscription, ToolbarState } from "./toolbar-state";
 import { useLexicalSubscription } from "@lexical/react/useLexicalSubscription";
 
-type BlockStyleDropdownType = "paragraph" | HeadingTagType;
+type BlockStyleDropdownType = "paragraph" | "code" | HeadingTagType;
 
 const blockStyleDropdownValues: Array<{ label: string; value: BlockStyleDropdownType }> = [
   { label: "Normal text", value: "paragraph" },
@@ -59,6 +60,7 @@ const blockStyleDropdownValues: Array<{ label: string; value: BlockStyleDropdown
   { label: "Heading 4", value: "h4" },
   { label: "Heading 5", value: "h5" },
   { label: "Heading 6", value: "h6" },
+  { label: "Code block", value: "code" },
 ];
 
 export interface MainToolbarProps {
@@ -81,9 +83,11 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
 
   const handleChangeBlockStyleDropdown = (style: BlockStyleDropdownType) => {
     editor.update(() => {
-      $setBlocksType($getSelection(), () =>
-        style === "paragraph" ? $createParagraphNode() : $createHeadingNode(style),
-      );
+      $setBlocksType($getSelection(), () => {
+        if (style === "paragraph") return $createParagraphNode();
+        if (style === "code") return $createCodeNode();
+        return $createHeadingNode(style);
+      });
     });
   };
   const handleClickBold = () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
@@ -308,6 +312,10 @@ function toFluentUiToolbarCheckedValues(toolbarState: ToolbarState): {
  * @param block
  */
 function getTextStyleValue(block: ToolbarState["block"]): BlockStyleDropdownType {
+  if (block === "code") {
+    return block;
+  }
+
   if (block === "h1" || block === "h2" || block === "h3" || block === "h4" || block === "h5" || block === "h6") {
     return block;
   }
