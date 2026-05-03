@@ -12,12 +12,15 @@ import {
   ToolbarToggleButton,
 } from "@fluentui/react-components";
 import {
+  ArrowClockwiseRegular,
+  ArrowCounterclockwiseRegular,
   ClipboardTaskListLtrRegular,
+  CodeRegular,
   LineHorizontal1Regular,
   LinkRegular,
-  TextClearFormattingRegular,
   TextBoldRegular,
   TextBulletListLtrRegular,
+  TextClearFormattingRegular,
   TextIndentDecreaseLtrRegular,
   TextIndentIncreaseLtrRegular,
   TextItalicRegular,
@@ -54,8 +57,10 @@ import {
   LexicalNode,
   mergeRegister,
   OUTDENT_CONTENT_COMMAND,
+  REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
   TextFormatType,
+  UNDO_COMMAND,
 } from "lexical";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CLEAR_FORMATTING_COMMAND } from "../extensions/ClearFormattingExtension";
@@ -63,6 +68,7 @@ import { CLEAR_FORMATTING_COMMAND } from "../extensions/ClearFormattingExtension
 interface ToolbarState {
   block: "paragraph" | HeadingTagType | "quote" | "bullet" | "number" | "check" | null;
   bold: boolean;
+  code: boolean;
   italic: boolean;
   strikethrough: boolean;
 }
@@ -82,6 +88,7 @@ const textStyles: Array<{ label: string; value: TextStyleValue }> = [
 const inactiveToolbarState: ToolbarState = {
   block: null,
   bold: false,
+  code: false,
   italic: false,
   strikethrough: false,
 };
@@ -94,6 +101,7 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
       block: toolbarState.block === null ? [] : [toolbarState.block],
       format: [
         toolbarState.bold ? "bold" : null,
+        toolbarState.code ? "code" : null,
         toolbarState.italic ? "italic" : null,
         toolbarState.strikethrough ? "strikethrough" : null,
       ].filter((value): value is string => value !== null),
@@ -130,6 +138,7 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     setToolbarState({
       block,
       bold: selection.hasFormat("bold"),
+      code: selection.hasFormat("code"),
       italic: selection.hasFormat("italic"),
       strikethrough: selection.hasFormat("strikethrough"),
     });
@@ -157,7 +166,9 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
 
   const setTextStyle = (style: TextStyleValue) => {
     editor.update(() => {
-      $setBlocksType($getSelection(), () => (style === "paragraph" ? $createParagraphNode() : $createHeadingNode(style)));
+      $setBlocksType($getSelection(), () =>
+        style === "paragraph" ? $createParagraphNode() : $createHeadingNode(style),
+      );
     });
   };
 
@@ -179,7 +190,7 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     <Toolbar
       aria-label="Rich text editor toolbar"
       checkedValues={checkedValues}
-      size="small"
+      size="medium"
       style={{
         borderTop: `1px solid ${tokens.colorNeutralStroke2}`,
         borderLeft: `1px solid ${tokens.colorNeutralStroke2}`,
@@ -190,7 +201,13 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     >
       <Menu checkedValues={{ textStyle: [selectedTextStyle] }}>
         <MenuTrigger disableButtonEnhancement>
-          <MenuButton aria-label="Text style" disabled={disabled} size="small" appearance={"transparent"} style={{width:"9em", justifyContent: "space-between"}}>
+          <MenuButton
+            aria-label="Text style"
+            disabled={disabled}
+            size="small"
+            appearance={"transparent"}
+            style={{ width: "9em", justifyContent: "space-between" }}
+          >
             {selectedTextStyleLabel}
           </MenuButton>
         </MenuTrigger>
@@ -225,6 +242,14 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
         name="format"
         onClick={() => formatText("italic")}
         value="italic"
+      />
+      <ToolbarToggleButton
+        aria-label="Code"
+        disabled={disabled}
+        icon={<CodeRegular />}
+        name="format"
+        onClick={() => formatText("code")}
+        value="code"
       />
       <ToolbarToggleButton
         aria-label="Strikethrough"
@@ -295,6 +320,18 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
       />
       <ToolbarDivider />
       <ToolbarButton aria-label="Link" disabled={disabled} icon={<LinkRegular />} onClick={setLink} />
+      <ToolbarButton
+        aria-label="Undo"
+        disabled={disabled}
+        icon={<ArrowCounterclockwiseRegular />}
+        onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
+      />
+      <ToolbarButton
+        aria-label="Redo"
+        disabled={disabled}
+        icon={<ArrowClockwiseRegular />}
+        onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
+      />
     </Toolbar>
   );
 }
