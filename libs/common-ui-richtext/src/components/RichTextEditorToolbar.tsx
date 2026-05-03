@@ -28,7 +28,7 @@ import {
   TextQuoteRegular,
   TextStrikethroughRegular,
 } from "@fluentui/react-icons";
-import { TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
 import { $setBlocksType } from "@lexical/selection";
@@ -64,14 +64,8 @@ import {
 } from "lexical";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CLEAR_FORMATTING_COMMAND } from "../extensions/ClearFormattingExtension";
+import { computeToolbarStateFromEditor, inactiveToolbarState, ToolbarState } from "./toolbar-state";
 
-interface ToolbarState {
-  block: "paragraph" | HeadingTagType | "quote" | "bullet" | "number" | "check" | null;
-  bold: boolean;
-  code: boolean;
-  italic: boolean;
-  strikethrough: boolean;
-}
 
 type TextStyleValue = "paragraph" | HeadingTagType;
 
@@ -85,15 +79,13 @@ const textStyles: Array<{ label: string; value: TextStyleValue }> = [
   { label: "Heading 6", value: "h6" },
 ];
 
-const inactiveToolbarState: ToolbarState = {
-  block: null,
-  bold: false,
-  code: false,
-  italic: false,
-  strikethrough: false,
-};
 
-export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
+export interface RichTextEditorToolbarProps {
+  /** if true toolbar shall be disabled */
+  disabled: boolean;
+}
+
+export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) {
   const [editor] = useLexicalComposerContext();
   const [toolbarState, setToolbarState] = useState<ToolbarState>(inactiveToolbarState);
   const checkedValues = useMemo(
@@ -103,6 +95,7 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
         toolbarState.bold ? "bold" : null,
         toolbarState.code ? "code" : null,
         toolbarState.italic ? "italic" : null,
+        toolbarState.link ? "link" : null,
         toolbarState.strikethrough ? "strikethrough" : null,
       ].filter((value): value is string => value !== null),
     }),
@@ -113,35 +106,7 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     textStyles.find((textStyle) => textStyle.value === selectedTextStyle)?.label ?? "Normal text";
 
   const updateToolbarState = useCallback(() => {
-    const selection = $getSelection();
-
-    if (!$isRangeSelection(selection)) {
-      setToolbarState(inactiveToolbarState);
-      return;
-    }
-
-    const topLevelElement = getTopLevelElement(selection.anchor.getNode());
-    let block: ToolbarState["block"] = null;
-
-    if (topLevelElement !== null) {
-      if ($isHeadingNode(topLevelElement)) {
-        block = topLevelElement.getTag();
-      } else if ($isQuoteNode(topLevelElement)) {
-        block = "quote";
-      } else if ($isListNode(topLevelElement)) {
-        block = topLevelElement.getListType();
-      } else if (topLevelElement.getType() === "paragraph") {
-        block = "paragraph";
-      }
-    }
-
-    setToolbarState({
-      block,
-      bold: selection.hasFormat("bold"),
-      code: selection.hasFormat("code"),
-      italic: selection.hasFormat("italic"),
-      strikethrough: selection.hasFormat("strikethrough"),
-    });
+    setToolbarState(computeToolbarStateFromEditor())
   }, []);
 
   useEffect(() => {
@@ -178,12 +143,12 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
     });
   };
 
-  const setLink = () => {
-    const url = window.prompt("URL");
-    if (url === null) {
-      return;
+  const handleClickLink = () => {
+    if (toolbarState.link) {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+    } else {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://");
     }
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, url.trim().length > 0 ? url : null);
   };
 
   return (
@@ -319,7 +284,14 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
         onClick={() => editor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined)}
       />
       <ToolbarDivider />
-      <ToolbarButton aria-label="Link" disabled={disabled} icon={<LinkRegular />} onClick={setLink} />
+      <ToolbarToggleButton
+        aria-label="Link"
+        disabled={disabled}
+        icon={<LinkRegular />}
+        name="format"
+        onClick={handleClickLink}
+        value="link"
+      />
       <ToolbarButton
         aria-label="Undo"
         disabled={disabled}
@@ -334,13 +306,6 @@ export function RichTextEditorToolbar({ disabled }: { disabled: boolean }) {
       />
     </Toolbar>
   );
-}
-
-function getTopLevelElement(node: LexicalNode): LexicalNode | null {
-  return $findMatchingParent(node, (parentNode) => {
-    const parent = parentNode.getParent();
-    return parent !== null && $isRootOrShadowRoot(parent);
-  });
 }
 
 function getTextStyleValue(block: ToolbarState["block"]): TextStyleValue {

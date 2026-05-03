@@ -12,16 +12,17 @@ import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
 import TreeViewComponent from "../components/TreeViewComponent";
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { HistoryExtension } from "@lexical/history";
-import { HorizontalRuleExtension } from "@lexical/extension";
+import { HorizontalRuleExtension, SelectionAlwaysOnDisplayExtension } from "@lexical/extension";
 import { ReactExtension } from "@lexical/react/ReactExtension";
 import { ClearFormattingExtension } from "../extensions/ClearFormattingExtension";
 import { JsonOnChangeExtension } from "../extensions/JsonOnChangeExtension";
 import { useEditorTheme } from "../styles/richtext-editor-styles";
 import { EditorRefExtension, type RichTextEditorRef, useEditorRef } from "../extensions/EditorRefExtension";
 import { ExternalValueSync } from "./ExternalValueSync";
+import { RichTextEditorLinkEditor } from "./RichTextEditorLinkEditor";
 
 const useStyles = makeStyles({
-  editorArea: {
+  editorShell: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
     height: "160px",
     overflow: "auto",
@@ -29,6 +30,11 @@ const useStyles = makeStyles({
     paddingRight: tokens.spacingHorizontalS,
     paddingTop: tokens.spacingVerticalS,
     paddingBottom: tokens.spacingVerticalS,
+    position: "relative",
+  },
+  editorArea: {
+    minHeight: "100%",
+    outlineStyle: "none",
   },
 });
 export interface RichTextEditorBaseProps<EXTERNAL_VALUE> {
@@ -86,13 +92,16 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
       <RichTextEditorToolbar disabled={props.disabled} />
       <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />
       <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
-      <ContentEditable
-        aria-placeholder="Enter text"
-        className={`${styles.editorArea} notranslate`}
-        placeholder={<div>Enter text</div>}
-        spellCheck
-        translate={"no"}
-      />
+      <div className={styles.editorShell}>
+        <ContentEditable
+          aria-placeholder="Enter text"
+          className={`${styles.editorArea} notranslate`}
+          placeholder={<div>Enter text</div>}
+          spellCheck
+          translate={"no"}
+        />
+        <RichTextEditorLinkEditor disabled={props.disabled} />
+      </div>
       {debug && <TreeViewComponent />}
     </LexicalExtensionComposer>
   );
