@@ -28,48 +28,29 @@ import {
   TextQuoteRegular,
   TextStrikethroughRegular,
 } from "@fluentui/react-icons";
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useLexicalEditable } from "@lexical/react/useLexicalEditable";
 import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
 import { $setBlocksType } from "@lexical/selection";
-import {
-  $createHeadingNode,
-  $createQuoteNode,
-  $isHeadingNode,
-  $isQuoteNode,
-  type HeadingTagType,
-} from "@lexical/rich-text";
-import {
-  $isListNode,
-  INSERT_CHECK_LIST_COMMAND,
-  INSERT_ORDERED_LIST_COMMAND,
-  INSERT_UNORDERED_LIST_COMMAND,
-} from "@lexical/list";
+import { $createHeadingNode, $createQuoteNode, type HeadingTagType } from "@lexical/rich-text";
+import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from "@lexical/list";
 import {
   $createParagraphNode,
-  $findMatchingParent,
   $getSelection,
-  $isRangeSelection,
-  $isRootOrShadowRoot,
-  COMMAND_PRIORITY_LOW,
   FORMAT_TEXT_COMMAND,
   INDENT_CONTENT_COMMAND,
-  LexicalNode,
-  mergeRegister,
   OUTDENT_CONTENT_COMMAND,
   REDO_COMMAND,
-  SELECTION_CHANGE_COMMAND,
-  TextFormatType,
   UNDO_COMMAND,
 } from "lexical";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { CLEAR_FORMATTING_COMMAND } from "../extensions/ClearFormattingExtension";
-import { computeToolbarStateFromEditor, inactiveToolbarState, ToolbarState } from "./toolbar-state";
+import { ToolbarState, useToolbarState } from "./toolbar-state";
 
+type BlockStyleDropdownType = "paragraph" | HeadingTagType;
 
-type TextStyleValue = "paragraph" | HeadingTagType;
-
-const textStyles: Array<{ label: string; value: TextStyleValue }> = [
+const blockStyleDropdownValues: Array<{ label: string; value: BlockStyleDropdownType }> = [
   { label: "Normal text", value: "paragraph" },
   { label: "Heading 1", value: "h1" },
   { label: "Heading 2", value: "h2" },
@@ -79,7 +60,6 @@ const textStyles: Array<{ label: string; value: TextStyleValue }> = [
   { label: "Heading 6", value: "h6" },
 ];
 
-
 export interface RichTextEditorToolbarProps {
   /** if true toolbar shall be disabled */
   disabled: boolean;
@@ -87,74 +67,58 @@ export interface RichTextEditorToolbarProps {
 
 export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) {
   const [editor] = useLexicalComposerContext();
-  const [toolbarState, setToolbarState] = useState<ToolbarState>(inactiveToolbarState);
-  const checkedValues = useMemo(
-    () => ({
-      block: toolbarState.block === null ? [] : [toolbarState.block],
-      format: [
-        toolbarState.bold ? "bold" : null,
-        toolbarState.code ? "code" : null,
-        toolbarState.italic ? "italic" : null,
-        toolbarState.link ? "link" : null,
-        toolbarState.strikethrough ? "strikethrough" : null,
-      ].filter((value): value is string => value !== null),
-    }),
-    [toolbarState],
-  );
-  const selectedTextStyle = getTextStyleValue(toolbarState.block);
-  const selectedTextStyleLabel =
-    textStyles.find((textStyle) => textStyle.value === selectedTextStyle)?.label ?? "Normal text";
+  const isEditable = useLexicalEditable();
+  const toolbarState = useToolbarState();
+  const toolbarDisabled = disabled || !isEditable;
 
-  const updateToolbarState = useCallback(() => {
-    setToolbarState(computeToolbarStateFromEditor())
-  }, []);
+  const fluentToolbarCheckedValues = useMemo(() => toFluentUiToolbarCheckedValues(toolbarState), [toolbarState]);
+  const selectedBlockStyleDropdownType = getTextStyleValue(toolbarState.block);
 
-  useEffect(() => {
-    return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(updateToolbarState);
-      }),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        () => {
-          updateToolbarState();
-          return false;
-        },
-        COMMAND_PRIORITY_LOW,
-      ),
-    );
-  }, [editor, updateToolbarState]);
+  const selectedBlockStyleDropdownLabel =
+    blockStyleDropdownValues.find((textStyle) => textStyle.value === selectedBlockStyleDropdownType)?.label ??
+    "Normal text";
 
-  const formatText = (format: TextFormatType) => {
-    editor.dispatchCommand(FORMAT_TEXT_COMMAND, format);
-  };
-
-  const setTextStyle = (style: TextStyleValue) => {
+  const handleChangeBlockStyleDropdown = (style: BlockStyleDropdownType) => {
     editor.update(() => {
       $setBlocksType($getSelection(), () =>
         style === "paragraph" ? $createParagraphNode() : $createHeadingNode(style),
       );
     });
   };
-
-  const setQuote = () => {
-    editor.update(() => {
-      $setBlocksType($getSelection(), () => $createQuoteNode());
-    });
-  };
-
+  const handleClickBold = () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
+  const handleClickItalic = () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
+  const handleClickCode = () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
+  const handleClickStrikethrough = () => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
+  const handleClickClearFormatting = () => editor.dispatchCommand(CLEAR_FORMATTING_COMMAND, undefined);
+  const handleClickHorizontalRule = () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined);
+  const handleClickUnorderedList = () => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+  const handleClickNumberedList = () => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+  const handleClickTaskList = () => editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined);
+  const handleClickIndentDecrease = () => editor.dispatchCommand(OUTDENT_CONTENT_COMMAND, undefined);
+  const handleClickIndentIncrease = () => editor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
+  const handleClickUndo = () => editor.dispatchCommand(UNDO_COMMAND, undefined);
+  const handleClickRedo = () => editor.dispatchCommand(REDO_COMMAND, undefined);
   const handleClickLink = () => {
+    // When the link button is clicked, we must either remove the underlying link if we are on a link
+    // of create a new node with a link, even if empty (just with https://).
+    // This is important to do it here, because unless the link is written in the editor,
+    // the link dialog cannot show up if the cursor or selection is not already on a link.
     if (toolbarState.link) {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     } else {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://");
     }
   };
+  const handleClickQuote = () => {
+    editor.update(() => {
+      $setBlocksType($getSelection(), () => $createQuoteNode());
+    });
+  };
 
   return (
     <Toolbar
       aria-label="Rich text editor toolbar"
-      checkedValues={checkedValues}
+      checkedValues={fluentToolbarCheckedValues}
       size="medium"
       style={{
         borderTop: `1px solid ${tokens.colorNeutralStroke2}`,
@@ -164,25 +128,25 @@ export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) 
         borderTopRightRadius: tokens.borderRadiusLarge,
       }}
     >
-      <Menu checkedValues={{ textStyle: [selectedTextStyle] }}>
+      <Menu checkedValues={{ textStyle: [selectedBlockStyleDropdownType] }}>
         <MenuTrigger disableButtonEnhancement>
           <MenuButton
             aria-label="Text style"
-            disabled={disabled}
+            disabled={toolbarDisabled}
             size="small"
             appearance={"transparent"}
             style={{ width: "9em", justifyContent: "space-between" }}
           >
-            {selectedTextStyleLabel}
+            {selectedBlockStyleDropdownLabel}
           </MenuButton>
         </MenuTrigger>
         <MenuPopover>
           <MenuList>
-            {textStyles.map((textStyle) => (
+            {blockStyleDropdownValues.map((textStyle) => (
               <MenuItemRadio
                 key={textStyle.value}
                 name="textStyle"
-                onClick={() => setTextStyle(textStyle.value)}
+                onClick={() => handleChangeBlockStyleDropdown(textStyle.value)}
                 value={textStyle.value}
               >
                 {textStyle.label}
@@ -194,99 +158,99 @@ export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) 
 
       <ToolbarToggleButton
         aria-label="Bold"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextBoldRegular />}
         name="format"
-        onClick={() => formatText("bold")}
+        onClick={handleClickBold}
         value="bold"
       />
       <ToolbarToggleButton
         aria-label="Italic"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextItalicRegular />}
         name="format"
-        onClick={() => formatText("italic")}
+        onClick={handleClickItalic}
         value="italic"
       />
       <ToolbarToggleButton
         aria-label="Code"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<CodeRegular />}
         name="format"
-        onClick={() => formatText("code")}
+        onClick={handleClickCode}
         value="code"
       />
       <ToolbarToggleButton
         aria-label="Strikethrough"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextStrikethroughRegular />}
         name="format"
-        onClick={() => formatText("strikethrough")}
+        onClick={handleClickStrikethrough}
         value="strikethrough"
       />
       <ToolbarButton
         aria-label="Clear formatting"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextClearFormattingRegular />}
-        onClick={() => editor.dispatchCommand(CLEAR_FORMATTING_COMMAND, undefined)}
+        onClick={handleClickClearFormatting}
       />
       <ToolbarDivider />
       <ToolbarToggleButton
         aria-label="Quote"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextQuoteRegular />}
         name="block"
-        onClick={setQuote}
+        onClick={handleClickQuote}
         value="quote"
       />
       <ToolbarButton
         aria-label="Horizontal rule"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<LineHorizontal1Regular />}
-        onClick={() => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined)}
+        onClick={handleClickHorizontalRule}
       />
       <ToolbarDivider />
       <ToolbarToggleButton
         aria-label="Bulleted list"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextBulletListLtrRegular />}
         name="block"
-        onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}
+        onClick={handleClickUnorderedList}
         value="bullet"
       />
       <ToolbarToggleButton
         aria-label="Numbered list"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextNumberListLtrRegular />}
         name="block"
-        onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)}
+        onClick={handleClickNumberedList}
         value="number"
       />
       <ToolbarToggleButton
         aria-label="Task list"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<ClipboardTaskListLtrRegular />}
         name="block"
-        onClick={() => editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined)}
+        onClick={handleClickTaskList}
         value="check"
       />
       <ToolbarDivider />
       <ToolbarButton
         aria-label="Outdent"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextIndentDecreaseLtrRegular />}
-        onClick={() => editor.dispatchCommand(OUTDENT_CONTENT_COMMAND, undefined)}
+        onClick={handleClickIndentDecrease}
       />
       <ToolbarButton
         aria-label="Indent"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<TextIndentIncreaseLtrRegular />}
-        onClick={() => editor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined)}
+        onClick={handleClickIndentIncrease}
       />
       <ToolbarDivider />
       <ToolbarToggleButton
         aria-label="Link"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<LinkRegular />}
         name="format"
         onClick={handleClickLink}
@@ -294,21 +258,47 @@ export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) 
       />
       <ToolbarButton
         aria-label="Undo"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<ArrowCounterclockwiseRegular />}
-        onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
+        onClick={handleClickUndo}
       />
       <ToolbarButton
         aria-label="Redo"
-        disabled={disabled}
+        disabled={toolbarDisabled}
         icon={<ArrowClockwiseRegular />}
-        onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
+        onClick={handleClickRedo}
       />
     </Toolbar>
   );
 }
 
-function getTextStyleValue(block: ToolbarState["block"]): TextStyleValue {
+/**
+ * Converts the toolbarState computed from Lexical current state
+ * into a set of checkedValues as expected by FluentUI Toolbar
+ *
+ * ```
+ * checkedValues = {
+ *   block: ["quote"], // or ["bullet"], ["number"], ["check"], etc.
+ *   format: ["bold", "italic", "link"]
+ * }
+ * ```
+ */
+function toFluentUiToolbarCheckedValues(toolbarState: ToolbarState): {
+  block: string[];
+  format: string[];
+} {
+  return {
+    block: toolbarState.block === null ? [] : [toolbarState.block],
+    format: [
+      toolbarState.bold ? "bold" : null,
+      toolbarState.code ? "code" : null,
+      toolbarState.italic ? "italic" : null,
+      toolbarState.link ? "link" : null,
+      toolbarState.strikethrough ? "strikethrough" : null,
+    ].filter((value): value is string => value !== null),
+  };
+}
+function getTextStyleValue(block: ToolbarState["block"]): BlockStyleDropdownType {
   if (block === "h1" || block === "h2" || block === "h3" || block === "h4" || block === "h5" || block === "h6") {
     return block;
   }

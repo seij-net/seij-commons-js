@@ -12,7 +12,7 @@ import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
 import TreeViewComponent from "../components/TreeViewComponent";
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { HistoryExtension } from "@lexical/history";
-import { HorizontalRuleExtension, SelectionAlwaysOnDisplayExtension } from "@lexical/extension";
+import { HorizontalRuleExtension } from "@lexical/extension";
 import { ReactExtension } from "@lexical/react/ReactExtension";
 import { ClearFormattingExtension } from "../extensions/ClearFormattingExtension";
 import { JsonOnChangeExtension } from "../extensions/JsonOnChangeExtension";
@@ -24,7 +24,7 @@ import { RichTextEditorLinkEditor } from "./RichTextEditorLinkEditor";
 const useStyles = makeStyles({
   editorShell: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
-    height: "160px",
+    height: "320px",
     overflow: "auto",
     paddingLeft: tokens.spacingHorizontalS,
     paddingRight: tokens.spacingHorizontalS,
@@ -100,9 +100,9 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
           spellCheck
           translate={"no"}
         />
-        <RichTextEditorLinkEditor disabled={props.disabled} />
       </div>
       {debug && <TreeViewComponent />}
+      <RichTextEditorLinkEditor disabled={props.disabled} />
     </LexicalExtensionComposer>
   );
 }
