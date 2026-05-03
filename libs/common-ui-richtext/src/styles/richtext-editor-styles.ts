@@ -15,6 +15,23 @@ export const useEditorStyles = makeStyles({
     marginBottom: 0,
     paddingLeft: 0,
   },
+  codeBlock: {
+    display: "block",
+    paddingLeft: tokens.spacingHorizontalM,
+    paddingRight: tokens.spacingHorizontalM,
+    paddingTop: tokens.spacingVerticalS,
+    paddingBottom: tokens.spacingVerticalS,
+    borderLeft: "3px solid " + tokens.colorNeutralStroke2,
+    marginBottom: tokens.spacingVerticalS,
+  },
+  codeInline: {
+    color: tokens.colorNeutralForeground1,
+    backgroundColor: tokens.colorNeutralBackground4,
+    paddingLeft: "0.2em",
+    paddingRight: "0.2em",
+    border: "1px solid " + tokens.colorNeutralStroke2,
+    borderRadius: tokens.borderRadiusMedium
+  },
   listitem: {
     marginTop: 0,
     marginBottom: tokens.spacingVerticalXXS,
@@ -108,6 +125,7 @@ export const useEditorTheme = () => {
       text: {
         strikethrough: styles.strikethrough,
         underlineStrikethrough: styles.underlineStrikethrough,
+        code: styles.codeInline
       },
       list: {
         checklist: styles.checklist,
@@ -115,6 +133,7 @@ export const useEditorTheme = () => {
         listitemChecked: styles.listitemChecked,
         listitemUnchecked: styles.listitemUnchecked,
       },
+      code: styles.codeBlock,
       paragraph: styles.paragraph,
       quote: styles.quote,
     }),

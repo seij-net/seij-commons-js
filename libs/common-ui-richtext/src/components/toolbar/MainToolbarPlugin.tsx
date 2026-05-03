@@ -31,7 +31,7 @@ import {
 import { TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useLexicalEditable } from "@lexical/react/useLexicalEditable";
-import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
+import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
 import { $setBlocksType } from "@lexical/selection";
 import { $createHeadingNode, $createQuoteNode, type HeadingTagType } from "@lexical/rich-text";
 import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from "@lexical/list";
@@ -66,7 +66,7 @@ export interface MainToolbarProps {
   disabled: boolean;
 }
 
-export function MainToolbar({ disabled }: MainToolbarProps) {
+export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   const toolbarState = useLexicalSubscription(computeToolbarStateSubscription);

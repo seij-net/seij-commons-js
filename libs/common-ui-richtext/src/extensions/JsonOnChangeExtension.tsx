@@ -1,7 +1,7 @@
 import { defineExtension, HISTORY_MERGE_TAG, safeCast } from "lexical";
 import { CONTROLLED_VALUE_UPDATE_TAG } from "./ControlledValueUpdateTag";
 import { $convertToMarkdownString } from "@lexical/markdown";
-import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
+import { DEFAULT_TRANSFORMERS } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 
 export type JsonOnChangeExtensionConfig = {
   onChange: null | ((payload: object | string) => void);
@@ -34,7 +34,7 @@ export const JsonOnChangeExtension = defineExtension({
         let result: object | string = "";
         if (config.format === "state") result = payload.editorState.toJSON();
         if (config.format === "markdown")
-          result = payload.editorState.read(() => $convertToMarkdownString(MARKDOWN_TRANSFORMERS));
+          result = payload.editorState.read(() => $convertToMarkdownString(DEFAULT_TRANSFORMERS));
         onChange(result);
       }
     });

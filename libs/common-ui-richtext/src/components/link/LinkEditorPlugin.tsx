@@ -12,14 +12,14 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
 import { type MouseEvent } from "react";
-import { LinkEditorForm } from "./link/LinkEditorForm";
+import { LinkEditorForm } from "./LinkEditorForm";
 
 interface LinkSelection {
   linkHTMLElement: HTMLElement;
   url: string;
 }
 
-export function RichTextEditorLinkEditor({ disabled }: { disabled: boolean }) {
+export function LinkEditorPlugin({ disabled }: { disabled: boolean }) {
   const [editor] = useLexicalComposerContext();
   const linkSelection = useLexicalSubscription(computeLinkSelectionSubscription);
   const rootElement = editor.getRootElement();

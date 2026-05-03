@@ -4,6 +4,8 @@
 
 - Feature: added code, undo, redo
 - Feature: combobox to select paragraph or headings
+- Feature: added code blocks
+- Feature: better UI for
 
 ## v0.2.2
 

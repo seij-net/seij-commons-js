@@ -7,8 +7,7 @@ import { RichTextExtension } from "@lexical/rich-text";
 import { CheckListExtension, ListExtension } from "@lexical/list";
 import { configExtension, defineExtension } from "lexical";
 import { type ForwardedRef, forwardRef, type ReactElement, type RefAttributes, useMemo, useRef } from "react";
-import { MainToolbar } from "./toolbar/MainToolbar";
-import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
+import { MainToolbarPlugin } from "./toolbar/MainToolbarPlugin";
 import TreeViewComponent from "../components/TreeViewComponent";
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { HistoryExtension } from "@lexical/history";
@@ -19,7 +18,9 @@ import { JsonOnChangeExtension } from "../extensions/JsonOnChangeExtension";
 import { useEditorTheme } from "../styles/richtext-editor-styles";
 import { EditorRefExtension, type RichTextEditorRef, useEditorRef } from "../extensions/EditorRefExtension";
 import { ExternalValueSync } from "./external-value-sync/ExternalValueSync";
-import { RichTextEditorLinkEditor } from "./RichTextEditorLinkEditor";
+import { LinkEditorPlugin } from "./link/LinkEditorPlugin";
+import { CodeExtension } from "@lexical/code-core";
+import { CodeShikiExtension } from "@lexical/code-shiki";
 
 const useStyles = makeStyles({
   editorShell: {
@@ -68,6 +69,8 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
         theme,
         dependencies: [
           configExtension(EditorRefExtension, { editorRef, pendingFocusRef }),
+          //CodeExtension,
+          CodeShikiExtension,
           HistoryExtension,
           ListExtension,
           CheckListExtension,
@@ -89,8 +92,8 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
 
   return (
     <LexicalExtensionComposer extension={SeijEditorExtension} contentEditable={null}>
-      <MainToolbar disabled={props.disabled} />
-      <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />
+      <MainToolbarPlugin disabled={props.disabled} />
+      <MarkdownShortcutPlugin />
       <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
       <div className={styles.editorShell}>
         <ContentEditable
@@ -102,7 +105,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
         />
       </div>
       {debug && <TreeViewComponent />}
-      <RichTextEditorLinkEditor disabled={props.disabled} />
+      <LinkEditorPlugin disabled={props.disabled} />
     </LexicalExtensionComposer>
   );
 }
