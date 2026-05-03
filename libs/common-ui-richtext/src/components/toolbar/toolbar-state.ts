@@ -9,11 +9,10 @@ import {
   LexicalNode,
   mergeRegister,
   RangeSelection,
-  SELECTION_CHANGE_COMMAND,
+  SELECTION_CHANGE_COMMAND
 } from "lexical";
 import { $isListNode } from "@lexical/list";
 import { $isLinkNode } from "@lexical/link";
-import { useLexicalSubscription } from "@lexical/react/useLexicalSubscription";
 
 /**
  * State that indicates
@@ -32,7 +31,14 @@ export interface ToolbarState {
   strikethrough: boolean;
 }
 
-export type ToolbarStateBlocType = "paragraph" | HeadingTagType | "quote" | "list_unordered" | "list_ordered" | "list_todo" | null;
+export type ToolbarStateBlocType =
+  | "paragraph"
+  | HeadingTagType
+  | "quote"
+  | "list_unordered"
+  | "list_ordered"
+  | "list_todo"
+  | null;
 
 /**
  * Constant state of the toolbar when nothing is selected.
@@ -47,19 +53,10 @@ export const toolbarStateNothing: ToolbarState = {
 };
 
 /**
- * Returns the toolbar state based on the state of the editor
- */
-export function useToolbarState(): ToolbarState {
-  // We subscribe to Lexical changes and each time we compute the state of
-  // the toolbar. We must pass an external function (stable identity, no closure)
-  return useLexicalSubscription(computeToolbarStateSubscription);
-}
-
-/**
  * Subcribes to editor changes (selection and global state)
  * On each change, recompulte the toolbar state and return it.
  */
-function computeToolbarStateSubscription(editor: LexicalEditor) {
+export function computeToolbarStateSubscription(editor: LexicalEditor) {
   return {
     initialValueFn: () => editor.getEditorState().read($computeToolbarStateFromEditor),
     subscribe: (callback: (value: ToolbarState) => void) =>
@@ -118,7 +115,6 @@ function $findToolbarBlockType(selection: RangeSelection) {
       } else if (type === "check") {
         block = "list_todo";
       }
-
     } else if (topLevelElement.getType() === "paragraph") {
       block = "paragraph";
     }

@@ -1,7 +1,9 @@
 import { Popover, PopoverSurface } from "@fluentui/react-components";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useLexicalSubscription } from "@lexical/react/useLexicalSubscription";
 import {
+  $findMatchingParent,
   $getSelection,
   $isRangeSelection,
   COMMAND_PRIORITY_LOW,
@@ -9,96 +11,34 @@ import {
   mergeRegister,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { type MouseEvent, useCallback, useEffect, useState } from "react";
+import { type MouseEvent } from "react";
 import { LinkEditorForm } from "./link/LinkEditorForm";
 
 interface LinkSelection {
-  rootElement: HTMLElement;
-  target: HTMLElement;
+  linkHTMLElement: HTMLElement;
   url: string;
 }
 
 export function RichTextEditorLinkEditor({ disabled }: { disabled: boolean }) {
   const [editor] = useLexicalComposerContext();
-  const [linkSelection, setLinkSelection] = useState<LinkSelection | null>(null);
+  const linkSelection = useLexicalSubscription(computeLinkSelectionSubscription);
+  const rootElement = editor.getRootElement();
 
-  const readSelection = useCallback(() => {
-    const selection = $getSelection();
-    const rootElement = editor.getRootElement();
-
-    if (!$isRangeSelection(selection) || rootElement === null || disabled) {
-      setLinkSelection(null);
-      return;
-    }
-
-    const selectedNode = selection.anchor.getNode();
-    let linkNode = $isLinkNode(selectedNode) ? selectedNode : null;
-    let parent = selectedNode.getParent();
-
-    while (linkNode === null && parent !== null) {
-      if ($isLinkNode(parent)) {
-        linkNode = parent;
-      }
-      parent = parent.getParent();
-    }
-
-    const linkElement = linkNode === null ? null : editor.getElementByKey(linkNode.getKey());
-
-    if (linkNode === null || linkElement === null) {
-      setLinkSelection(null);
-      return;
-    }
-
-    setLinkSelection({
-      rootElement,
-      target: linkElement,
-      url: linkNode.getURL(),
-    });
-  }, [disabled, editor]);
-
-  useEffect(() => {
-    return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(readSelection);
-      }),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        () => {
-          readSelection();
-          return false;
-        },
-        COMMAND_PRIORITY_LOW,
-      ),
-    );
-  }, [editor, readSelection]);
-
-  if (linkSelection === null) {
+  if (disabled || linkSelection === null) {
     return null;
   }
 
-  return <LinkEditorPopover disabled={disabled} editor={editor} linkSelection={linkSelection} />;
-}
-
-function LinkEditorPopover({
-  disabled,
-  editor,
-  linkSelection,
-}: {
-  disabled: boolean;
-  editor: LexicalEditor;
-  linkSelection: LinkSelection;
-}) {
-  const submitLink = (url: string) => {
+  const handleSubmit = (url: string) => {
     editor.dispatchCommand(TOGGLE_LINK_COMMAND, url.length > 0 ? url : null);
   };
 
-  const cancelEdit = () => {
+  const handleCancel = () => {
     if (linkSelection.url === "https://") {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }
   };
 
-  const removeLink = () => {
+  const handleRemove = () => {
     editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
   };
 
@@ -117,26 +57,68 @@ function LinkEditorPopover({
   return (
     <Popover
       inline
-      mountNode={linkSelection.rootElement}
+      mountNode={rootElement}
       open
       positioning={{
         align: "start",
-        flipBoundary: linkSelection.rootElement,
+        flipBoundary: rootElement,
         offset: 8,
-        overflowBoundary: linkSelection.rootElement,
+        overflowBoundary: rootElement,
         position: "below",
-        target: linkSelection.target,
+        target: linkSelection.linkHTMLElement,
       }}
     >
       <PopoverSurface onMouseDown={preventSelectionLoss}>
         <LinkEditorForm
           disabled={disabled}
-          onCancel={cancelEdit}
-          onRemove={removeLink}
-          onSubmit={submitLink}
+          onCancel={handleCancel}
+          onRemove={handleRemove}
+          onSubmit={handleSubmit}
           url={linkSelection.url}
         />
       </PopoverSurface>
     </Popover>
   );
+}
+
+function computeLinkSelectionSubscription(editor: LexicalEditor) {
+  return {
+    initialValueFn: () => editor.getEditorState().read(() => $computeLinkSelection(editor)),
+    subscribe: (callback: (value: LinkSelection | null) => void) =>
+      mergeRegister(
+        editor.registerUpdateListener(({ editorState }) => {
+          callback(editorState.read(() => $computeLinkSelection(editor)));
+        }),
+        editor.registerCommand(
+          SELECTION_CHANGE_COMMAND,
+          () => {
+            callback($computeLinkSelection(editor));
+            return false;
+          },
+          COMMAND_PRIORITY_LOW,
+        ),
+      ),
+  };
+}
+
+function $computeLinkSelection(editor: LexicalEditor): LinkSelection | null {
+  const selection = $getSelection();
+
+  if (!$isRangeSelection(selection)) {
+    return null;
+  }
+
+  const selectedNode = selection.anchor.getNode();
+  const linkNode = $isLinkNode(selectedNode) ? selectedNode : $findMatchingParent(selectedNode, $isLinkNode);
+
+  const linkElement = linkNode === null ? null : editor.getElementByKey(linkNode.getKey());
+
+  if (linkNode === null || linkElement === null) {
+    return null;
+  }
+
+  return {
+    linkHTMLElement: linkElement,
+    url: linkNode.getURL(),
+  };
 }

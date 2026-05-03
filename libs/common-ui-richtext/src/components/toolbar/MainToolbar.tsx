@@ -46,7 +46,8 @@ import {
 } from "lexical";
 import { useMemo } from "react";
 import { CLEAR_FORMATTING_COMMAND } from "../../extensions/ClearFormattingExtension";
-import { ToolbarState, useToolbarState } from "./toolbar-state";
+import { computeToolbarStateSubscription, ToolbarState } from "./toolbar-state";
+import { useLexicalSubscription } from "@lexical/react/useLexicalSubscription";
 
 type BlockStyleDropdownType = "paragraph" | HeadingTagType;
 
@@ -68,7 +69,7 @@ export interface MainToolbarProps {
 export function MainToolbar({ disabled }: MainToolbarProps) {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
-  const toolbarState = useToolbarState();
+  const toolbarState = useLexicalSubscription(computeToolbarStateSubscription);
   const toolbarDisabled = disabled || !isEditable;
 
   const fluentToolbarCheckedValues = useMemo(() => toFluentUiToolbarCheckedValues(toolbarState), [toolbarState]);
