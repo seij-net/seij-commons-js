@@ -1,7 +1,7 @@
 import { type ForwardedRef, forwardRef } from "react";
 import { type RichTextEditorRef } from "./extensions/EditorRefExtension";
 import { RichTextEditorBase } from "./components/RichTextEditorBase";
-import { useExternalValueSyncBarrier } from "./components/ExternalValueSync";
+import { useExternalValueSyncBarrier } from "./components/external-value-sync/ExternalValueSync";
 
 type Markdown = string;
 

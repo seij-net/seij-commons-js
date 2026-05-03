@@ -1,6 +1,14 @@
-import { Button, Input, makeStyles, tokens, type InputOnChangeData } from "@fluentui/react-components";
+import { Button, Input, type InputOnChangeData, makeStyles, tokens } from "@fluentui/react-components";
 import { CheckmarkRegular, DeleteRegular, DismissRegular, EditRegular } from "@fluentui/react-icons";
-import { type KeyboardEvent, type MouseEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  type MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 
 const linkFormWidth = 320;
 
@@ -33,6 +41,12 @@ export interface LinkEditorFormProps {
   onSubmit: (url: string) => void;
 }
 
+/**
+ * A form to edit a link. It is displayed inside a popup element.
+ *
+ * If the URL is just "https://" with nothing behind, we consider we are
+ * in an editing mode.
+ */
 export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: LinkEditorFormProps) {
   const styles = useStyles();
   const [editing, setEditing] = useState(url === "https://");
@@ -43,17 +57,39 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
     setDraftUrl(url || "https://");
   }, [url]);
 
-  const submit = (event: KeyboardEvent<HTMLInputElement> | MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const validateValue = () => {
     onSubmit(draftUrl.trim());
     setEditing(false);
   };
-
-  const cancel = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClickOK = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    validateValue();
+  };
+  const handleClickCancel = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setDraftUrl(url || "https://");
     onCancel();
     setEditing(false);
+  };
+
+  const handleClickEdit: MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.preventDefault();
+    setDraftUrl(url);
+    setEditing(true);
+  };
+
+  const handleClickRemove: MouseEventHandler<HTMLButtonElement> = () => onRemove();
+  const handleChangeLinkValue = (_event: ChangeEvent, data: InputOnChangeData) => setDraftUrl(data.value);
+  const handleFocusLinkValue: FocusEventHandler<HTMLInputElement> = (event) => event.target.select();
+  const handleKeydownLinkValue: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      validateValue();
+    } else if (event.key === "Escape") {
+      setDraftUrl(url || "https://");
+      onCancel();
+      setEditing(false);
+    }
   };
 
   if (!editing) {
@@ -67,11 +103,7 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
           appearance="subtle"
           disabled={disabled}
           icon={<EditRegular />}
-          onClick={(event) => {
-            event.preventDefault();
-            setDraftUrl(url);
-            setEditing(true);
-          }}
+          onClick={handleClickEdit}
           size="small"
         />
         <Button
@@ -79,7 +111,7 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
           appearance="subtle"
           disabled={disabled}
           icon={<DeleteRegular />}
-          onClick={onRemove}
+          onClick={handleClickRemove}
           size="small"
         />
       </div>
@@ -93,17 +125,9 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
         autoFocus
         className={styles.input}
         disabled={disabled}
-        onChange={(_event, data: InputOnChangeData) => setDraftUrl(data.value)}
-        onFocus={(event) => event.target.select()}
-        onKeyDown={(event) => {
-          if (event.key === "Enter") {
-            submit(event);
-          } else if (event.key === "Escape") {
-            setDraftUrl(url || "https://");
-            onCancel();
-            setEditing(false);
-          }
-        }}
+        onChange={handleChangeLinkValue}
+        onFocus={handleFocusLinkValue}
+        onKeyDown={handleKeydownLinkValue}
         size="small"
         value={draftUrl}
       />
@@ -112,7 +136,7 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
         appearance="subtle"
         disabled={disabled}
         icon={<DismissRegular />}
-        onClick={cancel}
+        onClick={handleClickCancel}
         size="small"
       />
       <Button
@@ -120,7 +144,7 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
         appearance="primary"
         disabled={disabled}
         icon={<CheckmarkRegular />}
-        onClick={submit}
+        onClick={handleClickOK}
         size="small"
       />
     </div>

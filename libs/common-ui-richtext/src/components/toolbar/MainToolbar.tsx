@@ -45,7 +45,7 @@ import {
   UNDO_COMMAND,
 } from "lexical";
 import { useMemo } from "react";
-import { CLEAR_FORMATTING_COMMAND } from "../extensions/ClearFormattingExtension";
+import { CLEAR_FORMATTING_COMMAND } from "../../extensions/ClearFormattingExtension";
 import { ToolbarState, useToolbarState } from "./toolbar-state";
 
 type BlockStyleDropdownType = "paragraph" | HeadingTagType;
@@ -60,12 +60,12 @@ const blockStyleDropdownValues: Array<{ label: string; value: BlockStyleDropdown
   { label: "Heading 6", value: "h6" },
 ];
 
-export interface RichTextEditorToolbarProps {
+export interface MainToolbarProps {
   /** if true toolbar shall be disabled */
   disabled: boolean;
 }
 
-export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) {
+export function MainToolbar({ disabled }: MainToolbarProps) {
   const [editor] = useLexicalComposerContext();
   const isEditable = useLexicalEditable();
   const toolbarState = useToolbarState();
@@ -211,20 +211,20 @@ export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) 
       />
       <ToolbarDivider />
       <ToolbarToggleButton
-        aria-label="Bulleted list"
+        aria-label="Unordered list"
         disabled={toolbarDisabled}
         icon={<TextBulletListLtrRegular />}
         name="block"
         onClick={handleClickUnorderedList}
-        value="bullet"
+        value="list_unordered"
       />
       <ToolbarToggleButton
-        aria-label="Numbered list"
+        aria-label="Ordered list"
         disabled={toolbarDisabled}
         icon={<TextNumberListLtrRegular />}
         name="block"
         onClick={handleClickNumberedList}
-        value="number"
+        value="list_ordered"
       />
       <ToolbarToggleButton
         aria-label="Task list"
@@ -232,7 +232,7 @@ export function RichTextEditorToolbar({ disabled }: RichTextEditorToolbarProps) 
         icon={<ClipboardTaskListLtrRegular />}
         name="block"
         onClick={handleClickTaskList}
-        value="check"
+        value="list_todo"
       />
       <ToolbarDivider />
       <ToolbarButton
@@ -298,6 +298,14 @@ function toFluentUiToolbarCheckedValues(toolbarState: ToolbarState): {
     ].filter((value): value is string => value !== null),
   };
 }
+
+/**
+ * Converts a block from the toolbar state into a block style for the dropdown
+ * if block style selection. We need this because the toolbar state has more
+ * kinds of blocks that the dropdown (for example, "quote" or "lists" are not in the
+ * dropdown).
+ * @param block
+ */
 function getTextStyleValue(block: ToolbarState["block"]): BlockStyleDropdownType {
   if (block === "h1" || block === "h2" || block === "h3" || block === "h4" || block === "h5" || block === "h6") {
     return block;

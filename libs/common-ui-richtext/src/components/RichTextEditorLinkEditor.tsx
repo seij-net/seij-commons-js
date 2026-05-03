@@ -10,7 +10,7 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
 import { type MouseEvent, useCallback, useEffect, useState } from "react";
-import { LinkEditorForm } from "./LinkEditorForm";
+import { LinkEditorForm } from "./link/LinkEditorForm";
 
 interface LinkSelection {
   rootElement: HTMLElement;

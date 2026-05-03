@@ -9,7 +9,7 @@ import {
   LexicalNode,
   mergeRegister,
   RangeSelection,
-  SELECTION_CHANGE_COMMAND
+  SELECTION_CHANGE_COMMAND,
 } from "lexical";
 import { $isListNode } from "@lexical/list";
 import { $isLinkNode } from "@lexical/link";
@@ -32,7 +32,7 @@ export interface ToolbarState {
   strikethrough: boolean;
 }
 
-export type ToolbarStateBlocType = "paragraph" | HeadingTagType | "quote" | "bullet" | "number" | "check" | null;
+export type ToolbarStateBlocType = "paragraph" | HeadingTagType | "quote" | "list_unordered" | "list_ordered" | "list_todo" | null;
 
 /**
  * Constant state of the toolbar when nothing is selected.
@@ -110,7 +110,15 @@ function $findToolbarBlockType(selection: RangeSelection) {
     } else if ($isQuoteNode(topLevelElement)) {
       block = "quote";
     } else if ($isListNode(topLevelElement)) {
-      block = topLevelElement.getListType();
+      const type = topLevelElement.getListType();
+      if (type === "number") {
+        block = "list_ordered";
+      } else if (type === "bullet") {
+        block = "list_unordered";
+      } else if (type === "check") {
+        block = "list_todo";
+      }
+
     } else if (topLevelElement.getType() === "paragraph") {
       block = "paragraph";
     }

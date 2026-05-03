@@ -1,9 +1,9 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect, useRef, useState } from "react";
 import { SerializedEditorState } from "lexical";
-import { CONTROLLED_VALUE_UPDATE_TAG } from "../extensions/ControlledValueUpdateTag";
+import { CONTROLLED_VALUE_UPDATE_TAG } from "../../extensions/ControlledValueUpdateTag";
 import { $convertFromMarkdownString } from "@lexical/markdown";
-import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
+import { MARKDOWN_TRANSFORMERS } from "../../RichTextEditorBridgePlugin";
 
 export function ExternalValueSync<EXTERNAL_VALUE>({
   value,
