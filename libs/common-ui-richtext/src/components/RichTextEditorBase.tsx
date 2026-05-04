@@ -1,4 +1,4 @@
-import { makeStyles, tokens } from "@fluentui/react-components";
+import { makeStyles, mergeClasses, tokens } from "@fluentui/react-components";
 import { LinkExtension } from "@lexical/link";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
@@ -23,9 +23,15 @@ import { CodeShikiExtension } from "@lexical/code-shiki";
 import { useRichTextI18n } from "../utils/useRichTextI18n";
 
 const useStyles = makeStyles({
-  editorShell: {
+  editor: {
+    display: "flex",
+    flexDirection: "column",
+    maxHeight: "100vh",
+    minHeight: 0,
+  },
+  contentViewport: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
-    height: "320px",
+    minHeight: 0,
     overflow: "auto",
     paddingLeft: tokens.spacingHorizontalS,
     paddingRight: tokens.spacingHorizontalS,
@@ -33,11 +39,30 @@ const useStyles = makeStyles({
     paddingBottom: tokens.spacingVerticalS,
     position: "relative",
   },
-  editorArea: {
-    minHeight: "100%",
+  contentEditable: {
+    minHeight: "320px",
     outlineStyle: "none",
   },
 });
+
+/**
+ * Used to customize various parts of the editor. Give them CSS classnames.
+ */
+export interface RichTextEditorClassNames {
+  /**
+   * Root of the component, includes the toolbar and editor
+   */
+  editor?: string;
+  /**
+   * Visible area/scrollable around the editable content
+   */
+  contentViewport?: string;
+  /**
+   * Editable content area (the ContentEditable itself)
+   */
+  contentEditable?: string;
+}
+
 export interface RichTextEditorBaseProps<EXTERNAL_VALUE> {
   value: EXTERNAL_VALUE;
   valueRevision: number;
@@ -45,6 +70,7 @@ export interface RichTextEditorBaseProps<EXTERNAL_VALUE> {
   debug?: boolean;
   onChange: (value: EXTERNAL_VALUE) => void;
   format: "markdown" | "state";
+  classNames?: RichTextEditorClassNames;
 }
 
 function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
@@ -94,17 +120,19 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
 
   return (
     <LexicalExtensionComposer extension={SeijEditorExtension} contentEditable={null}>
-      <MainToolbarPlugin disabled={props.disabled} />
-      <MarkdownShortcutPlugin />
-      <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
-      <div className={styles.editorShell}>
-        <ContentEditable
-          aria-placeholder={contentEditablePlaceholder}
-          className={`${styles.editorArea} notranslate`}
-          placeholder={<div>{contentEditablePlaceholder}</div>}
-          spellCheck
-          translate={"no"}
-        />
+      <div className={mergeClasses(styles.editor, props.classNames?.editor)}>
+        <MainToolbarPlugin disabled={props.disabled} />
+        <MarkdownShortcutPlugin />
+        <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
+        <div className={mergeClasses(styles.contentViewport, props.classNames?.contentViewport)}>
+          <ContentEditable
+            aria-placeholder={contentEditablePlaceholder}
+            className={mergeClasses(styles.contentEditable, props.classNames?.contentEditable, "notranslate")}
+            placeholder={<div>{contentEditablePlaceholder}</div>}
+            spellCheck
+            translate={"no"}
+          />
+        </div>
       </div>
       {debug && <TreeViewComponent />}
       <LinkEditorPlugin disabled={props.disabled} />

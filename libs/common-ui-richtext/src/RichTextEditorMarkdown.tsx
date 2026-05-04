@@ -1,6 +1,6 @@
 import { type ForwardedRef, forwardRef } from "react";
 import { type RichTextEditorRef } from "./extensions/EditorRefExtension";
-import { RichTextEditorBase } from "./components/RichTextEditorBase";
+import { type RichTextEditorClassNames, RichTextEditorBase } from "./components/RichTextEditorBase";
 import { useExternalValueSyncBarrier } from "./components/external-value-sync/ExternalValueSync";
 
 type Markdown = string;
@@ -10,6 +10,7 @@ export interface RichTextEditorMarkdownProps {
   disabled: boolean;
   onChange: (value: Markdown) => void;
   debug?: boolean;
+  classNames?: RichTextEditorClassNames;
 }
 function markdownEquality(previous: Markdown, next: Markdown) {
   return previous === next;
@@ -31,6 +32,7 @@ export const RichTextEditorMarkdown = forwardRef(function RichTextEditorJson(
       format={"markdown"}
       disabled={props.disabled}
       debug={props.debug}
+      classNames={props.classNames}
       ref={ref}
       onChange={handleChange}
     />

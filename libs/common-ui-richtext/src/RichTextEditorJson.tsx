@@ -1,7 +1,7 @@
 import { type SerializedEditorState } from "lexical";
 import { type ForwardedRef, forwardRef } from "react";
 import { type RichTextEditorRef } from "./extensions/EditorRefExtension";
-import { RichTextEditorBase } from "./components/RichTextEditorBase";
+import { type RichTextEditorClassNames, RichTextEditorBase } from "./components/RichTextEditorBase";
 import { useExternalValueSyncBarrier } from "./components/external-value-sync/ExternalValueSync";
 
 export interface RichTextEditorJsonProps {
@@ -9,6 +9,7 @@ export interface RichTextEditorJsonProps {
   disabled: boolean;
   onChange: (value: SerializedEditorState) => void;
   debug?: boolean;
+  classNames?: RichTextEditorClassNames;
 }
 
 function jsonEquality(previous: SerializedEditorState, next: SerializedEditorState) {
@@ -31,6 +32,7 @@ export const RichTextEditorJson = forwardRef(function RichTextEditorJson(
       valueRevision={revision}
       disabled={props.disabled}
       debug={props.debug}
+      classNames={props.classNames}
       ref={ref}
       format={"state"}
       onChange={handleChange}
