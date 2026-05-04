@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.4.0
+
+- Feature: better CSS controls. Introduced classNames configuration
+
 ## v0.3.0
 
 - Feature: added inline code format

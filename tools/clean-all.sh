@@ -10,5 +10,6 @@ rm -rf "${ROOT_DIR}/node_modules" "${ROOT_DIR}/.turbo"
 find "${ROOT_DIR}" -maxdepth 3 -type d \( \
   -name node_modules -o \
   -name dist -o \
-  -name .turbo \
+  -name .turbo -o \
+  -name storybook-static \
 \) -prune -exec rm -rf '{}' +

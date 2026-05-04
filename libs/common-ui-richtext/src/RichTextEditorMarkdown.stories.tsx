@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { RichTextEditorMarkdown, RichTextEditorRef } from "@seij/common-ui-richtext";
 import { SeijUIProvider } from "@seij/common-ui";
 
+// language=text
 const SAMPLE_MARKDOWN = `
 # Main title
 
@@ -165,7 +166,9 @@ export const MarkdownValue: Story = {
             flex: 1,
             minWidth: 0,
             minHeight: 0,
-            overflow: "auto",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
             boxSizing: "border-box",
             padding: tokens.spacingHorizontalM,
           }}
