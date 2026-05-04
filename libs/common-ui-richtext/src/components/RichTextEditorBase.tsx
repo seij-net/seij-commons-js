@@ -7,8 +7,7 @@ import { RichTextExtension } from "@lexical/rich-text";
 import { CheckListExtension, ListExtension } from "@lexical/list";
 import { configExtension, defineExtension } from "lexical";
 import { type ForwardedRef, forwardRef, type ReactElement, type RefAttributes, useMemo, useRef } from "react";
-import { RichTextEditorToolbar } from "../components/RichTextEditorToolbar";
-import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
+import { MainToolbarPlugin } from "./toolbar/MainToolbarPlugin";
 import TreeViewComponent from "../components/TreeViewComponent";
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { HistoryExtension } from "@lexical/history";
@@ -18,17 +17,25 @@ import { ClearFormattingExtension } from "../extensions/ClearFormattingExtension
 import { JsonOnChangeExtension } from "../extensions/JsonOnChangeExtension";
 import { useEditorTheme } from "../styles/richtext-editor-styles";
 import { EditorRefExtension, type RichTextEditorRef, useEditorRef } from "../extensions/EditorRefExtension";
-import { ExternalValueSync } from "./ExternalValueSync";
+import { ExternalValueSync } from "./external-value-sync/ExternalValueSync";
+import { LinkEditorPlugin } from "./link/LinkEditorPlugin";
+import { CodeShikiExtension } from "@lexical/code-shiki";
+import { useRichTextI18n } from "../utils/useRichTextI18n";
 
 const useStyles = makeStyles({
-  editorArea: {
+  editorShell: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
-    height: "160px",
+    height: "320px",
     overflow: "auto",
     paddingLeft: tokens.spacingHorizontalS,
     paddingRight: tokens.spacingHorizontalS,
     paddingTop: tokens.spacingVerticalS,
     paddingBottom: tokens.spacingVerticalS,
+    position: "relative",
+  },
+  editorArea: {
+    minHeight: "100%",
+    outlineStyle: "none",
   },
 });
 export interface RichTextEditorBaseProps<EXTERNAL_VALUE> {
@@ -47,6 +54,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
   const styles = useStyles();
   const { editorRef, pendingFocusRef } = useEditorRef(ref);
   const theme = useEditorTheme();
+  const { t } = useRichTextI18n();
 
   // We copy the onChange coming from the props when they change
   // in a stable ref, so that the memoization give a stable extension.
@@ -54,6 +62,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
   onChangeRef.current = props.onChange;
 
   const debug = props.debug ?? false;
+  const contentEditablePlaceholder = t("contentEditablePlaceholder");
 
   const SeijEditorExtension = useMemo(
     () =>
@@ -62,6 +71,8 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
         theme,
         dependencies: [
           configExtension(EditorRefExtension, { editorRef, pendingFocusRef }),
+          //CodeExtension,
+          CodeShikiExtension,
           HistoryExtension,
           ListExtension,
           CheckListExtension,
@@ -83,16 +94,20 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
 
   return (
     <LexicalExtensionComposer extension={SeijEditorExtension} contentEditable={null}>
-      <RichTextEditorToolbar disabled={props.disabled} />
-      <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />
+      <MainToolbarPlugin disabled={props.disabled} />
+      <MarkdownShortcutPlugin />
       <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
-      <ContentEditable
-        aria-placeholder="Enter text"
-        placeholder={<div>Enter text</div>}
-        spellCheck
-        className={styles.editorArea}
-      />
+      <div className={styles.editorShell}>
+        <ContentEditable
+          aria-placeholder={contentEditablePlaceholder}
+          className={`${styles.editorArea} notranslate`}
+          placeholder={<div>{contentEditablePlaceholder}</div>}
+          spellCheck
+          translate={"no"}
+        />
+      </div>
       {debug && <TreeViewComponent />}
+      <LinkEditorPlugin disabled={props.disabled} />
     </LexicalExtensionComposer>
   );
 }

@@ -15,12 +15,11 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { findLatestVersion } from "./npm-version-cache.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.join(__dirname, "..");
-const CACHE_FILE = path.join(ROOT_DIR, ".outdated-cache.json");
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 const pkg = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, "package.json"), "utf8"));
 
@@ -74,30 +73,6 @@ function findInstalledVersion(name) {
   return "";
 }
 
-function findLatestVersion(name) {
-  console.log("Finding lastest version of " + name)
-  const now = Date.now();
-  const cache = loadCache();
-  const entry = cache[name];
-  if (entry && entry.latest && now - entry.fetchedAt < CACHE_TTL_MS) {
-    console.log("Finding lastest version of " + name+ "from cache: " + entry.latest)
-    return entry.latest;
-  }
-
-  try {
-    const latest = execSync(`pnpm view ${name} version`, {
-      cwd: ROOT_DIR,
-      stdio: ["ignore", "pipe", "ignore"],
-      encoding: "utf8",
-    }).trim();
-    cache[name] = { latest, fetchedAt: now };
-    saveCache(cache);
-    return latest;
-  } catch {
-    return entry?.latest || "";
-  }
-}
-
 const rows = [];
 for (const [name, info] of entries.entries()) {
   const installed = findInstalledVersion(name) || "-";
@@ -130,20 +105,4 @@ for (const row of rows) {
     col(row.latest, widths[4]),
   ].join(" ");
   console.log(row.update ? `${YELLOW}${line}${RESET}` : line);
-}
-
-function loadCache() {
-  try {
-    return JSON.parse(fs.readFileSync(CACHE_FILE, "utf8"));
-  } catch {
-    return {};
-  }
-}
-
-function saveCache(cache) {
-  try {
-    fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
-  } catch {
-    // best-effort cache; ignore errors
-  }
 }

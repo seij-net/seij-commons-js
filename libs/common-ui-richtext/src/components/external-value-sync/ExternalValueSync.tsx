@@ -1,9 +1,9 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect, useRef, useState } from "react";
 import { SerializedEditorState } from "lexical";
-import { CONTROLLED_VALUE_UPDATE_TAG } from "../extensions/ControlledValueUpdateTag";
+import { CONTROLLED_VALUE_UPDATE_TAG } from "../../extensions/ControlledValueUpdateTag";
 import { $convertFromMarkdownString } from "@lexical/markdown";
-import { MARKDOWN_TRANSFORMERS } from "../RichTextEditorBridgePlugin";
+import { DEFAULT_TRANSFORMERS } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 
 export function ExternalValueSync<EXTERNAL_VALUE>({
   value,
@@ -23,7 +23,7 @@ export function ExternalValueSync<EXTERNAL_VALUE>({
       });
     } else if (format == "markdown") {
       const serialized = value as string;
-      editor.update(() => $convertFromMarkdownString(serialized, MARKDOWN_TRANSFORMERS), {
+      editor.update(() => $convertFromMarkdownString(serialized, DEFAULT_TRANSFORMERS), {
         tag: CONTROLLED_VALUE_UPDATE_TAG,
       });
     }

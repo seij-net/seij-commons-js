@@ -2,7 +2,7 @@
   "name": "seij-commons-js",
   "version": "0.1.0",
   "license": "Apache-2.0",
-  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a",
+  "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8",
   "scripts": {
     "clean": "turbo run clean",
     "build": "turbo run build",
@@ -65,6 +65,8 @@
       "i18next-icu": "^2.3.0",
       "i18next": "^25.3.4",
       "i18next-browser-languagedetector": "^8.2.0",
+      "@lexical/code-core": "^0.44.0",
+      "@lexical/code-shiki": "^0.44.0",
       "@lexical/extension": "^0.44.0",
       "@lexical/link": "^0.44.0",
       "@lexical/list": "^0.44.0",

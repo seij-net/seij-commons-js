@@ -16,6 +16,24 @@ Praesent eget viverra ex, in auctor nunc. Sed a purus vel mi mattis mattis vel n
 This is some text<br />
 With carriage return
 
+This should render as Javascript:
+
+\`\`\`javascript
+type PendingFocusRef = {
+  current: boolean;
+};
+function plus(a, b) {
+  return a + b
+}
+\`\`\`
+
+This should render as Text:
+
+\`\`\`javascript
+This is a raw text
+This is a raw text
+This is a raw text
+\`\`\`
 
 ## Emphasis
 
