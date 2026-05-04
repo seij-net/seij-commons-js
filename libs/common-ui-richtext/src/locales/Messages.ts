@@ -1,0 +1,34 @@
+export interface Messages {
+  contentEditablePlaceholder: string;
+  linkApplyButton: string;
+  linkCancelButton: string;
+  linkEditButton: string;
+  linkRemoveButton: string;
+  linkUrlInput: string;
+  toolbarBoldButton: string;
+  toolbarClearFormattingButton: string;
+  toolbarCodeBlock: string;
+  toolbarCodeLanguageMenu: string;
+  toolbarHeading1: string;
+  toolbarHeading2: string;
+  toolbarHeading3: string;
+  toolbarHeading4: string;
+  toolbarHeading5: string;
+  toolbarHeading6: string;
+  toolbarHorizontalRuleButton: string;
+  toolbarIndentButton: string;
+  toolbarInlineCodeButton: string;
+  toolbarItalicButton: string;
+  toolbarLinkButton: string;
+  toolbarNormalText: string;
+  toolbarOrderedListButton: string;
+  toolbarOutdentButton: string;
+  toolbarQuoteButton: string;
+  toolbarRedoButton: string;
+  toolbarRichTextEditor: string;
+  toolbarStrikethroughButton: string;
+  toolbarTaskListButton: string;
+  toolbarTextStyleMenu: string;
+  toolbarUndoButton: string;
+  toolbarUnorderedListButton: string;
+}

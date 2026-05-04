@@ -1,4 +1,4 @@
-import { Button, Input, type InputOnChangeData, makeStyles, tokens } from "@fluentui/react-components";
+import { Button, Input, type InputOnChangeData, makeStyles, tokens, Tooltip } from "@fluentui/react-components";
 import { CheckmarkRegular, DeleteRegular, DismissRegular, EditRegular } from "@fluentui/react-icons";
 import {
   ChangeEvent,
@@ -9,6 +9,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useRichTextI18n } from "../../utils/useRichTextI18n";
 
 const linkFormWidth = 320;
 
@@ -51,11 +52,18 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
   const styles = useStyles();
   const [editing, setEditing] = useState(url === "https://");
   const [draftUrl, setDraftUrl] = useState(url || "https://");
+  const { t } = useRichTextI18n();
 
   useEffect(() => {
     setEditing(url === "https://");
     setDraftUrl(url || "https://");
   }, [url]);
+
+  const linkEditButtonLabel = t("linkEditButton");
+  const linkRemoveButtonLabel = t("linkRemoveButton");
+  const linkUrlInputLabel = t("linkUrlInput");
+  const linkCancelButtonLabel = t("linkCancelButton");
+  const linkApplyButtonLabel = t("linkApplyButton");
 
   const validateValue = () => {
     onSubmit(draftUrl.trim());
@@ -98,22 +106,26 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
         <a className={styles.link} href={url} rel="noopener noreferrer" target="_blank">
           {url}
         </a>
-        <Button
-          aria-label="Edit link"
-          appearance="subtle"
-          disabled={disabled}
-          icon={<EditRegular />}
-          onClick={handleClickEdit}
-          size="small"
-        />
-        <Button
-          aria-label="Remove link"
-          appearance="subtle"
-          disabled={disabled}
-          icon={<DeleteRegular />}
-          onClick={handleClickRemove}
-          size="small"
-        />
+        <Tooltip content={linkEditButtonLabel} relationship={"description"} withArrow>
+          <Button
+            aria-label={linkEditButtonLabel}
+            appearance="subtle"
+            disabled={disabled}
+            icon={<EditRegular />}
+            onClick={handleClickEdit}
+            size="small"
+          />
+        </Tooltip>
+        <Tooltip content={linkRemoveButtonLabel} relationship={"description"} withArrow>
+          <Button
+            aria-label={linkRemoveButtonLabel}
+            appearance="subtle"
+            disabled={disabled}
+            icon={<DeleteRegular />}
+            onClick={handleClickRemove}
+            size="small"
+          />
+        </Tooltip>
       </div>
     );
   }
@@ -121,7 +133,7 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
   return (
     <div className={styles.root}>
       <Input
-        aria-label="Link URL"
+        aria-label={linkUrlInputLabel}
         autoFocus
         className={styles.input}
         disabled={disabled}
@@ -132,7 +144,7 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
         value={draftUrl}
       />
       <Button
-        aria-label="Cancel"
+        aria-label={linkCancelButtonLabel}
         appearance="subtle"
         disabled={disabled}
         icon={<DismissRegular />}
@@ -140,7 +152,7 @@ export function LinkEditorForm({ disabled, url, onCancel, onRemove, onSubmit }: 
         size="small"
       />
       <Button
-        aria-label="Apply"
+        aria-label={linkApplyButtonLabel}
         appearance="primary"
         disabled={disabled}
         icon={<CheckmarkRegular />}

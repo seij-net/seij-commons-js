@@ -2,10 +2,13 @@
 
 ## v0.3.0
 
-- Feature: added code, undo, redo
-- Feature: combobox to select paragraph or headings
+- Feature: added inline code format 
+- Feature: added undo, redo buttons
+- Feature: combobox to select paragraphs and headings
 - Feature: added code blocks
-- Feature: better UI for
+- Feature: added code hightlighting with shiki
+- Feature: better UI, adaptative toolbar
+- Feature: French translation
 
 ## v0.2.2
 

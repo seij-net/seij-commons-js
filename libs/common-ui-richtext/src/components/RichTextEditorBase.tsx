@@ -21,6 +21,7 @@ import { ExternalValueSync } from "./external-value-sync/ExternalValueSync";
 import { LinkEditorPlugin } from "./link/LinkEditorPlugin";
 import { CodeExtension } from "@lexical/code-core";
 import { CodeShikiExtension } from "@lexical/code-shiki";
+import { useRichTextI18n } from "../utils/useRichTextI18n";
 
 const useStyles = makeStyles({
   editorShell: {
@@ -54,6 +55,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
   const styles = useStyles();
   const { editorRef, pendingFocusRef } = useEditorRef(ref);
   const theme = useEditorTheme();
+  const { t } = useRichTextI18n();
 
   // We copy the onChange coming from the props when they change
   // in a stable ref, so that the memoization give a stable extension.
@@ -61,6 +63,7 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
   onChangeRef.current = props.onChange;
 
   const debug = props.debug ?? false;
+  const contentEditablePlaceholder = t("contentEditablePlaceholder");
 
   const SeijEditorExtension = useMemo(
     () =>
@@ -97,9 +100,9 @@ function RichTextEditorBaseComponent<EXTERNAL_VALUE>(
       <ExternalValueSync value={props.value} valueRevision={props.valueRevision} format={props.format} />
       <div className={styles.editorShell}>
         <ContentEditable
-          aria-placeholder="Enter text"
+          aria-placeholder={contentEditablePlaceholder}
           className={`${styles.editorArea} notranslate`}
-          placeholder={<div>Enter text</div>}
+          placeholder={<div>{contentEditablePlaceholder}</div>}
           spellCheck
           translate={"no"}
         />

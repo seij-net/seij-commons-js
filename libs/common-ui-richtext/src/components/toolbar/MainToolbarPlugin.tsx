@@ -6,6 +6,7 @@ import {
   MenuPopover,
   MenuTrigger,
   tokens,
+  Tooltip,
   Toolbar,
   ToolbarButton,
   ToolbarDivider,
@@ -52,19 +53,9 @@ import { CLEAR_FORMATTING_COMMAND } from "../../extensions/ClearFormattingExtens
 import { computeToolbarStateSubscription, ToolbarState } from "./toolbar-state";
 import { useLexicalSubscription } from "@lexical/react/useLexicalSubscription";
 import { $findTopLevelElement } from "../../utils/lexical-utils";
+import { useRichTextI18n } from "../../utils/useRichTextI18n";
 
 type BlockStyleDropdownType = "paragraph" | "code" | HeadingTagType;
-
-const blockStyleDropdownValues: Array<{ label: string; value: BlockStyleDropdownType }> = [
-  { label: "Normal text", value: "paragraph" },
-  { label: "Heading 1", value: "h1" },
-  { label: "Heading 2", value: "h2" },
-  { label: "Heading 3", value: "h3" },
-  { label: "Heading 4", value: "h4" },
-  { label: "Heading 5", value: "h5" },
-  { label: "Heading 6", value: "h6" },
-  { label: "Code block", value: "code" },
-];
 
 const codeLanguageDropdownValues = getCodeLanguageOptions().filter(([value]) =>
   [
@@ -104,13 +95,25 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
   const isEditable = useLexicalEditable();
   const toolbarState = useLexicalSubscription(computeToolbarStateSubscription);
   const toolbarDisabled = disabled || !isEditable;
+  const { t } = useRichTextI18n();
+
+  const blockStyleDropdownValues: Array<{ label: string; value: BlockStyleDropdownType }> = [
+    { label: t("toolbarNormalText"), value: "paragraph" },
+    { label: t("toolbarHeading1"), value: "h1" },
+    { label: t("toolbarHeading2"), value: "h2" },
+    { label: t("toolbarHeading3"), value: "h3" },
+    { label: t("toolbarHeading4"), value: "h4" },
+    { label: t("toolbarHeading5"), value: "h5" },
+    { label: t("toolbarHeading6"), value: "h6" },
+    { label: t("toolbarCodeBlock"), value: "code" },
+  ];
 
   const fluentToolbarCheckedValues = useMemo(() => toFluentUiToolbarCheckedValues(toolbarState), [toolbarState]);
   const selectedBlockStyleDropdownType = getTextStyleValue(toolbarState.blockType);
 
   const selectedBlockStyleDropdownLabel =
     blockStyleDropdownValues.find((textStyle) => textStyle.value === selectedBlockStyleDropdownType)?.label ??
-    "Normal text";
+    t("toolbarNormalText");
   const isCodeBlock = toolbarState.blockType === "code";
   const selectedCodeLanguage = normalizeCodeLanguage(toolbarState.blockCodeLanguage || "javascript");
   const selectedCodeLanguageLabel =
@@ -169,7 +172,7 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
 
   return (
     <Toolbar
-      aria-label="Rich text editor toolbar"
+      aria-label={t("toolbarRichTextEditor")}
       checkedValues={fluentToolbarCheckedValues}
       size="medium"
       style={{
@@ -183,7 +186,7 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
       <Menu checkedValues={{ textStyle: [selectedBlockStyleDropdownType] }}>
         <MenuTrigger disableButtonEnhancement>
           <MenuButton
-            aria-label="Text style"
+            aria-label={t("toolbarTextStyleMenu")}
             disabled={toolbarDisabled}
             size="small"
             appearance={"transparent"}
@@ -212,7 +215,7 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
         <Menu checkedValues={{ codeLanguage: [selectedCodeLanguage] }}>
           <MenuTrigger disableButtonEnhancement>
             <MenuButton
-              aria-label="Code language"
+              aria-label={t("toolbarCodeLanguageMenu")}
               disabled={toolbarDisabled}
               size="small"
               appearance={"transparent"}
@@ -240,122 +243,152 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
 
       {!isCodeBlock && (
         <>
-          <ToolbarToggleButton
-            aria-label="Bold"
-            disabled={toolbarDisabled}
-            icon={<TextBoldRegular />}
-            name="format"
-            onClick={handleClickBold}
-            value="bold"
-          />
-          <ToolbarToggleButton
-            aria-label="Italic"
-            disabled={toolbarDisabled}
-            icon={<TextItalicRegular />}
-            name="format"
-            onClick={handleClickItalic}
-            value="italic"
-          />
-          <ToolbarToggleButton
-            aria-label="Code"
-            disabled={toolbarDisabled}
-            icon={<CodeRegular />}
-            name="format"
-            onClick={handleClickCode}
-            value="code"
-          />
-          <ToolbarToggleButton
-            aria-label="Strikethrough"
-            disabled={toolbarDisabled}
-            icon={<TextStrikethroughRegular />}
-            name="format"
-            onClick={handleClickStrikethrough}
-            value="strikethrough"
-          />
-          <ToolbarButton
-            aria-label="Clear formatting"
-            disabled={toolbarDisabled}
-            icon={<TextClearFormattingRegular />}
-            onClick={handleClickClearFormatting}
-          />
+          <Tooltip content={t("toolbarBoldButton")} relationship={"description"} withArrow>
+            <ToolbarToggleButton
+              aria-label={t("toolbarBoldButton")}
+              disabled={toolbarDisabled}
+              icon={<TextBoldRegular />}
+              name="format"
+              onClick={handleClickBold}
+              value="bold"
+            />
+          </Tooltip>
+          <Tooltip content={t("toolbarItalicButton")} relationship={"description"} withArrow>
+            <ToolbarToggleButton
+              aria-label={t("toolbarItalicButton")}
+              disabled={toolbarDisabled}
+              icon={<TextItalicRegular />}
+              name="format"
+              onClick={handleClickItalic}
+              value="italic"
+            />
+          </Tooltip>
+          <Tooltip content={t("toolbarInlineCodeButton")} relationship={"description"} withArrow>
+            <ToolbarToggleButton
+              aria-label={t("toolbarInlineCodeButton")}
+              disabled={toolbarDisabled}
+              icon={<CodeRegular />}
+              name="format"
+              onClick={handleClickCode}
+              value="code"
+            />
+          </Tooltip>
+          <Tooltip content={t("toolbarStrikethroughButton")} relationship={"description"} withArrow>
+            <ToolbarToggleButton
+              aria-label={t("toolbarStrikethroughButton")}
+              disabled={toolbarDisabled}
+              icon={<TextStrikethroughRegular />}
+              name="format"
+              onClick={handleClickStrikethrough}
+              value="strikethrough"
+            />
+          </Tooltip>
+          <Tooltip content={t("toolbarClearFormattingButton")} relationship={"description"} withArrow>
+            <ToolbarButton
+              aria-label={t("toolbarClearFormattingButton")}
+              disabled={toolbarDisabled}
+              icon={<TextClearFormattingRegular />}
+              onClick={handleClickClearFormatting}
+            />
+          </Tooltip>
           <ToolbarDivider />
         </>
       )}
-      <ToolbarToggleButton
-        aria-label="Quote"
-        disabled={toolbarDisabled}
-        icon={<TextQuoteRegular />}
-        name="block"
-        onClick={handleClickQuote}
-        value="quote"
-      />
-      <ToolbarButton
-        aria-label="Horizontal rule"
-        disabled={toolbarDisabled}
-        icon={<LineHorizontal1Regular />}
-        onClick={handleClickHorizontalRule}
-      />
+      <Tooltip content={t("toolbarQuoteButton")} relationship={"description"} withArrow>
+        <ToolbarToggleButton
+          aria-label={t("toolbarQuoteButton")}
+          disabled={toolbarDisabled}
+          icon={<TextQuoteRegular />}
+          name="block"
+          onClick={handleClickQuote}
+          value="quote"
+        />
+      </Tooltip>
+      <Tooltip content={t("toolbarHorizontalRuleButton")} relationship={"description"} withArrow>
+        <ToolbarButton
+          aria-label={t("toolbarHorizontalRuleButton")}
+          disabled={toolbarDisabled}
+          icon={<LineHorizontal1Regular />}
+          onClick={handleClickHorizontalRule}
+        />
+      </Tooltip>
       <ToolbarDivider />
-      <ToolbarToggleButton
-        aria-label="Unordered list"
-        disabled={toolbarDisabled}
-        icon={<TextBulletListLtrRegular />}
-        name="block"
-        onClick={handleClickUnorderedList}
-        value="list_unordered"
-      />
-      <ToolbarToggleButton
-        aria-label="Ordered list"
-        disabled={toolbarDisabled}
-        icon={<TextNumberListLtrRegular />}
-        name="block"
-        onClick={handleClickNumberedList}
-        value="list_ordered"
-      />
-      <ToolbarToggleButton
-        aria-label="Task list"
-        disabled={toolbarDisabled}
-        icon={<ClipboardTaskListLtrRegular />}
-        name="block"
-        onClick={handleClickTaskList}
-        value="list_todo"
-      />
+      <Tooltip content={t("toolbarUnorderedListButton")} relationship={"description"} withArrow>
+        <ToolbarToggleButton
+          aria-label={t("toolbarUnorderedListButton")}
+          disabled={toolbarDisabled}
+          icon={<TextBulletListLtrRegular />}
+          name="block"
+          onClick={handleClickUnorderedList}
+          value="list_unordered"
+        />
+      </Tooltip>
+      <Tooltip content={t("toolbarOrderedListButton")} relationship={"description"} withArrow>
+        <ToolbarToggleButton
+          aria-label={t("toolbarOrderedListButton")}
+          disabled={toolbarDisabled}
+          icon={<TextNumberListLtrRegular />}
+          name="block"
+          onClick={handleClickNumberedList}
+          value="list_ordered"
+        />
+      </Tooltip>
+      <Tooltip content={t("toolbarTaskListButton")} relationship={"description"} withArrow>
+        <ToolbarToggleButton
+          aria-label={t("toolbarTaskListButton")}
+          disabled={toolbarDisabled}
+          icon={<ClipboardTaskListLtrRegular />}
+          name="block"
+          onClick={handleClickTaskList}
+          value="list_todo"
+        />
+      </Tooltip>
       <ToolbarDivider />
-      <ToolbarButton
-        aria-label="Outdent"
-        disabled={toolbarDisabled}
-        icon={<TextIndentDecreaseLtrRegular />}
-        onClick={handleClickIndentDecrease}
-      />
-      <ToolbarButton
-        aria-label="Indent"
-        disabled={toolbarDisabled}
-        icon={<TextIndentIncreaseLtrRegular />}
-        onClick={handleClickIndentIncrease}
-      />
+      <Tooltip content={t("toolbarOutdentButton")} relationship={"description"} withArrow>
+        <ToolbarButton
+          aria-label={t("toolbarOutdentButton")}
+          disabled={toolbarDisabled}
+          icon={<TextIndentDecreaseLtrRegular />}
+          onClick={handleClickIndentDecrease}
+        />
+      </Tooltip>
+      <Tooltip content={t("toolbarIndentButton")} relationship={"description"} withArrow>
+        <ToolbarButton
+          aria-label={t("toolbarIndentButton")}
+          disabled={toolbarDisabled}
+          icon={<TextIndentIncreaseLtrRegular />}
+          onClick={handleClickIndentIncrease}
+        />
+      </Tooltip>
       <ToolbarDivider />
       {!isCodeBlock && (
-        <ToolbarToggleButton
-          aria-label="Link"
-          disabled={toolbarDisabled}
-          icon={<LinkRegular />}
-          name="format"
-          onClick={handleClickLink}
-          value="link"
-        />
+        <Tooltip content={t("toolbarLinkButton")} relationship={"description"} withArrow>
+          <ToolbarToggleButton
+            aria-label={t("toolbarLinkButton")}
+            disabled={toolbarDisabled}
+            icon={<LinkRegular />}
+            name="format"
+            onClick={handleClickLink}
+            value="link"
+          />
+        </Tooltip>
       )}
-      <ToolbarButton
-        aria-label="Undo"
-        disabled={toolbarDisabled}
-        icon={<ArrowCounterclockwiseRegular />}
-        onClick={handleClickUndo}
-      />
-      <ToolbarButton
-        aria-label="Redo"
-        disabled={toolbarDisabled}
-        icon={<ArrowClockwiseRegular />}
-        onClick={handleClickRedo}
-      />
+      <Tooltip content={t("toolbarUndoButton")} relationship={"description"} withArrow>
+        <ToolbarButton
+          aria-label={t("toolbarUndoButton")}
+          disabled={toolbarDisabled}
+          icon={<ArrowCounterclockwiseRegular />}
+          onClick={handleClickUndo}
+        />
+      </Tooltip>
+      <Tooltip content={t("toolbarRedoButton")} relationship={"description"} withArrow>
+        <ToolbarButton
+          aria-label={t("toolbarRedoButton")}
+          disabled={toolbarDisabled}
+          icon={<ArrowClockwiseRegular />}
+          onClick={handleClickRedo}
+        />
+      </Tooltip>
     </Toolbar>
   );
 }
