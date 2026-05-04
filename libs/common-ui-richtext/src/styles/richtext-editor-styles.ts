@@ -113,7 +113,8 @@ export const useEditorStyles = makeStyles({
   },
   quote: {
     marginLeft: tokens.spacingVerticalS,
-    borderLeft: `2px solid ${tokens.colorNeutralStroke2}`,
+    paddingLeft: tokens.spacingVerticalS,
+    borderLeft: `3px solid ${tokens.colorNeutralStroke2}`,
   },
 });
 
