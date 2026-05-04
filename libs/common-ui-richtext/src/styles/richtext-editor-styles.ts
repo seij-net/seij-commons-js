@@ -30,7 +30,7 @@ export const useEditorStyles = makeStyles({
     paddingLeft: "0.2em",
     paddingRight: "0.2em",
     border: "1px solid " + tokens.colorNeutralStroke2,
-    borderRadius: tokens.borderRadiusMedium
+    borderRadius: tokens.borderRadiusMedium,
   },
   listitem: {
     marginTop: 0,
@@ -125,7 +125,7 @@ export const useEditorTheme = () => {
       text: {
         strikethrough: styles.strikethrough,
         underlineStrikethrough: styles.underlineStrikethrough,
-        code: styles.codeInline
+        code: styles.codeInline,
       },
       list: {
         checklist: styles.checklist,

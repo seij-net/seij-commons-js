@@ -5,7 +5,6 @@ import { CONTROLLED_VALUE_UPDATE_TAG } from "../../extensions/ControlledValueUpd
 import { $convertFromMarkdownString } from "@lexical/markdown";
 import { DEFAULT_TRANSFORMERS } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 
-
 export function ExternalValueSync<EXTERNAL_VALUE>({
   value,
   valueRevision,

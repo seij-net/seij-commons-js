@@ -2,7 +2,7 @@
 
 ## v0.3.0
 
-- Feature: added inline code format 
+- Feature: added inline code format
 - Feature: added undo, redo buttons
 - Feature: combobox to select paragraphs and headings
 - Feature: added code blocks

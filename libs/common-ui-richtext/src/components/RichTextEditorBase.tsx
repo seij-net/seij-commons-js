@@ -19,7 +19,6 @@ import { useEditorTheme } from "../styles/richtext-editor-styles";
 import { EditorRefExtension, type RichTextEditorRef, useEditorRef } from "../extensions/EditorRefExtension";
 import { ExternalValueSync } from "./external-value-sync/ExternalValueSync";
 import { LinkEditorPlugin } from "./link/LinkEditorPlugin";
-import { CodeExtension } from "@lexical/code-core";
 import { CodeShikiExtension } from "@lexical/code-shiki";
 import { useRichTextI18n } from "../utils/useRichTextI18n";
 
