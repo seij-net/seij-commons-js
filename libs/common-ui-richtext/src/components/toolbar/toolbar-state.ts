@@ -1,19 +1,16 @@
 import { $isHeadingNode, $isQuoteNode, HeadingTagType } from "@lexical/rich-text";
 import {
-  $findMatchingParent,
   $getSelection,
   $isRangeSelection,
-  $isRootOrShadowRoot,
   COMMAND_PRIORITY_LOW,
   type LexicalEditor,
-  LexicalNode,
   mergeRegister,
   RangeSelection,
-  SELECTION_CHANGE_COMMAND
+  SELECTION_CHANGE_COMMAND,
 } from "lexical";
 import { $isListNode } from "@lexical/list";
-import { $isLinkNode } from "@lexical/link";
 import { $isCodeNode } from "@lexical/code-core";
+import { $findCodeLanguage, $findTopLevelElement, $isInsideLink } from "../../utils/lexical-utils";
 
 /**
  * State that indicates
@@ -24,11 +21,33 @@ import { $isCodeNode } from "@lexical/code-core";
  *   There can be multiple at the same time
  */
 export interface ToolbarState {
-  block: ToolbarStateBlocType;
+  /**
+   * Type of bloc where the selection anchor is
+   */
+  blockType: ToolbarStateBlocType;
+  /**
+   * Indicates the language when the bloc type is "code"
+   */
+  blockCodeLanguage: string;
+  /**
+   * Indicates the current selection is on a bold part
+   */
   bold: boolean;
-  code: boolean;
+  /**
+   * Indicates the current selection is on an inline code part (don't confuse that with code block)
+   */
+  inlineCode: boolean;
+  /**
+   * Indicates the current selection is in an italic part
+   */
   italic: boolean;
+  /**
+   * Indicates the current selection is in a link
+   */
   link: boolean;
+  /**
+   * Indicates the current selection is in a strikethrough part
+   */
   strikethrough: boolean;
 }
 
@@ -46,9 +65,10 @@ export type ToolbarStateBlocType =
  * Constant state of the toolbar when nothing is selected.
  */
 export const toolbarStateNothing: ToolbarState = {
-  block: null,
+  blockType: null,
   bold: false,
-  code: false,
+  inlineCode: false,
+  blockCodeLanguage: "",
   italic: false,
   link: false,
   strikethrough: false,
@@ -90,16 +110,17 @@ export function $computeToolbarStateFromEditor(): ToolbarState {
   }
 
   return {
-    block: $findToolbarBlockType(selection),
+    blockType: $findToolbarBlockType(selection),
     bold: selection.hasFormat("bold"),
-    code: selection.hasFormat("code"),
+    inlineCode: selection.hasFormat("code"),
+    blockCodeLanguage: $findCodeLanguage(selection),
     italic: selection.hasFormat("italic"),
     link: $isInsideLink(selection),
     strikethrough: selection.hasFormat("strikethrough"),
   };
 }
 
-function $findToolbarBlockType(selection: RangeSelection) {
+function $findToolbarBlockType(selection: RangeSelection): ToolbarStateBlocType {
   const topLevelElement = $findTopLevelElement(selection.anchor.getNode());
   let block: ToolbarStateBlocType = null;
 
@@ -124,16 +145,4 @@ function $findToolbarBlockType(selection: RangeSelection) {
     }
   }
   return block;
-}
-
-function $isInsideLink(selection: RangeSelection) {
-  const node = selection.anchor.getNode();
-  return $isLinkNode(node) || $findMatchingParent(node, $isLinkNode) !== null;
-}
-
-function $findTopLevelElement(node: LexicalNode): LexicalNode | null {
-  return $findMatchingParent(node, (parentNode) => {
-    const parent = parentNode.getParent();
-    return parent !== null && $isRootOrShadowRoot(parent);
-  });
 }

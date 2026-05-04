@@ -35,10 +35,12 @@ import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
 import { $setBlocksType } from "@lexical/selection";
 import { $createHeadingNode, $createQuoteNode, type HeadingTagType } from "@lexical/rich-text";
 import { INSERT_CHECK_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from "@lexical/list";
-import { $createCodeNode } from "@lexical/code-core";
+import { $createCodeNode, $isCodeNode } from "@lexical/code-core";
+import { getCodeLanguageOptions, normalizeCodeLanguage } from "@lexical/code-shiki";
 import {
   $createParagraphNode,
   $getSelection,
+  $isRangeSelection,
   FORMAT_TEXT_COMMAND,
   INDENT_CONTENT_COMMAND,
   OUTDENT_CONTENT_COMMAND,
@@ -49,6 +51,7 @@ import { useMemo } from "react";
 import { CLEAR_FORMATTING_COMMAND } from "../../extensions/ClearFormattingExtension";
 import { computeToolbarStateSubscription, ToolbarState } from "./toolbar-state";
 import { useLexicalSubscription } from "@lexical/react/useLexicalSubscription";
+import { $findTopLevelElement } from "../../utils/lexical-utils";
 
 type BlockStyleDropdownType = "paragraph" | "code" | HeadingTagType;
 
@@ -63,6 +66,34 @@ const blockStyleDropdownValues: Array<{ label: string; value: BlockStyleDropdown
   { label: "Code block", value: "code" },
 ];
 
+const codeLanguageDropdownValues = getCodeLanguageOptions().filter(([value]) =>
+  [
+    "c",
+    "cpp",
+    "csharp",
+    "dax",
+    "fsharp",
+    "go",
+    "java",
+    "javascript",
+    "julia",
+    "kotlin",
+    "m",
+    "matlab",
+    "php",
+    "python",
+    "r",
+    "ruby",
+    "rust",
+    "sas",
+    "scala",
+    "sql",
+    "swift",
+    "typescript",
+    "vb",
+  ].includes(value),
+);
+
 export interface MainToolbarProps {
   /** if true toolbar shall be disabled */
   disabled: boolean;
@@ -75,11 +106,15 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
   const toolbarDisabled = disabled || !isEditable;
 
   const fluentToolbarCheckedValues = useMemo(() => toFluentUiToolbarCheckedValues(toolbarState), [toolbarState]);
-  const selectedBlockStyleDropdownType = getTextStyleValue(toolbarState.block);
+  const selectedBlockStyleDropdownType = getTextStyleValue(toolbarState.blockType);
 
   const selectedBlockStyleDropdownLabel =
     blockStyleDropdownValues.find((textStyle) => textStyle.value === selectedBlockStyleDropdownType)?.label ??
     "Normal text";
+  const isCodeBlock = toolbarState.blockType === "code";
+  const selectedCodeLanguage = normalizeCodeLanguage(toolbarState.blockCodeLanguage || "javascript");
+  const selectedCodeLanguageLabel =
+    codeLanguageDropdownValues.find(([value]) => value === selectedCodeLanguage)?.[1] ?? selectedCodeLanguage;
 
   const handleChangeBlockStyleDropdown = (style: BlockStyleDropdownType) => {
     editor.update(() => {
@@ -103,6 +138,18 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
   const handleClickIndentIncrease = () => editor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
   const handleClickUndo = () => editor.dispatchCommand(UNDO_COMMAND, undefined);
   const handleClickRedo = () => editor.dispatchCommand(REDO_COMMAND, undefined);
+  const handleChangeCodeLanguage = (language: string) => {
+    editor.update(() => {
+      const selection = $getSelection();
+
+      if (!$isRangeSelection(selection)) return;
+
+      const topLevelElement = $findTopLevelElement(selection.anchor.getNode());
+      if ($isCodeNode(topLevelElement)) {
+        topLevelElement.setLanguage(language);
+      }
+    });
+  };
   const handleClickLink = () => {
     // When the link button is clicked, we must either remove the underlying link if we are on a link
     // of create a new node with a link, even if empty (just with https://).
@@ -161,45 +208,79 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
         </MenuPopover>
       </Menu>
 
-      <ToolbarToggleButton
-        aria-label="Bold"
-        disabled={toolbarDisabled}
-        icon={<TextBoldRegular />}
-        name="format"
-        onClick={handleClickBold}
-        value="bold"
-      />
-      <ToolbarToggleButton
-        aria-label="Italic"
-        disabled={toolbarDisabled}
-        icon={<TextItalicRegular />}
-        name="format"
-        onClick={handleClickItalic}
-        value="italic"
-      />
-      <ToolbarToggleButton
-        aria-label="Code"
-        disabled={toolbarDisabled}
-        icon={<CodeRegular />}
-        name="format"
-        onClick={handleClickCode}
-        value="code"
-      />
-      <ToolbarToggleButton
-        aria-label="Strikethrough"
-        disabled={toolbarDisabled}
-        icon={<TextStrikethroughRegular />}
-        name="format"
-        onClick={handleClickStrikethrough}
-        value="strikethrough"
-      />
-      <ToolbarButton
-        aria-label="Clear formatting"
-        disabled={toolbarDisabled}
-        icon={<TextClearFormattingRegular />}
-        onClick={handleClickClearFormatting}
-      />
-      <ToolbarDivider />
+      {isCodeBlock && (
+        <Menu checkedValues={{ codeLanguage: [selectedCodeLanguage] }}>
+          <MenuTrigger disableButtonEnhancement>
+            <MenuButton
+              aria-label="Code language"
+              disabled={toolbarDisabled}
+              size="small"
+              appearance={"transparent"}
+              style={{ width: "9em", justifyContent: "space-between" }}
+            >
+              {selectedCodeLanguageLabel}
+            </MenuButton>
+          </MenuTrigger>
+          <MenuPopover>
+            <MenuList>
+              {codeLanguageDropdownValues.map(([value, label]) => (
+                <MenuItemRadio
+                  key={value}
+                  name="codeLanguage"
+                  onClick={() => handleChangeCodeLanguage(value)}
+                  value={value}
+                >
+                  {label}
+                </MenuItemRadio>
+              ))}
+            </MenuList>
+          </MenuPopover>
+        </Menu>
+      )}
+
+      {!isCodeBlock && (
+        <>
+          <ToolbarToggleButton
+            aria-label="Bold"
+            disabled={toolbarDisabled}
+            icon={<TextBoldRegular />}
+            name="format"
+            onClick={handleClickBold}
+            value="bold"
+          />
+          <ToolbarToggleButton
+            aria-label="Italic"
+            disabled={toolbarDisabled}
+            icon={<TextItalicRegular />}
+            name="format"
+            onClick={handleClickItalic}
+            value="italic"
+          />
+          <ToolbarToggleButton
+            aria-label="Code"
+            disabled={toolbarDisabled}
+            icon={<CodeRegular />}
+            name="format"
+            onClick={handleClickCode}
+            value="code"
+          />
+          <ToolbarToggleButton
+            aria-label="Strikethrough"
+            disabled={toolbarDisabled}
+            icon={<TextStrikethroughRegular />}
+            name="format"
+            onClick={handleClickStrikethrough}
+            value="strikethrough"
+          />
+          <ToolbarButton
+            aria-label="Clear formatting"
+            disabled={toolbarDisabled}
+            icon={<TextClearFormattingRegular />}
+            onClick={handleClickClearFormatting}
+          />
+          <ToolbarDivider />
+        </>
+      )}
       <ToolbarToggleButton
         aria-label="Quote"
         disabled={toolbarDisabled}
@@ -253,14 +334,16 @@ export function MainToolbarPlugin({ disabled }: MainToolbarProps) {
         onClick={handleClickIndentIncrease}
       />
       <ToolbarDivider />
-      <ToolbarToggleButton
-        aria-label="Link"
-        disabled={toolbarDisabled}
-        icon={<LinkRegular />}
-        name="format"
-        onClick={handleClickLink}
-        value="link"
-      />
+      {!isCodeBlock && (
+        <ToolbarToggleButton
+          aria-label="Link"
+          disabled={toolbarDisabled}
+          icon={<LinkRegular />}
+          name="format"
+          onClick={handleClickLink}
+          value="link"
+        />
+      )}
       <ToolbarButton
         aria-label="Undo"
         disabled={toolbarDisabled}
@@ -293,10 +376,10 @@ function toFluentUiToolbarCheckedValues(toolbarState: ToolbarState): {
   format: string[];
 } {
   return {
-    block: toolbarState.block === null ? [] : [toolbarState.block],
+    block: toolbarState.blockType === null ? [] : [toolbarState.blockType],
     format: [
       toolbarState.bold ? "bold" : null,
-      toolbarState.code ? "code" : null,
+      toolbarState.inlineCode ? "code" : null,
       toolbarState.italic ? "italic" : null,
       toolbarState.link ? "link" : null,
       toolbarState.strikethrough ? "strikethrough" : null,
@@ -311,7 +394,7 @@ function toFluentUiToolbarCheckedValues(toolbarState: ToolbarState): {
  * dropdown).
  * @param block
  */
-function getTextStyleValue(block: ToolbarState["block"]): BlockStyleDropdownType {
+function getTextStyleValue(block: ToolbarState["blockType"]): BlockStyleDropdownType {
   if (block === "code") {
     return block;
   }
