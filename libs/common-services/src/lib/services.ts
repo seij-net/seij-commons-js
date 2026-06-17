@@ -106,6 +106,42 @@ export class Connection {
     }
   }
 
+  async postOctetStream<T>(url: string, data: BodyInit): Promise<T> {
+    const headers = this.createHeaders();
+    headers["Content-Type"] = "application/octet-stream";
+
+    let resp: Response | null = null;
+    try {
+      resp = await fetch(normalizeUrl(this.apiBase, url), {
+        method: "POST",
+        headers,
+        body: data,
+      });
+    } catch (fetchError) {
+      throw toProblem(fetchError);
+    }
+
+    if (!resp.ok) {
+      let json: any = null;
+      try {
+        json = await resp.json();
+      } catch (notJsonError) {
+        throw createProblem(resp);
+      }
+
+      if (json.title) throw new Problem(json);
+      throw createProblem(resp);
+    }
+
+    try {
+      const content = await resp.text();
+      if (isEmpty(content)) return content as T;
+      return JSON.parse(content);
+    } catch (parseResponseError) {
+      throw createProblemUnreadableJson();
+    }
+  }
+
   async delete<T>(url: string): Promise<T> {
     let resp: Response | null = null;
     try {
