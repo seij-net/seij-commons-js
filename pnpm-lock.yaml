@@ -9,6 +9,8 @@ overrides:
   '@fluentui/react-icons': ^2.0.325
   '@tanstack/react-query-devtools': ^5.91.3
   '@tanstack/react-query': ^5.90.21
+  '@tanstack/react-table': ^8.21.3
+  '@tanstack/react-virtual': ^3.13.25
   '@types/lodash-es': ^4.17.12
   '@types/luxon': ^3.6.2
   date-fns: ^4.1.0
@@ -257,6 +259,27 @@ importers:
         version: 4.17.12
 
   libs/common-ui-csv-export: {}
+
+  libs/common-ui-ds:
+    dependencies:
+      '@fluentui/react-components':
+        specifier: ^9.73.8
+        version: 9.73.8(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(scheduler@0.27.0)
+      '@fluentui/react-icons':
+        specifier: ^2.0.325
+        version: 2.0.325(react@19.2.4)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@tanstack/react-virtual':
+        specifier: ^3.13.25
+        version: 3.14.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.4
+        version: 19.2.4(react@19.2.4)
 
   libs/common-ui-icons:
     dependencies:
@@ -1954,6 +1977,26 @@ packages:
 
   '@swc/helpers@0.5.18':
     resolution: {integrity: sha512-TXTnIcNJQEKwThMMqBXsZ4VGAza6bvN4pa41Rkqoio6QBKMvo+5lexeTMScGCIxtzgQJzElcvIltani+adC5PQ==}
+
+  '@tanstack/react-table@8.21.3':
+    resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
+  '@tanstack/react-virtual@3.14.3':
+    resolution: {integrity: sha512-k/cnHPVaOfn46hSbiY6n4Dzf4QjCGWSF40zR5QIIYUqPAjpA6TN7InfYmcMiDVQGP2iUn9xsRbAl8u1v3UmeVQ==}
+    peerDependencies:
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
+  '@tanstack/table-core@8.21.3':
+    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
+    engines: {node: '>=12'}
+
+  '@tanstack/virtual-core@3.17.1':
+    resolution: {integrity: sha512-VZyW2Uiml5tmBZwPGrSD3Sz73OxzljQMCmzYHsUTPEuTsERf5xwa+uWb01xEzkz3ZSYTjj8NEb/mKHvgKxyZdA==}
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -6919,6 +6962,22 @@ snapshots:
   '@swc/helpers@0.5.18':
     dependencies:
       tslib: 2.8.1
+
+  '@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tanstack/table-core': 8.21.3
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
+  '@tanstack/react-virtual@3.14.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tanstack/virtual-core': 3.17.1
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
+  '@tanstack/table-core@8.21.3': {}
+
+  '@tanstack/virtual-core@3.17.1': {}
 
   '@testing-library/dom@10.4.1':
     dependencies:

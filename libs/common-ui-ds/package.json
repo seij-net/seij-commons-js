@@ -1,0 +1,48 @@
+{
+  "name": "@seij/common-ui-ds",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seij-net/seij-commons-js.git"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "vite build -c vite.config.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.lib.json --noEmit",
+    "watch": "tsc -p tsconfig.lib.json --noEmit --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@fluentui/react-components": "workspace:^",
+    "@fluentui/react-icons": "workspace:^",
+    "@tanstack/react-table": "workspace:^",
+    "@tanstack/react-virtual": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "workspace:^",
+    "react-dom": "workspace:^"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": {
+      "import": "./dist/styles.js"
+    }
+  },
+  "sideEffects": [
+    "dist/styles.js",
+    "**/*.css"
+  ],
+  "files": [
+    "dist/**",
+    "README.md",
+    "LICENSE"
+  ]
+}
