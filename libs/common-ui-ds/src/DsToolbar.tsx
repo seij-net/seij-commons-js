@@ -83,23 +83,12 @@ export function DsToolbar({
   return (
     <div className={styles.root}>
       <div className={styles.mainRow}>
-        <SearchBox
-          value={search}
-          onChange={(_, data) => handleChangeSearch(data.value)}
-        />
+        <SearchBox value={search} onChange={(_, data) => handleChangeSearch(data.value)} />
         {sortable && sortable.length > 0 && (
-          <DsToolbarSortable
-            sortable={sortable}
-            sorting={defaultQuery.sorting}
-            onChange={handleSortingChange}
-          />
+          <DsToolbarSortable sortable={sortable} sorting={defaultQuery.sorting} onChange={handleSortingChange} />
         )}
         {filterable && filterable.length > 0 && (
-          <DsToolbarFilterable
-            filterable={filterable}
-            filters={defaultQuery.filters}
-            onChange={handleFiltersChange}
-          />
+          <DsToolbarFilterable filterable={filterable} filters={defaultQuery.filters} onChange={handleFiltersChange} />
         )}
         {queryStorage && onApplySnapshot && (
           <DsToolbarSavedFilters

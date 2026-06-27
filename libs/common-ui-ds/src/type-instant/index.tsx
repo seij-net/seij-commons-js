@@ -3,13 +3,7 @@ import { DeleteRegular } from "@fluentui/react-icons";
 import { useFilterRowStyles } from "../filter-row-styles";
 
 export type DsQueryInstantFilterCondition = "lt" | "gt" | "eq" | "between";
-export type DsQueryInstantOptionalFilterCondition =
-  | "lt"
-  | "gt"
-  | "eq"
-  | "between"
-  | "empty"
-  | "notEmpty";
+export type DsQueryInstantOptionalFilterCondition = "lt" | "gt" | "eq" | "between" | "empty" | "notEmpty";
 
 export type DsQueryInstantFilter = {
   id: string;
@@ -66,20 +60,12 @@ export function InstantFilterRow({
 }: {
   filter: DsQueryInstantFilter | DsQueryInstantOptionalFilter;
   fieldLabel: string;
-  onUpdate: (
-    patch:
-      | Partial<DsQueryInstantFilter>
-      | Partial<DsQueryInstantOptionalFilter>,
-  ) => void;
+  onUpdate: (patch: Partial<DsQueryInstantFilter> | Partial<DsQueryInstantOptionalFilter>) => void;
   onRemove: () => void;
 }) {
   const styles = useFilterRowStyles();
-  const conditions =
-    filter.type === "instantOptional"
-      ? INSTANT_OPTIONAL_CONDITIONS
-      : INSTANT_CONDITIONS;
-  const needsValue =
-    filter.condition !== "empty" && filter.condition !== "notEmpty";
+  const conditions = filter.type === "instantOptional" ? INSTANT_OPTIONAL_CONDITIONS : INSTANT_CONDITIONS;
+  const needsValue = filter.condition !== "empty" && filter.condition !== "notEmpty";
   return (
     <div className={styles.filterRow}>
       <Text className={styles.fieldLabel}>{fieldLabel}</Text>
@@ -88,9 +74,7 @@ export function InstantFilterRow({
         value={filter.condition}
         onChange={(_, data) =>
           onUpdate({
-            condition: data.value as
-              | DsQueryInstantFilterCondition
-              | DsQueryInstantOptionalFilterCondition,
+            condition: data.value as DsQueryInstantFilterCondition | DsQueryInstantOptionalFilterCondition,
             value: "",
             valueTo: "",
           })
@@ -133,9 +117,7 @@ export function InstantFilterRow({
   );
 }
 
-export function isInstantFilter(f: {
-  type: string;
-}): f is DsQueryInstantFilter | DsQueryInstantOptionalFilter {
+export function isInstantFilter(f: { type: string }): f is DsQueryInstantFilter | DsQueryInstantOptionalFilter {
   return f.type === "instant" || f.type === "instantOptional";
 }
 

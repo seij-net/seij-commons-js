@@ -7,16 +7,16 @@ import type {
   DsQuerySelectFilter,
   DsQuerySelectFilterCondition,
 } from "./DsQuery";
-import type {DsFilterableBooleanField, DsQueryBooleanFilter,} from "./type-boolean";
-import {BooleanFilterRow, createDefaultBooleanFilter, isBooleanFilter,} from "./type-boolean";
-import type {DsQueryDecimalFilter, DsQueryDecimalOptionalFilter,} from "./type-decimal";
-import {createDefaultDecimalFilter, DecimalFilterRow, isDecimalFilter,} from "./type-decimal";
-import type {DsQueryInstantFilter, DsQueryInstantOptionalFilter,} from "./type-instant";
-import {createDefaultInstantFilter, InstantFilterRow, isInstantFilter,} from "./type-instant";
-import type {DsQueryLocalDateFilter, DsQueryLocalDateOptionalFilter,} from "./type-localdate";
-import {createDefaultLocalDateFilter, isLocalDateFilter, LocalDateFilterRow,} from "./type-localdate";
-import type {DsQueryTextFilter} from "./type-text";
-import {createDefaultTextFilter, isTextFilter, TextFilterRow,} from "./type-text";
+import type { DsFilterableBooleanField, DsQueryBooleanFilter } from "./type-boolean";
+import { BooleanFilterRow, createDefaultBooleanFilter, isBooleanFilter } from "./type-boolean";
+import type { DsQueryDecimalFilter, DsQueryDecimalOptionalFilter } from "./type-decimal";
+import { createDefaultDecimalFilter, DecimalFilterRow, isDecimalFilter } from "./type-decimal";
+import type { DsQueryInstantFilter, DsQueryInstantOptionalFilter } from "./type-instant";
+import { createDefaultInstantFilter, InstantFilterRow, isInstantFilter } from "./type-instant";
+import type { DsQueryLocalDateFilter, DsQueryLocalDateOptionalFilter } from "./type-localdate";
+import { createDefaultLocalDateFilter, isLocalDateFilter, LocalDateFilterRow } from "./type-localdate";
+import type { DsQueryTextFilter } from "./type-text";
+import { createDefaultTextFilter, isTextFilter, TextFilterRow } from "./type-text";
 import {
   conditionRequiresValues,
   createDefaultSelectFilter,
@@ -24,7 +24,7 @@ import {
   SELECT_CONDITIONS,
   SelectFilterRow,
 } from "./type-select";
-import {useState} from "react";
+import { useState } from "react";
 import {
   Button,
   makeStyles,
@@ -43,8 +43,8 @@ import {
   Text,
   tokens,
 } from "@fluentui/react-components";
-import {AddRegular, DeleteRegular, FilterRegular,} from "@fluentui/react-icons";
-import {useFilterRowStyles} from "./filter-row-styles";
+import { AddRegular, DeleteRegular, FilterRegular } from "@fluentui/react-icons";
+import { useFilterRowStyles } from "./filter-row-styles";
 
 const useStyles = makeStyles({
   filterButton: {
@@ -91,9 +91,7 @@ function RefFilterRow({
   const [search, setSearch] = useState("");
   const needsValues = conditionRequiresValues(filter.condition);
   const conditions = SELECT_CONDITIONS.filter((condition) =>
-    (field.conditions ?? SELECT_CONDITIONS.map((c) => c.value)).includes(
-      condition.value,
-    ),
+    (field.conditions ?? SELECT_CONDITIONS.map((c) => c.value)).includes(condition.value),
   );
 
   const { options, selectedLabels, isPending } = field.useOptions({
@@ -128,10 +126,7 @@ function RefFilterRow({
       </Select>
       {needsValues && (
         <div className={styles.filterValue}>
-          <TagPicker
-            selectedOptions={filter.values}
-            onOptionSelect={handleOptionSelect}
-          >
+          <TagPicker selectedOptions={filter.values} onOptionSelect={handleOptionSelect}>
             <TagPickerControl>
               <TagPickerGroup>
                 {selectedLabels.map(({ value, label }) => (
@@ -148,13 +143,9 @@ function RefFilterRow({
             </TagPickerControl>
             <TagPickerList>
               {isPending ? (
-                <TagPickerOption value="__loading__">
-                  Chargement…
-                </TagPickerOption>
+                <TagPickerOption value="__loading__">Chargement…</TagPickerOption>
               ) : options.length === 0 ? (
-                <TagPickerOption value="__empty__">
-                  Aucun résultat
-                </TagPickerOption>
+                <TagPickerOption value="__empty__">Aucun résultat</TagPickerOption>
               ) : (
                 options.map((opt) => (
                   <TagPickerOption key={opt.value} value={opt.value}>
@@ -238,9 +229,7 @@ export function DsToolbarFilterable({
   ) => {
     onChange({
       ...filters,
-      items: filters.items.map((f) =>
-        f.id === id ? ({ ...f, ...patch } as DsQueryFilter) : f,
-      ),
+      items: filters.items.map((f) => (f.id === id ? ({ ...f, ...patch } as DsQueryFilter) : f)),
     });
   };
 
@@ -258,12 +247,7 @@ export function DsToolbarFilterable({
       }}
     >
       <PopoverTrigger>
-        <Button
-          appearance="subtle"
-          icon={<FilterRegular />}
-          className={styles.filterButton}
-          title="Filtrer"
-        />
+        <Button appearance="subtle" icon={<FilterRegular />} className={styles.filterButton} title="Filtrer" />
       </PopoverTrigger>
       <PopoverSurface className={styles.popoverSurface}>
         {filters.items.length >= 2 && (

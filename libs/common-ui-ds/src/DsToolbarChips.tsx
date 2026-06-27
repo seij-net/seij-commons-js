@@ -5,14 +5,14 @@ import type {
   DsQueryFilters,
   DsQuerySorting,
 } from "./DsQuery";
-import {formatTextFilterChip, isTextFilter} from "./type-text";
-import {formatSelectFilterChip, isSelectFilter,} from "./type-select";
-import {formatBooleanFilterChip, isBooleanFilter,} from "./type-boolean";
-import {formatInstantFilterChip, isInstantFilter,} from "./type-instant";
-import {formatLocalDateFilterChip, isLocalDateFilter,} from "./type-localdate";
-import {formatDecimalFilterChip, isDecimalFilter,} from "./type-decimal";
-import {Button, makeStyles, tokens} from "@fluentui/react-components";
-import {DismissRegular} from "@fluentui/react-icons";
+import { formatTextFilterChip, isTextFilter } from "./type-text";
+import { formatSelectFilterChip, isSelectFilter } from "./type-select";
+import { formatBooleanFilterChip, isBooleanFilter } from "./type-boolean";
+import { formatInstantFilterChip, isInstantFilter } from "./type-instant";
+import { formatLocalDateFilterChip, isLocalDateFilter } from "./type-localdate";
+import { formatDecimalFilterChip, isDecimalFilter } from "./type-decimal";
+import { Button, makeStyles, tokens } from "@fluentui/react-components";
+import { DismissRegular } from "@fluentui/react-icons";
 
 const useStyles = makeStyles({
   row: {
@@ -45,38 +45,25 @@ const useStyles = makeStyles({
   },
 });
 
-function formatSortChip(
-  sort: DsQuerySorting,
-  sortable: { id: string; label: string }[],
-): string {
+function formatSortChip(sort: DsQuerySorting, sortable: { id: string; label: string }[]): string {
   const label = sortable.find((s) => s.id === sort.id)?.label ?? sort.id;
   return `${label} ${sort.desc ? "↓" : "↑"}`;
 }
 
-function formatFilterChip(
-  filter: DsQueryFilter,
-  filterable: DsFilterableField[],
-): string {
+function formatFilterChip(filter: DsQueryFilter, filterable: DsFilterableField[]): string {
   const field = filterable.find((f) => f.id === filter.field);
   const fieldLabel = field?.label ?? filter.field;
 
   if (isTextFilter(filter)) return formatTextFilterChip(filter, fieldLabel);
 
   if (isBooleanFilter(filter))
-    return formatBooleanFilterChip(
-      filter,
-      fieldLabel,
-      field as DsFilterableBooleanField | undefined,
-    );
+    return formatBooleanFilterChip(filter, fieldLabel, field as DsFilterableBooleanField | undefined);
 
-  if (isInstantFilter(filter))
-    return formatInstantFilterChip(filter, fieldLabel);
+  if (isInstantFilter(filter)) return formatInstantFilterChip(filter, fieldLabel);
 
-  if (isLocalDateFilter(filter))
-    return formatLocalDateFilterChip(filter, fieldLabel);
+  if (isLocalDateFilter(filter)) return formatLocalDateFilterChip(filter, fieldLabel);
 
-  if (isDecimalFilter(filter))
-    return formatDecimalFilterChip(filter, fieldLabel);
+  if (isDecimalFilter(filter)) return formatDecimalFilterChip(filter, fieldLabel);
 
   if (isSelectFilter(filter) && field?.type === "select")
     return formatSelectFilterChip(filter, fieldLabel, field.options);

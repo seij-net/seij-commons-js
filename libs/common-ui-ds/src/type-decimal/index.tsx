@@ -2,13 +2,7 @@ import { Button, Input, Select, Text } from "@fluentui/react-components";
 import { DeleteRegular } from "@fluentui/react-icons";
 import { useFilterRowStyles } from "../filter-row-styles";
 
-export type DsQueryDecimalFilterCondition =
-  | "gt"
-  | "gte"
-  | "lt"
-  | "lte"
-  | "eq"
-  | "between";
+export type DsQueryDecimalFilterCondition = "gt" | "gte" | "lt" | "lte" | "eq" | "between";
 export type DsQueryDecimalOptionalFilterCondition =
   | "gt"
   | "gte"
@@ -78,20 +72,12 @@ export function DecimalFilterRow({
 }: {
   filter: DsQueryDecimalFilter | DsQueryDecimalOptionalFilter;
   fieldLabel: string;
-  onUpdate: (
-    patch:
-      | Partial<DsQueryDecimalFilter>
-      | Partial<DsQueryDecimalOptionalFilter>,
-  ) => void;
+  onUpdate: (patch: Partial<DsQueryDecimalFilter> | Partial<DsQueryDecimalOptionalFilter>) => void;
   onRemove: () => void;
 }) {
   const styles = useFilterRowStyles();
-  const conditions =
-    filter.type === "decimalOptional"
-      ? DECIMAL_OPTIONAL_CONDITIONS
-      : DECIMAL_CONDITIONS;
-  const needsValue =
-    filter.condition !== "empty" && filter.condition !== "notEmpty";
+  const conditions = filter.type === "decimalOptional" ? DECIMAL_OPTIONAL_CONDITIONS : DECIMAL_CONDITIONS;
+  const needsValue = filter.condition !== "empty" && filter.condition !== "notEmpty";
   return (
     <div className={styles.filterRow}>
       <Text className={styles.fieldLabel}>{fieldLabel}</Text>
@@ -100,9 +86,7 @@ export function DecimalFilterRow({
         value={filter.condition}
         onChange={(_, data) =>
           onUpdate({
-            condition: data.value as
-              | DsQueryDecimalFilterCondition
-              | DsQueryDecimalOptionalFilterCondition,
+            condition: data.value as DsQueryDecimalFilterCondition | DsQueryDecimalOptionalFilterCondition,
             value: undefined,
             valueTo: undefined,
           })
@@ -153,9 +137,7 @@ export function DecimalFilterRow({
   );
 }
 
-export function isDecimalFilter(f: {
-  type: string;
-}): f is DsQueryDecimalFilter | DsQueryDecimalOptionalFilter {
+export function isDecimalFilter(f: { type: string }): f is DsQueryDecimalFilter | DsQueryDecimalOptionalFilter {
   return f.type === "decimal" || f.type === "decimalOptional";
 }
 

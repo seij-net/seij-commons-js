@@ -10,13 +10,7 @@ import {
   Text,
   tokens,
 } from "@fluentui/react-components";
-import {
-  ArrowResetRegular,
-  BookmarkFilled,
-  BookmarkRegular,
-  DeleteRegular,
-  SaveRegular,
-} from "@fluentui/react-icons";
+import { ArrowResetRegular, BookmarkFilled, BookmarkRegular, DeleteRegular, SaveRegular } from "@fluentui/react-icons";
 
 const useStyles = makeStyles({
   button: {
@@ -72,9 +66,7 @@ export function DsToolbarSavedFilters({
   activeFilterName: string | null;
 }) {
   const styles = useStyles();
-  const [savedFilters, setSavedFilters] = useState(() =>
-    queryStorage.listSavedQueries(),
-  );
+  const [savedFilters, setSavedFilters] = useState(() => queryStorage.listSavedQueries());
   const [savingName, setSavingName] = useState<string | null>(null);
 
   const handleSave = () => {
@@ -127,10 +119,7 @@ export function DsToolbarSavedFilters({
             </Text>
             {savedFilters.map(({ name, query }) => (
               <div key={name} className={styles.savedRow}>
-                <Text
-                  className={styles.savedLabel}
-                  onClick={() => onApply(query, name)}
-                >
+                <Text className={styles.savedLabel} onClick={() => onApply(query, name)}>
                   {name}
                 </Text>
                 <Button

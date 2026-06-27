@@ -63,9 +63,7 @@ export function DsToolbarSortable({
   const [adding, setAdding] = useState(false);
 
   const toggleDirection = (index: number) => {
-    onChange(
-      sorting.map((s, i) => (i === index ? { ...s, desc: !s.desc } : s)),
-    );
+    onChange(sorting.map((s, i) => (i === index ? { ...s, desc: !s.desc } : s)));
   };
 
   const removeCriterion = (index: number) => {
@@ -82,8 +80,7 @@ export function DsToolbarSortable({
 
   const usedIds = new Set(sorting.map((s) => s.id));
   const available = sortable.filter((f) => !usedIds.has(f.id));
-  const labelFor = (id: string) =>
-    sortable.find((f) => f.id === id)?.label ?? id;
+  const labelFor = (id: string) => sortable.find((f) => f.id === id)?.label ?? id;
 
   return (
     <Popover
@@ -93,12 +90,7 @@ export function DsToolbarSortable({
       }}
     >
       <PopoverTrigger>
-        <Button
-          appearance="subtle"
-          icon={<ArrowSortRegular />}
-          className={styles.sortButton}
-          title="Trier"
-        />
+        <Button appearance="subtle" icon={<ArrowSortRegular />} className={styles.sortButton} title="Trier" />
       </PopoverTrigger>
       <PopoverSurface className={styles.popoverSurface}>
         {sorting.length === 0 ? (
@@ -112,13 +104,7 @@ export function DsToolbarSortable({
               <Button
                 appearance="subtle"
                 size="small"
-                icon={
-                  criterion.desc ? (
-                    <ArrowSortDownRegular />
-                  ) : (
-                    <ArrowSortUpRegular />
-                  )
-                }
+                icon={criterion.desc ? <ArrowSortDownRegular /> : <ArrowSortUpRegular />}
                 title={criterion.desc ? "Décroissant" : "Croissant"}
                 onClick={() => toggleDirection(index)}
               />

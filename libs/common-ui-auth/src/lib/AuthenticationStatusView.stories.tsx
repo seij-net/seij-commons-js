@@ -31,21 +31,23 @@ type Story = StoryObj<typeof AuthenticationStatusView>;
 
 export const Authenticating: Story = {
   render: () => (
-    <AuthContext.Provider value={{ activeNavigator: "signinSilent" } as Partial<AuthContextProps>}>
+    <AuthContext.Provider value={mockAuthContext({ activeNavigator: "signinSilent" })}>
       <AuthenticationStatusView />
     </AuthContext.Provider>
   ),
 };
+
 export const SignoutRedirect: Story = {
   render: () => (
-    <AuthContext.Provider value={{ activeNavigator: "signoutRedirect" } as Partial<AuthContextProps>}>
+    <AuthContext.Provider value={mockAuthContext({ activeNavigator: "signoutRedirect" })}>
       <AuthenticationStatusView />
     </AuthContext.Provider>
   ),
 };
+
 export const IsLoading: Story = {
   render: () => (
-    <AuthContext.Provider value={{ isLoading: true } as Partial<AuthContextProps>}>
+    <AuthContext.Provider value={mockAuthContext({ isLoading: true })}>
       <AuthenticationStatusView />
     </AuthContext.Provider>
   ),
@@ -54,12 +56,10 @@ export const IsLoading: Story = {
 export const Error: Story = {
   render: () => (
     <AuthContext.Provider
-      value={
-        {
-          error: { message: "An error occured blah blah" },
-          signinRedirect: () => window.alert("Sign In retry"),
-        } as Partial<AuthContextProps>
-      }
+      value={mockAuthContext({
+        error: Object.assign(new globalThis.Error("An error occured blah blah"), { source: "signinCallback" as const }),
+        signinRedirect: () => Promise.resolve(window.alert("Sign In retry")),
+      })}
     >
       <AuthenticationStatusView />
     </AuthContext.Provider>
@@ -69,34 +69,53 @@ export const Error: Story = {
 export const IsAuthenticated: Story = {
   render: () => (
     <AuthContext.Provider
-      value={
-        {
-          isAuthenticated: true,
-          user: {
-            profile: {
-              name: "Sebby",
-            },
-          },
-          removeUser: () => window.alert("Sign Out clicked"),
-        } as Partial<AuthContextProps>
-      }
+      value={mockAuthContext({
+        isAuthenticated: true,
+        user: { profile: { name: "Sebby" } } as AuthContextProps["user"],
+        removeUser: () => Promise.resolve(window.alert("Sign Out clicked")),
+      })}
     >
       <AuthenticationStatusView />
     </AuthContext.Provider>
   ),
 };
+
 export const NotAuthenticated: Story = {
   render: () => (
     <AuthContext.Provider
-      value={
-        {
-          isAuthenticated: false,
-          user: null,
-          signinRedirect: () => window.alert("Sign In clicked"),
-        } as Partial<AuthContextProps>
-      }
+      value={mockAuthContext({
+        isAuthenticated: false,
+        user: null,
+        signinRedirect: () => Promise.resolve(window.alert("Sign In clicked")),
+      })}
     >
       <AuthenticationStatusView />
     </AuthContext.Provider>
   ),
 };
+
+function mockAuthContext(ctx: Partial<AuthContextProps>): AuthContextProps {
+  return {
+    isLoading: false,
+    isAuthenticated: false,
+    user: undefined,
+    activeNavigator: undefined,
+    error: undefined,
+    settings: {} as AuthContextProps["settings"],
+    events: {} as AuthContextProps["events"],
+    clearStaleState: () => Promise.resolve(),
+    removeUser: () => Promise.resolve(),
+    signinPopup: () => Promise.reject(),
+    signinSilent: () => Promise.resolve(null),
+    signinRedirect: () => Promise.resolve(),
+    signinResourceOwnerCredentials: () => Promise.reject(),
+    signoutRedirect: () => Promise.resolve(),
+    signoutPopup: () => Promise.resolve(),
+    signoutSilent: () => Promise.resolve(),
+    querySessionStatus: () => Promise.resolve(null),
+    revokeTokens: () => Promise.resolve(),
+    startSilentRenew: () => {},
+    stopSilentRenew: () => {},
+    ...ctx,
+  };
+}

@@ -15,12 +15,7 @@ import {
 import { DeleteRegular } from "@fluentui/react-icons";
 import { useFilterRowStyles } from "../filter-row-styles";
 
-export type DsQuerySelectFilterCondition =
-  | "anyOf"
-  | "allOf"
-  | "noneOf"
-  | "empty"
-  | "notEmpty";
+export type DsQuerySelectFilterCondition = "anyOf" | "allOf" | "noneOf" | "empty" | "notEmpty";
 
 export type DsQuerySelectFilter = {
   id: string;
@@ -35,7 +30,7 @@ export type DsFilterableSelectField = {
   label: string;
   type: "select";
   options: { value: string; label: string }[];
-  conditions?: DsQuerySelectFilterCondition[];
+  conditions?: readonly DsQuerySelectFilterCondition[];
 };
 
 export const SELECT_CONDITIONS: {
@@ -68,9 +63,7 @@ export function SelectFilterRow({
   const [search, setSearch] = useState("");
   const needsValues = conditionRequiresValues(filter.condition);
   const conditions = SELECT_CONDITIONS.filter((condition) =>
-    (field.conditions ?? SELECT_CONDITIONS.map((c) => c.value)).includes(
-      condition.value,
-    ),
+    (field.conditions ?? SELECT_CONDITIONS.map((c) => c.value)).includes(condition.value),
   );
 
   const filteredOptions = field.options.filter(
@@ -107,10 +100,7 @@ export function SelectFilterRow({
       </Select>
       {needsValues && (
         <div className={styles.filterValue}>
-          <TagPicker
-            selectedOptions={filter.values}
-            onOptionSelect={handleOptionSelect}
-          >
+          <TagPicker selectedOptions={filter.values} onOptionSelect={handleOptionSelect}>
             <TagPickerControl>
               <TagPickerGroup>
                 {selectedLabels.map(({ value, label }) => (
@@ -119,16 +109,11 @@ export function SelectFilterRow({
                   </Tag>
                 ))}
               </TagPickerGroup>
-              <TagPickerInput
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+              <TagPickerInput value={search} onChange={(e) => setSearch(e.target.value)} />
             </TagPickerControl>
             <TagPickerList>
               {filteredOptions.length === 0 ? (
-                <TagPickerOption value="__empty__">
-                  Aucun résultat
-                </TagPickerOption>
+                <TagPickerOption value="__empty__">Aucun résultat</TagPickerOption>
               ) : (
                 filteredOptions.map((opt) => (
                   <TagPickerOption key={opt.value} value={opt.value}>
@@ -158,7 +143,7 @@ export function isSelectFilter(f: { type: string }): f is DsQuerySelectFilter {
 export function createDefaultSelectFilter(base: {
   id: string;
   field: string;
-  conditions?: DsQuerySelectFilterCondition[];
+  conditions?: readonly DsQuerySelectFilterCondition[];
 }): DsQuerySelectFilter {
   return {
     id: base.id,
@@ -176,9 +161,7 @@ export function formatSelectFilterChip(
 ): string {
   const getValueLabels = () => {
     if (filter.values.length === 0) return "…";
-    return filter.values
-      .map((v) => options.find((o) => o.value === v)?.label ?? v)
-      .join(", ");
+    return filter.values.map((v) => options.find((o) => o.value === v)?.label ?? v).join(", ");
   };
 
   switch (filter.condition) {

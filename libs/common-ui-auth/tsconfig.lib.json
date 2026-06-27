@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "declaration": true,
+    "declarationMap": true,
     "removeComments": false
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

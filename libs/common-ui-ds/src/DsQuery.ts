@@ -1,18 +1,6 @@
-export type {
-  DsQueryTextFilterCondition,
-  DsQueryTextFilter,
-  DsFilterableTextField,
-} from "./type-text";
-export type {
-  DsQuerySelectFilterCondition,
-  DsQuerySelectFilter,
-  DsFilterableSelectField,
-} from "./type-select";
-export type {
-  DsQueryBooleanFilterCondition,
-  DsQueryBooleanFilter,
-  DsFilterableBooleanField,
-} from "./type-boolean";
+export type { DsQueryTextFilterCondition, DsQueryTextFilter, DsFilterableTextField } from "./type-text";
+export type { DsQuerySelectFilterCondition, DsQuerySelectFilter, DsFilterableSelectField } from "./type-select";
+export type { DsQueryBooleanFilterCondition, DsQueryBooleanFilter, DsFilterableBooleanField } from "./type-boolean";
 export type {
   DsQueryInstantFilterCondition,
   DsQueryInstantOptionalFilterCondition,
@@ -35,16 +23,16 @@ export type {
   DsFilterableDecimalField,
 } from "./type-decimal";
 
-import type {DsFilterableTextField, DsQueryTextFilter} from "./type-text";
-import type {DsFilterableSelectField, DsQuerySelectFilter, DsQuerySelectFilterCondition,} from "./type-select";
-import type {DsFilterableBooleanField, DsQueryBooleanFilter} from "./type-boolean";
-import type {DsFilterableInstantField, DsQueryInstantFilter, DsQueryInstantOptionalFilter,} from "./type-instant";
+import type { DsFilterableTextField, DsQueryTextFilter } from "./type-text";
+import type { DsFilterableSelectField, DsQuerySelectFilter, DsQuerySelectFilterCondition } from "./type-select";
+import type { DsFilterableBooleanField, DsQueryBooleanFilter } from "./type-boolean";
+import type { DsFilterableInstantField, DsQueryInstantFilter, DsQueryInstantOptionalFilter } from "./type-instant";
 import type {
   DsFilterableLocalDateField,
   DsQueryLocalDateFilter,
   DsQueryLocalDateOptionalFilter,
 } from "./type-localdate";
-import type {DsFilterableDecimalField, DsQueryDecimalFilter, DsQueryDecimalOptionalFilter,} from "./type-decimal";
+import type { DsFilterableDecimalField, DsQueryDecimalFilter, DsQueryDecimalOptionalFilter } from "./type-decimal";
 
 /**
  * A query to a datasource
@@ -105,12 +93,8 @@ export type DsFilterableRefField = {
   id: string;
   label: string;
   type: "ref";
-  conditions?: DsQuerySelectFilterCondition[];
-  useOptions: (params: {
-    search: string;
-    limit: number;
-    selectedValues: string[];
-  }) => {
+  conditions?: readonly DsQuerySelectFilterCondition[];
+  useOptions: (params: { search: string; limit: number; selectedValues: string[] }) => {
     options: { value: string; label: string }[];
     selectedLabels: { value: string; label: string }[];
     isPending: boolean;

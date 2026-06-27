@@ -3,5 +3,5 @@ import { makeConfig } from "../../tools/seijvite";
 
 export default makeConfig({
   projectRoot: __dirname,
-  type: "lib-ui"
+  type: "lib-ui",
 });

@@ -53,9 +53,7 @@ export function BooleanFilterRow({
       <Select
         size="small"
         value={filter.value ? "true" : "false"}
-        onChange={(_, data) =>
-          onUpdate({ condition: "eq", value: data.value === "true" })
-        }
+        onChange={(_, data) => onUpdate({ condition: "eq", value: data.value === "true" })}
       >
         {conditions.map((c) => (
           <option key={c.value} value={c.value}>
@@ -74,16 +72,11 @@ export function BooleanFilterRow({
   );
 }
 
-export function isBooleanFilter(f: {
-  type: string;
-}): f is DsQueryBooleanFilter {
+export function isBooleanFilter(f: { type: string }): f is DsQueryBooleanFilter {
   return f.type === "boolean";
 }
 
-export function createDefaultBooleanFilter(base: {
-  id: string;
-  field: string;
-}): DsQueryBooleanFilter {
+export function createDefaultBooleanFilter(base: { id: string; field: string }): DsQueryBooleanFilter {
   return { ...base, type: "boolean", condition: "eq", value: true };
 }
 

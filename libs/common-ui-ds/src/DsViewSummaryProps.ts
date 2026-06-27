@@ -15,10 +15,7 @@ import type { ReactNode } from "react";
  * they are declared.
  *
  */
-export interface DsViewSummaryProps<
-  T extends DsItem,
-  TRefs = unknown,
-> extends DsViewProps<T, TRefs> {
+export interface DsViewSummaryProps<T extends DsItem, TRefs = unknown> extends DsViewProps<T, TRefs> {
   contentSlots: ContentSlot<T, TRefs>[];
 }
 

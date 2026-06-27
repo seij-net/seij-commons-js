@@ -1,10 +1,6 @@
 import type { DsItem } from "./DsItem";
 import type { DsDataFetcher } from "./DsDataFetcher";
-import type {
-  DsFilterableField,
-  DsQuerySnapshot,
-  DsQueryStorage,
-} from "./DsQuery";
+import type { DsFilterableField, DsQuerySnapshot, DsQueryStorage } from "./DsQuery";
 
 /**
  * Properties for DsView-like components common to all DsView components

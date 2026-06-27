@@ -2,11 +2,7 @@ import { Button, Input, Select, Text } from "@fluentui/react-components";
 import { DeleteRegular } from "@fluentui/react-icons";
 import { useFilterRowStyles } from "../filter-row-styles";
 
-export type DsQueryTextFilterCondition =
-  | "contains"
-  | "eq"
-  | "empty"
-  | "notEmpty";
+export type DsQueryTextFilterCondition = "contains" | "eq" | "empty" | "notEmpty";
 
 export type DsQueryTextFilter = {
   id: string;
@@ -22,13 +18,12 @@ export type DsFilterableTextField = {
   type: "text";
 };
 
-const TEXT_CONDITIONS: { value: DsQueryTextFilterCondition; label: string }[] =
-  [
-    { value: "contains", label: "contient" },
-    { value: "eq", label: "est" },
-    { value: "empty", label: "est vide" },
-    { value: "notEmpty", label: "n'est pas vide" },
-  ];
+const TEXT_CONDITIONS: { value: DsQueryTextFilterCondition; label: string }[] = [
+  { value: "contains", label: "contient" },
+  { value: "eq", label: "est" },
+  { value: "empty", label: "est vide" },
+  { value: "notEmpty", label: "n'est pas vide" },
+];
 
 export function TextFilterRow({
   filter,
@@ -42,8 +37,7 @@ export function TextFilterRow({
   onRemove: () => void;
 }) {
   const styles = useFilterRowStyles();
-  const needsValue =
-    filter.condition !== "empty" && filter.condition !== "notEmpty";
+  const needsValue = filter.condition !== "empty" && filter.condition !== "notEmpty";
   return (
     <div className={styles.filterRow}>
       <Text className={styles.fieldLabel}>{fieldLabel}</Text>
@@ -86,17 +80,11 @@ export function isTextFilter(f: { type: string }): f is DsQueryTextFilter {
   return f.type === "text";
 }
 
-export function createDefaultTextFilter(base: {
-  id: string;
-  field: string;
-}): DsQueryTextFilter {
+export function createDefaultTextFilter(base: { id: string; field: string }): DsQueryTextFilter {
   return { ...base, type: "text", condition: "contains", value: "" };
 }
 
-export function formatTextFilterChip(
-  filter: DsQueryTextFilter,
-  fieldLabel: string,
-): string {
+export function formatTextFilterChip(filter: DsQueryTextFilter, fieldLabel: string): string {
   switch (filter.condition) {
     case "contains":
       return `${fieldLabel} ~ "${filter.value}"`;

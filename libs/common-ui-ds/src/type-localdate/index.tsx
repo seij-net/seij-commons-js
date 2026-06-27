@@ -3,13 +3,7 @@ import { DeleteRegular } from "@fluentui/react-icons";
 import { useFilterRowStyles } from "../filter-row-styles";
 
 export type DsQueryLocalDateFilterCondition = "lt" | "gt" | "eq" | "between";
-export type DsQueryLocalDateOptionalFilterCondition =
-  | "lt"
-  | "gt"
-  | "eq"
-  | "between"
-  | "empty"
-  | "notEmpty";
+export type DsQueryLocalDateOptionalFilterCondition = "lt" | "gt" | "eq" | "between" | "empty" | "notEmpty";
 
 export type DsQueryLocalDateFilter = {
   id: string;
@@ -66,20 +60,12 @@ export function LocalDateFilterRow({
 }: {
   filter: DsQueryLocalDateFilter | DsQueryLocalDateOptionalFilter;
   fieldLabel: string;
-  onUpdate: (
-    patch:
-      | Partial<DsQueryLocalDateFilter>
-      | Partial<DsQueryLocalDateOptionalFilter>,
-  ) => void;
+  onUpdate: (patch: Partial<DsQueryLocalDateFilter> | Partial<DsQueryLocalDateOptionalFilter>) => void;
   onRemove: () => void;
 }) {
   const styles = useFilterRowStyles();
-  const conditions =
-    filter.type === "localdateOptional"
-      ? LOCALDATE_OPTIONAL_CONDITIONS
-      : LOCALDATE_CONDITIONS;
-  const needsValue =
-    filter.condition !== "empty" && filter.condition !== "notEmpty";
+  const conditions = filter.type === "localdateOptional" ? LOCALDATE_OPTIONAL_CONDITIONS : LOCALDATE_CONDITIONS;
+  const needsValue = filter.condition !== "empty" && filter.condition !== "notEmpty";
 
   return (
     <div className={styles.filterRow}>
@@ -89,9 +75,7 @@ export function LocalDateFilterRow({
         value={filter.condition}
         onChange={(_, data) =>
           onUpdate({
-            condition: data.value as
-              | DsQueryLocalDateFilterCondition
-              | DsQueryLocalDateOptionalFilterCondition,
+            condition: data.value as DsQueryLocalDateFilterCondition | DsQueryLocalDateOptionalFilterCondition,
             value: "",
             valueTo: "",
           })
@@ -134,9 +118,7 @@ export function LocalDateFilterRow({
   );
 }
 
-export function isLocalDateFilter(f: {
-  type: string;
-}): f is DsQueryLocalDateFilter | DsQueryLocalDateOptionalFilter {
+export function isLocalDateFilter(f: { type: string }): f is DsQueryLocalDateFilter | DsQueryLocalDateOptionalFilter {
   return f.type === "localdate" || f.type === "localdateOptional";
 }
 

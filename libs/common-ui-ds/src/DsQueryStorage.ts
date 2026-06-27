@@ -6,10 +6,7 @@ type StoredData = {
   saved?: Array<{ name: string; query: DsQuerySnapshot }>;
 };
 
-export function createLocalStorageQueryStorage(
-  key: string,
-  options?: { version?: number },
-): DsQueryStorage {
+export function createLocalStorageQueryStorage(key: string, options?: { version?: number }): DsQueryStorage {
   const storageKey = `ds-query:${key}`;
   const version = options?.version;
 

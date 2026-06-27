@@ -8,15 +8,15 @@ import {
   Text,
   tokens,
 } from "@fluentui/react-components";
-import type {Row, RowData} from "@tanstack/react-table";
-import {createColumnHelper, flexRender, getCoreRowModel, useReactTable,} from "@tanstack/react-table";
-import {ErrorBox, Loader} from "@seij/common-ui";
-import {toProblem} from "@seij/common-types";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import type {DsQuery, DsQuerySnapshot} from "./DsQuery";
-import {useVirtualizer} from "@tanstack/react-virtual";
-import type {DsViewSummaryProps} from "./DsViewSummaryProps";
-import {DsToolbar} from "./DsToolbar";
+import type { Row, RowData } from "@tanstack/react-table";
+import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { ErrorBox, Loader } from "@seij/common-ui";
+import { toProblem } from "@seij/common-types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { DsQuery, DsQuerySnapshot } from "./DsQuery";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import type { DsViewSummaryProps } from "./DsViewSummaryProps";
+import { DsToolbar } from "./DsToolbar";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -105,8 +105,7 @@ export function DsViewSummary<T extends { id: string }, TRefs = unknown>({
       contentSlots.map((summaryItem) =>
         createColumnHelper<T>().display({
           id: summaryItem.id,
-          cell: ({ row }) =>
-            summaryItem.cell({ item: row.original, refs: result.refs }),
+          cell: ({ row }) => summaryItem.cell({ item: row.original, refs: result.refs }),
           meta: { className: summaryItem.className, navigable: summaryItem.navigable },
         }),
       ),
@@ -133,28 +132,15 @@ export function DsViewSummary<T extends { id: string }, TRefs = unknown>({
   const virtualItems = rowVirtualizer.getVirtualItems();
   const paddingTop = virtualItems.length > 0 ? virtualItems[0].start : 0;
   const paddingBottom =
-    virtualItems.length > 0
-      ? rowVirtualizer.getTotalSize() -
-        virtualItems[virtualItems.length - 1].end
-      : 0;
+    virtualItems.length > 0 ? rowVirtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end : 0;
 
   useEffect(() => {
     const lastVirtualItem = virtualItems[virtualItems.length - 1];
     if (!lastVirtualItem) return;
-    if (
-      lastVirtualItem.index >= items.length - 1 &&
-      result.hasNextPage &&
-      !result.isFetchingNextPage
-    ) {
+    if (lastVirtualItem.index >= items.length - 1 && result.hasNextPage && !result.isFetchingNextPage) {
       result.fetchNextPage();
     }
-  }, [
-    virtualItems,
-    items.length,
-    result.hasNextPage,
-    result.isFetchingNextPage,
-    result.fetchNextPage,
-  ]);
+  }, [virtualItems, items.length, result.hasNextPage, result.isFetchingNextPage, result.fetchNextPage]);
 
   return (
     <div className={styles.root}>
@@ -192,10 +178,7 @@ export function DsViewSummary<T extends { id: string }, TRefs = unknown>({
           <TableBody>
             {paddingTop > 0 && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  style={{ height: `${paddingTop}px`, padding: 0 }}
-                />
+                <TableCell colSpan={columns.length} style={{ height: `${paddingTop}px`, padding: 0 }} />
               </TableRow>
             )}
             {virtualItems.map((virtualRow) => {
@@ -227,10 +210,7 @@ export function DsViewSummary<T extends { id: string }, TRefs = unknown>({
             })}
             {paddingBottom > 0 && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  style={{ height: `${paddingBottom}px`, padding: 0 }}
-                />
+                <TableCell colSpan={columns.length} style={{ height: `${paddingBottom}px`, padding: 0 }} />
               </TableRow>
             )}
           </TableBody>
@@ -256,23 +236,12 @@ function VirtualTableRow<T extends { id: string }, TRefs = unknown>({
   const styles = useStyles();
 
   return (
-    <TableRow
-      ref={measureElement}
-      data-index={index}
-      style={{ border: "1px solid " + tokens.colorNeutralStroke2 }}
-    >
+    <TableRow ref={measureElement} data-index={index} style={{ border: "1px solid " + tokens.colorNeutralStroke2 }}>
       {row.getVisibleCells().map((cell) => (
         <TableCell
           key={cell.id}
-          className={mergeClasses(
-            styles.titleCell,
-            cell.column.columnDef.meta?.className,
-          )}
-          onClick={
-            onClick && cell.column.columnDef.meta?.navigable !== false
-              ? () => onClick(row.id)
-              : undefined
-          }
+          className={mergeClasses(styles.titleCell, cell.column.columnDef.meta?.className)}
+          onClick={onClick && cell.column.columnDef.meta?.navigable !== false ? () => onClick(row.id) : undefined}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </TableCell>
