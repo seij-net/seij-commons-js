@@ -39,8 +39,7 @@ function loadLibPackages() {
  */
 function checkMultipleVersionSafePackage(pkg) {
   const value = pkg?.seij?.multipleVersionSafePackage;
-  if (value === undefined || value === null)
-    return [`seij.multipleVersionSafePackage is not set`];
+  if (value === undefined || value === null) return [`seij.multipleVersionSafePackage is not set`];
   if (typeof value !== "boolean")
     return [`seij.multipleVersionSafePackage must be a boolean, got ${JSON.stringify(value)}`];
   return [];
@@ -59,17 +58,17 @@ function checkMustBeInPeerDependencies(pkg, { mustBeInPeerDependencies, internal
   const errors = [];
 
   for (const name of mustBeInPeerDependencies) {
-    if (deps.includes(name))
-      errors.push(`"${name}" must be in peerDependencies, found in dependencies`);
-    if (devDeps.includes(name))
-      errors.push(`"${name}" must be in peerDependencies, found in devDependencies`);
+    if (deps.includes(name)) errors.push(`"${name}" must be in peerDependencies, found in dependencies`);
+    if (devDeps.includes(name)) errors.push(`"${name}" must be in peerDependencies, found in devDependencies`);
   }
 
   for (const name of [...deps, ...devDeps]) {
     const internal = internalPackages.get(name);
     if (internal?.seij?.multipleVersionSafePackage === false) {
       const location = deps.includes(name) ? "dependencies" : "devDependencies";
-      errors.push(`"${name}" has multipleVersionSafePackage: false and must be in peerDependencies, found in ${location}`);
+      errors.push(
+        `"${name}" has multipleVersionSafePackage: false and must be in peerDependencies, found in ${location}`,
+      );
     }
   }
 
@@ -80,10 +79,7 @@ function checkMustBeInPeerDependencies(pkg, { mustBeInPeerDependencies, internal
 // Runner
 // ---------------------------------------------------------------------------
 
-const RULES = [
-  checkMultipleVersionSafePackage,
-  checkMustBeInPeerDependencies,
-];
+const RULES = [checkMultipleVersionSafePackage, checkMustBeInPeerDependencies];
 
 export function validate() {
   const packages = loadLibPackages();
