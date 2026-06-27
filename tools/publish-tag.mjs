@@ -72,16 +72,11 @@ export async function publishTag(module) {
 
   const tag = `libs/${module}/v${version}`;
 
-  try {
-    run(`git tag -d "${tag}"`);
-  } catch {
-    /* tag may not exist locally */
-  }
-  try {
-    run(`git push origin --delete "${tag}"`);
-  } catch {
-    /* tag may not exist remotely */
-  }
+  const localTagExists = execSync(`git tag -l "${tag}"`, { encoding: "utf-8" }).trim() === tag;
+  if (localTagExists) run(`git tag -d "${tag}"`);
+
+  const remoteTagExists = execSync(`git ls-remote --tags origin "${tag}"`, { encoding: "utf-8" }).trim() !== "";
+  if (remoteTagExists) run(`git push origin --delete "${tag}"`);
 
   run(`git tag "${tag}"`);
   run(`git push origin "${tag}"`);
