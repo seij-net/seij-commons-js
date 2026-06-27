@@ -12,7 +12,8 @@
     "build-storybook": "turbo run build-storybook",
     "format": "prettier --write .",
     "validate": "node tools/validate.mjs",
-    "pre-publish": "node tools/pre-publish.mjs"
+    "publish-prepare": "node tools/publish-prepare.mjs",
+    "publish-all": "node tools/publish-all.mjs"
   },
   "private": true,
   "devDependencies": {
