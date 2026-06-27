@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-ui-ds",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -18,13 +18,13 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@fluentui/react-components": "workspace:^",
-    "@fluentui/react-icons": "workspace:^",
-    "@seij/common-ui": "workspace:^",
     "@tanstack/react-table": "workspace:^",
     "@tanstack/react-virtual": "workspace:^"
   },
   "peerDependencies": {
+    "@fluentui/react-components": "workspace:^",
+    "@fluentui/react-icons": "workspace:^",
+    "@seij/common-ui": "workspace:^",
     "react": "workspace:^",
     "react-dom": "workspace:^"
   },
@@ -48,5 +48,8 @@
     "dist/**",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "seij": {
+    "multipleVersionSafePackage": true
+  }
 }

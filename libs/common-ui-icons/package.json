@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-ui-icons",
-  "version": "0.2.0",
+  "version": "2.0.0",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -17,10 +17,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "dependencies": {
-    "@fluentui/react-icons": "workspace:^"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "@fluentui/react-icons": "workspace:^",
     "react": "workspace:^",
     "react-dom": "workspace:^"
   },
@@ -34,5 +33,8 @@
     "dist/**",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "seij": {
+    "multipleVersionSafePackage": false
+  }
 }

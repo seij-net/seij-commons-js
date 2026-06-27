@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-ui-csv-export",
-  "version": "0.1.1",
+  "version": "2.0.0",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -27,5 +27,8 @@
     "dist/**",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "seij": {
+    "multipleVersionSafePackage": true
+  }
 }

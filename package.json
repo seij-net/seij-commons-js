@@ -10,7 +10,9 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "build-storybook": "turbo run build-storybook",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "validate": "node tools/validate.mjs",
+    "pre-publish": "node tools/pre-publish.mjs"
   },
   "private": true,
   "devDependencies": {
@@ -51,6 +53,21 @@
   },
   "dependencies": {
     "tslib": "2.8.1"
+  },
+  "seij": {
+    "mustBeInPeerDependencies": [
+      "react",
+      "react-dom",
+      "@fluentui/react-components",
+      "@fluentui/react-icons",
+      "i18next",
+      "i18next-browser-languagedetector",
+      "i18next-icu",
+      "lexical",
+      "@lexical/react",
+      "react-oidc-context",
+      "oidc-client-ts"
+    ]
   },
   "pnpm": {
     "overrides": {

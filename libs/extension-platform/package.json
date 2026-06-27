@@ -1,6 +1,6 @@
 {
   "name": "@seij/extension-platform",
-  "version": "0.1.2",
+  "version": "2.0.0",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -29,5 +29,8 @@
     "dist/**",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "seij": {
+    "multipleVersionSafePackage": true
+  }
 }

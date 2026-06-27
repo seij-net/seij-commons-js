@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-ui-richtext",
-  "version": "0.4.0",
+  "version": "2.0.0",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -18,22 +18,22 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@fluentui/react-components": "workspace:^",
-    "@fluentui/react-icons": "workspace:^",
     "@lexical/code-core": "workspace:^",
     "@lexical/code-shiki": "workspace:^",
     "@lexical/extension": "workspace:^",
+    "@lexical/history": "workspace:^",
     "@lexical/link": "workspace:^",
     "@lexical/list": "workspace:^",
-    "@lexical/history": "workspace:^",
     "@lexical/markdown": "workspace:^",
-    "@lexical/react": "workspace:^",
     "@lexical/rich-text": "workspace:^",
-    "@lexical/selection": "workspace:^",
-    "@seij/common-ui": "workspace:^",
-    "lexical": "workspace:^"
+    "@lexical/selection": "workspace:^"
   },
   "peerDependencies": {
+    "@fluentui/react-components": "workspace:^",
+    "@fluentui/react-icons": "workspace:^",
+    "@lexical/react": "workspace:^",
+    "@seij/common-ui": "workspace:^",
+    "lexical": "workspace:^",
     "react": "workspace:^",
     "react-dom": "workspace:^"
   },
@@ -47,5 +47,8 @@
     "dist/**",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "seij": {
+    "multipleVersionSafePackage": false
+  }
 }
