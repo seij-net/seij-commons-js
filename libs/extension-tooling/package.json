@@ -12,7 +12,7 @@
     "build": "vite build -c vite.config.ts",
     "test": "vitest run",
     "lint": "eslint .",
-    "typecheck": "tsc -p tsconfig.lib.json --noEmit",
+    "typecheck": "tsc --build tsconfig.json --noEmit",
     "watch": "tsc -p tsconfig.lib.json --noEmit --watch"
   },
   "dependencies": {},

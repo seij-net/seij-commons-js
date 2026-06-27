@@ -9,3 +9,5 @@ tmp/
 *storybook.log
 storybook-static
 .outdated-cache.json
+
+*.tsbuildinfo
