@@ -79,6 +79,7 @@ export type DsQuerySnapshot = {
   search?: string;
   sorting: DsQuerySorting[];
   filters: DsQueryFilters;
+  visibleColumnIds?: string[];
 };
 
 export interface DsQueryStorage {

@@ -24,6 +24,7 @@
   "peerDependencies": {
     "@fluentui/react-components": "workspace:^",
     "@fluentui/react-icons": "workspace:^",
+    "@seij/common-types": "workspace:^",
     "@seij/common-ui": "workspace:^",
     "react": "workspace:^",
     "react-dom": "workspace:^"

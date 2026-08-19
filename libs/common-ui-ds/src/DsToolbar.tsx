@@ -6,7 +6,7 @@ import type {
   DsQuerySorting,
   DsQueryStorage,
 } from "./DsQuery.ts";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { makeStyles, SearchBox, tokens } from "@fluentui/react-components";
 import { DsToolbarSortable } from "./DsToolbarSortable";
 import { DsToolbarFilterable } from "./DsToolbarFilterable";
@@ -37,6 +37,8 @@ export function DsToolbar({
   queryDefaults,
   onApplySnapshot,
   activeFilterName,
+  viewControls,
+  completeSnapshot,
 }: {
   defaultQuery: DsQuery;
   onChange: (value: DsQuery) => void;
@@ -46,6 +48,8 @@ export function DsToolbar({
   queryDefaults?: DsQuerySnapshot;
   onApplySnapshot?: (snapshot: DsQuerySnapshot, name?: string) => void;
   activeFilterName?: string | null;
+  viewControls?: ReactNode;
+  completeSnapshot?: (snapshot: DsQuerySnapshot) => DsQuerySnapshot;
 }) {
   const styles = useStyles();
   const [search, setSearch] = useState(defaultQuery.search);
@@ -74,7 +78,11 @@ export function DsToolbar({
     });
   };
 
-  const currentSnapshot: DsQuerySnapshot = {
+  const currentSnapshot = completeSnapshot?.({
+    search: defaultQuery.search,
+    sorting: defaultQuery.sorting,
+    filters: defaultQuery.filters,
+  }) ?? {
     search: defaultQuery.search,
     sorting: defaultQuery.sorting,
     filters: defaultQuery.filters,
@@ -90,6 +98,7 @@ export function DsToolbar({
         {filterable && filterable.length > 0 && (
           <DsToolbarFilterable filterable={filterable} filters={defaultQuery.filters} onChange={handleFiltersChange} />
         )}
+        {viewControls}
         {queryStorage && onApplySnapshot && (
           <DsToolbarSavedFilters
             queryStorage={queryStorage}

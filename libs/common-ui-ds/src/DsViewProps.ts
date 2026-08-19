@@ -22,6 +22,11 @@ export interface DsViewProps<TItem extends DsItem, TRefs = unknown> {
    */
   source: DsDataFetcher<TItem, TRefs>;
   /**
+   * Number of items requested for each page. Pagination is never persisted in
+   * snapshots; this is a technical loading parameter owned by the view.
+   */
+  pageSize?: number;
+  /**
    * When present, the toolbar will display a sort control.
    * Each entry declares a field the user can sort on.
    */
