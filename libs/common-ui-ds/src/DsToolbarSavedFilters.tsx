@@ -1,4 +1,4 @@
-import type { DsQuerySnapshot, DsQueryStorage } from "./DsQuery";
+import type { DsPredefinedFilter, DsQuerySnapshot, DsQueryStorage } from "./DsQuery";
 import { useState } from "react";
 import {
   Button,
@@ -55,28 +55,37 @@ const useStyles = makeStyles({
 export function DsToolbarSavedFilters({
   queryStorage,
   queryDefaults,
+  predefinedFilters,
   currentSnapshot,
   onApply,
   activeFilterName,
 }: {
-  queryStorage: DsQueryStorage;
+  queryStorage?: DsQueryStorage;
   queryDefaults?: DsQuerySnapshot;
+  predefinedFilters?: DsPredefinedFilter[];
   currentSnapshot: DsQuerySnapshot;
   onApply: (snapshot: DsQuerySnapshot, name?: string) => void;
   activeFilterName: string | null;
 }) {
   const styles = useStyles();
-  const [savedFilters, setSavedFilters] = useState(() => queryStorage.listSavedQueries());
+  const [savedFilters, setSavedFilters] = useState(() => queryStorage?.listSavedQueries() ?? []);
   const [savingName, setSavingName] = useState<string | null>(null);
 
+  const predefined = predefinedFilters ?? [];
+
+  /** A predefined name would create two homonymous rows, and an ambiguous active name. */
+  const isNameTaken = (name: string) => predefined.some((filter) => filter.name === name);
+
   const handleSave = () => {
-    if (!savingName?.trim()) return;
-    queryStorage.saveNamedQuery(savingName.trim(), currentSnapshot);
+    const name = savingName?.trim();
+    if (!name || !queryStorage || isNameTaken(name)) return;
+    queryStorage.saveNamedQuery(name, currentSnapshot);
     setSavedFilters(queryStorage.listSavedQueries());
     setSavingName(null);
   };
 
   const handleDelete = (name: string) => {
+    if (!queryStorage) return;
     queryStorage.deleteNamedQuery(name);
     setSavedFilters(queryStorage.listSavedQueries());
   };
@@ -108,62 +117,92 @@ export function DsToolbarSavedFilters({
         </Button>
       </PopoverTrigger>
       <PopoverSurface className={styles.surface}>
-        {savedFilters.length === 0 ? (
-          <Text italic size={200} className={styles.sectionTitle}>
-            Aucun filtre enregistré
-          </Text>
-        ) : (
+        {predefined.length > 0 && (
           <>
             <Text size={200} className={styles.sectionTitle}>
-              Filtres enregistrés
+              Filtres prédéterminés
             </Text>
-            {savedFilters.map(({ name, query }) => (
-              <div key={name} className={styles.savedRow}>
+            {predefined.map(({ code, name, query }) => (
+              <div key={code} className={styles.savedRow}>
                 <Text className={styles.savedLabel} onClick={() => onApply(query, name)}>
                   {name}
                 </Text>
-                <Button
-                  appearance="subtle"
-                  size="small"
-                  icon={<DeleteRegular />}
-                  title="Supprimer"
-                  onClick={() => handleDelete(name)}
-                />
               </div>
             ))}
+            <div className={styles.divider} />
           </>
         )}
-        <div className={styles.divider} />
-        {savingName === null ? (
-          <Button
-            appearance="subtle"
-            size="small"
-            icon={<SaveRegular />}
-            className={styles.buttonLeft}
-            onClick={() => setSavingName("")}
-          >
-            Enregistrer les filtres actuels
-          </Button>
-        ) : (
-          <div className={styles.saveRow}>
-            <Input
-              size="small"
-              placeholder="Nom…"
-              value={savingName}
-              autoFocus
-              onChange={(_, data) => setSavingName(data.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSave();
-                if (e.key === "Escape") setSavingName(null);
-              }}
-            />
-            <Button size="small" appearance="primary" onClick={handleSave}>
-              OK
-            </Button>
-            <Button size="small" onClick={() => setSavingName(null)}>
-              ✕
-            </Button>
-          </div>
+        {queryStorage &&
+          (savedFilters.length === 0 ? (
+            <Text italic size={200} className={styles.sectionTitle}>
+              Aucun filtre enregistré
+            </Text>
+          ) : (
+            <>
+              <Text size={200} className={styles.sectionTitle}>
+                Filtres enregistrés
+              </Text>
+              {savedFilters.map(({ name, query }) => (
+                <div key={name} className={styles.savedRow}>
+                  <Text className={styles.savedLabel} onClick={() => onApply(query, name)}>
+                    {name}
+                  </Text>
+                  <Button
+                    appearance="subtle"
+                    size="small"
+                    icon={<DeleteRegular />}
+                    title="Supprimer"
+                    onClick={() => handleDelete(name)}
+                  />
+                </div>
+              ))}
+            </>
+          ))}
+        {queryStorage && (
+          <>
+            <div className={styles.divider} />
+            {savingName === null ? (
+              <Button
+                appearance="subtle"
+                size="small"
+                icon={<SaveRegular />}
+                className={styles.buttonLeft}
+                onClick={() => setSavingName("")}
+              >
+                Enregistrer les filtres actuels
+              </Button>
+            ) : (
+              <div className={styles.saveRow}>
+                <Input
+                  size="small"
+                  placeholder="Nom…"
+                  value={savingName}
+                  autoFocus
+                  onChange={(_, data) => setSavingName(data.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSave();
+                    if (e.key === "Escape") setSavingName(null);
+                  }}
+                />
+                <Button
+                  size="small"
+                  appearance="primary"
+                  disabled={!savingName.trim() || isNameTaken(savingName.trim())}
+                  onClick={handleSave}
+                >
+                  OK
+                </Button>
+                <Button size="small" onClick={() => setSavingName(null)}>
+                  ✕
+                </Button>
+              </div>
+            )}
+            {savingName !== null && isNameTaken(savingName.trim()) && (
+              <Text italic size={200}>
+                Ce nom est déjà celui d'un filtre prédéterminé.
+              </Text>
+            )}
+          </>
         )}
         {queryDefaults && (
           <Button

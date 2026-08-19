@@ -27,7 +27,9 @@ import {
 import { useState } from "react";
 import {
   Button,
+  Combobox,
   makeStyles,
+  Option,
   Popover,
   PopoverSurface,
   PopoverTrigger,
@@ -183,6 +185,12 @@ export function DsToolbarFilterable({
 }) {
   const styles = useStyles();
   const [adding, setAdding] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const closeAdding = () => {
+    setAdding(false);
+    setSearch("");
+  };
 
   const addFilter = (fieldId: string) => {
     const field = filterable.find((f) => f.id === fieldId);
@@ -211,7 +219,7 @@ export function DsToolbarFilterable({
       });
     }
     onChange({ ...filters, items: [...filters.items, newFilter] });
-    setAdding(false);
+    closeAdding();
   };
 
   const updateFilter = (
@@ -239,11 +247,16 @@ export function DsToolbarFilterable({
 
   const clearAll = () => onChange({ ...filters, items: [] });
 
+  const term = search.trim().toLowerCase();
+  const matching = filterable
+    .filter((field) => field.label.toLowerCase().includes(term))
+    .sort((a, b) => a.label.localeCompare(b.label, "fr", { sensitivity: "base" }));
+
   return (
     <Popover
       positioning="below-start"
       onOpenChange={(_, data) => {
-        if (!data.open) setAdding(false);
+        if (!data.open) closeAdding();
       }}
     >
       <PopoverTrigger>
@@ -365,22 +378,29 @@ export function DsToolbarFilterable({
         })}
         <div className={styles.addSection}>
           {adding ? (
-            <Select
+            <Combobox
               size="small"
-              defaultValue=""
-              onChange={(_, data) => {
-                if (data.value) addFilter(data.value);
+              freeform
+              autoFocus
+              placeholder="Rechercher un champ…"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              onOptionSelect={(_, data) => {
+                if (data.optionValue) addFilter(data.optionValue);
               }}
             >
-              <option value="" disabled>
-                Choisir un champ…
-              </option>
-              {filterable.map((field) => (
-                <option key={field.id} value={field.id}>
-                  {field.label}
-                </option>
-              ))}
-            </Select>
+              {matching.length === 0 ? (
+                <Option value="" disabled text="Aucun résultat">
+                  Aucun résultat
+                </Option>
+              ) : (
+                matching.map((field) => (
+                  <Option key={field.id} value={field.id} text={field.label}>
+                    {field.label}
+                  </Option>
+                ))
+              )}
+            </Combobox>
           ) : (
             <Button
               appearance="subtle"

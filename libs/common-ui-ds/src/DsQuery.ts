@@ -79,6 +79,19 @@ export type DsQuerySnapshot = {
   search?: string;
   sorting: DsQuerySorting[];
   filters: DsQueryFilters;
+  visibleColumnIds?: string[];
+};
+
+/**
+ * A named query provided by the code, not by the user: it cannot be edited nor deleted
+ * from the toolbar.
+ */
+export type DsPredefinedFilter = {
+  /** Stable identifier, free of any wording change. */
+  code: string;
+  /** Wording shown to the user. */
+  name: string;
+  query: DsQuerySnapshot;
 };
 
 export interface DsQueryStorage {

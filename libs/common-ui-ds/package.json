@@ -1,6 +1,6 @@
 {
   "name": "@seij/common-ui-ds",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -24,6 +24,7 @@
   "peerDependencies": {
     "@fluentui/react-components": "workspace:^",
     "@fluentui/react-icons": "workspace:^",
+    "@seij/common-types": "workspace:^",
     "@seij/common-ui": "workspace:^",
     "react": "workspace:^",
     "react-dom": "workspace:^"

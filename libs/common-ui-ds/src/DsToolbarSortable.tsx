@@ -2,11 +2,12 @@ import type { DsQuerySorting } from "./DsQuery";
 import { useState } from "react";
 import {
   Button,
+  Combobox,
   makeStyles,
+  Option,
   Popover,
   PopoverSurface,
   PopoverTrigger,
-  Select,
   Text,
   tokens,
 } from "@fluentui/react-components";
@@ -61,6 +62,7 @@ export function DsToolbarSortable({
 }) {
   const styles = useStyles();
   const [adding, setAdding] = useState(false);
+  const [search, setSearch] = useState("");
 
   const toggleDirection = (index: number) => {
     onChange(sorting.map((s, i) => (i === index ? { ...s, desc: !s.desc } : s)));
@@ -70,23 +72,32 @@ export function DsToolbarSortable({
     onChange(sorting.filter((_, i) => i !== index));
   };
 
+  const closeAdding = () => {
+    setAdding(false);
+    setSearch("");
+  };
+
   const addCriterion = (id: string) => {
     if (sorting.some((s) => s.id === id)) return;
     onChange([...sorting, { id, desc: false }]);
-    setAdding(false);
+    closeAdding();
   };
 
   const clearAll = () => onChange([]);
 
   const usedIds = new Set(sorting.map((s) => s.id));
   const available = sortable.filter((f) => !usedIds.has(f.id));
+  const term = search.trim().toLowerCase();
+  const matching = available
+    .filter((f) => f.label.toLowerCase().includes(term))
+    .sort((a, b) => a.label.localeCompare(b.label, "fr", { sensitivity: "base" }));
   const labelFor = (id: string) => sortable.find((f) => f.id === id)?.label ?? id;
 
   return (
     <Popover
       positioning="below-start"
       onOpenChange={(_, data) => {
-        if (!data.open) setAdding(false);
+        if (!data.open) closeAdding();
       }}
     >
       <PopoverTrigger>
@@ -121,22 +132,29 @@ export function DsToolbarSortable({
         {available.length > 0 && (
           <div className={styles.addSection}>
             {adding ? (
-              <Select
+              <Combobox
                 size="small"
-                defaultValue=""
-                onChange={(_, data) => {
-                  if (data.value) addCriterion(data.value);
+                freeform
+                autoFocus
+                placeholder="Rechercher un champ…"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                onOptionSelect={(_, data) => {
+                  if (data.optionValue) addCriterion(data.optionValue);
                 }}
               >
-                <option value="" disabled>
-                  Choisir un champ…
-                </option>
-                {available.map((field) => (
-                  <option key={field.id} value={field.id}>
-                    {field.label}
-                  </option>
-                ))}
-              </Select>
+                {matching.length === 0 ? (
+                  <Option value="" disabled text="Aucun résultat">
+                    Aucun résultat
+                  </Option>
+                ) : (
+                  matching.map((field) => (
+                    <Option key={field.id} value={field.id} text={field.label}>
+                      {field.label}
+                    </Option>
+                  ))
+                )}
+              </Combobox>
             ) : (
               <Button
                 appearance="subtle"
