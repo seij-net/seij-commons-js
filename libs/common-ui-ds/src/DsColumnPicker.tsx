@@ -43,17 +43,17 @@ export function DsColumnPicker({
   const [checkedFirstIds, setCheckedFirstIds] = useState<string[]>([]);
   const styles = useStyles();
 
-  const rank = (id: string) => {
-    const index = checkedFirstIds.indexOf(id);
-    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
-  };
+  /** Les colonnes cochées à l'ouverture restent en tête, sans se réordonner au fil des clics. */
+  const rank = (id: string) => (checkedFirstIds.includes(id) ? 0 : 1);
 
   const term = search.trim().toLowerCase();
   const visibleOptions = options
     .filter((option) => option.label.toLowerCase().includes(term))
-    .map((option, index) => ({ option, index }))
-    .sort((a, b) => rank(a.option.id) - rank(b.option.id) || a.index - b.index)
-    .map((entry) => entry.option);
+    .slice()
+    .sort(
+      (a, b) =>
+        rank(a.id) - rank(b.id) || a.label.localeCompare(b.label, "fr", { sensitivity: "base" }),
+    );
 
   return (
     <Popover
