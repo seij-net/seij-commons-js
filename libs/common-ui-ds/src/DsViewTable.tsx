@@ -181,19 +181,21 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
   );
   const firstVisibleColumnId = visibleColumns[0]?.id;
 
-  /** DsColumnPicker decides the display order: no need to sort here. */
-  const pickerOptions = useMemo(
-    () =>
-      columns.map((column) => ({
-        id: column.id,
-        label: labelByColumnId.get(column.id) ?? column.id,
-        checked: visibleColumnIds.includes(column.id),
-      })),
-    [columns, labelByColumnId, visibleColumnIds],
-  );
+  /**
+   * Visible columns come first, in table order: DsColumnPicker relies on that order to
+   * let the user move a column left or right. Hidden columns follow, in any order.
+   */
+  const pickerOptions = useMemo(() => {
+    const toOption = (id: string, checked: boolean) => ({
+      id,
+      label: labelByColumnId.get(id) ?? id,
+      checked,
+    });
+    const hiddenIds = allColumnIds.filter((id) => !visibleColumnIds.includes(id));
+    return [...visibleColumnIds.map((id) => toOption(id, true)), ...hiddenIds.map((id) => toOption(id, false))];
+  }, [allColumnIds, labelByColumnId, visibleColumnIds]);
 
-  const handleColumnPickerChange = (id: string, checked: boolean) => {
-    const next = checked ? [...visibleColumnIds, id] : visibleColumnIds.filter((columnId) => columnId !== id);
+  const applyVisibleColumnIds = (next: string[]) => {
     setVisibleColumnIds(next);
     queryStorage?.saveQuery({
       search: controller.query.search,
@@ -203,6 +205,19 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
     });
   };
 
+  const handleColumnPickerChange = (id: string, checked: boolean) => {
+    applyVisibleColumnIds(checked ? [...visibleColumnIds, id] : visibleColumnIds.filter((columnId) => columnId !== id));
+  };
+
+  const handleColumnMove = (id: string, direction: "up" | "down") => {
+    const index = visibleColumnIds.indexOf(id);
+    const target = direction === "up" ? index - 1 : index + 1;
+    if (index === -1 || target < 0 || target >= visibleColumnIds.length) return;
+    const next = [...visibleColumnIds];
+    [next[index], next[target]] = [next[target], next[index]];
+    applyVisibleColumnIds(next);
+  };
+
   const lineCount =
     controller.items.length === controller.result.total
       ? `${controller.items.length} ligne(s)`
@@ -210,7 +225,9 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
 
   return (
     <div className={styles.root}>
-      {controller.renderToolbar(<DsColumnPicker options={pickerOptions} onChange={handleColumnPickerChange} />)}
+      {controller.renderToolbar(
+        <DsColumnPicker options={pickerOptions} onChange={handleColumnPickerChange} onMove={handleColumnMove} />,
+      )}
       {controller.renderStatus()}
       <Text size={200} className={styles.counter}>
         {lineCount}
