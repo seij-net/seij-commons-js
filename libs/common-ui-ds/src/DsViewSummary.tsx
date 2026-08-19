@@ -34,6 +34,7 @@ export function DsViewSummary<T extends { id: string }, TRefs = unknown>({
   filterable,
   queryStorage,
   queryDefaults,
+  predefinedFilters,
 }: DsViewSummaryProps<T, TRefs>) {
   const styles = useStyles();
   const controller = useDsViewController({
@@ -44,6 +45,7 @@ export function DsViewSummary<T extends { id: string }, TRefs = unknown>({
     filterable,
     queryStorage,
     queryDefaults,
+    predefinedFilters,
   });
 
   const columns = useMemo(

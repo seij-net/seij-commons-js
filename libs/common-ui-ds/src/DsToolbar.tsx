@@ -1,5 +1,6 @@
 import type {
   DsFilterableField,
+  DsPredefinedFilter,
   DsQuery,
   DsQueryFilters,
   DsQuerySnapshot,
@@ -35,6 +36,7 @@ export function DsToolbar({
   filterable,
   queryStorage,
   queryDefaults,
+  predefinedFilters,
   onApplySnapshot,
   activeFilterName,
   viewControls,
@@ -46,6 +48,7 @@ export function DsToolbar({
   filterable?: DsFilterableField[];
   queryStorage?: DsQueryStorage;
   queryDefaults?: DsQuerySnapshot;
+  predefinedFilters?: DsPredefinedFilter[];
   onApplySnapshot?: (snapshot: DsQuerySnapshot, name?: string) => void;
   activeFilterName?: string | null;
   viewControls?: ReactNode;
@@ -78,6 +81,9 @@ export function DsToolbar({
     });
   };
 
+  /** The popover is worth showing as soon as there is something to list or to save. */
+  const showSavedFilters = Boolean(queryStorage) || (predefinedFilters?.length ?? 0) > 0;
+
   const currentSnapshot = completeSnapshot?.({
     search: defaultQuery.search,
     sorting: defaultQuery.sorting,
@@ -99,10 +105,11 @@ export function DsToolbar({
           <DsToolbarFilterable filterable={filterable} filters={defaultQuery.filters} onChange={handleFiltersChange} />
         )}
         {viewControls}
-        {queryStorage && onApplySnapshot && (
+        {showSavedFilters && onApplySnapshot && (
           <DsToolbarSavedFilters
             queryStorage={queryStorage}
             queryDefaults={queryDefaults}
+            predefinedFilters={predefinedFilters}
             currentSnapshot={currentSnapshot}
             onApply={onApplySnapshot}
             activeFilterName={activeFilterName ?? null}

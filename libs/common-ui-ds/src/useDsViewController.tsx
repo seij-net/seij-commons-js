@@ -35,11 +35,19 @@ export function useDsViewController<T extends DsItem, TRefs = unknown>({
   filterable,
   queryStorage,
   queryDefaults,
+  predefinedFilters,
   completeSnapshot,
   onApplySnapshot,
 }: Pick<
   DsViewProps<T, TRefs>,
-  "source" | "emptyMessage" | "pageSize" | "sortable" | "filterable" | "queryStorage" | "queryDefaults"
+  | "source"
+  | "emptyMessage"
+  | "pageSize"
+  | "sortable"
+  | "filterable"
+  | "queryStorage"
+  | "queryDefaults"
+  | "predefinedFilters"
 > & {
   completeSnapshot?: (snapshot: DsQuerySnapshot) => DsQuerySnapshot;
   onApplySnapshot?: (snapshot: DsQuerySnapshot) => void;
@@ -147,6 +155,7 @@ export function useDsViewController<T extends DsItem, TRefs = unknown>({
           filterable={filterable}
           queryStorage={queryStorage}
           queryDefaults={queryDefaults}
+          predefinedFilters={predefinedFilters}
           onApplySnapshot={handleApplySnapshot}
           activeFilterName={activeFilterName}
           viewControls={viewControls}

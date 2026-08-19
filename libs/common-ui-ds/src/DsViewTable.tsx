@@ -96,6 +96,7 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
   filterable,
   queryStorage,
   queryDefaults,
+  predefinedFilters,
 }: DsViewTableProps<T, TRefs>) {
   const styles = useStyles();
   const allColumnIds = useMemo(() => columns.map((column) => column.id), [columns]);
@@ -135,6 +136,7 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
     filterable,
     queryStorage,
     queryDefaults,
+    predefinedFilters,
     completeSnapshot,
     onApplySnapshot: (snapshot) => setVisibleColumnIds(normalizeVisibleColumnIds(snapshot.visibleColumnIds)),
   });

@@ -1,6 +1,6 @@
 import type { DsItem } from "./DsItem";
 import type { DsDataFetcher } from "./DsDataFetcher";
-import type { DsFilterableField, DsQuerySnapshot, DsQueryStorage } from "./DsQuery";
+import type { DsFilterableField, DsPredefinedFilter, DsQuerySnapshot, DsQueryStorage } from "./DsQuery";
 
 /**
  * Properties for DsView-like components common to all DsView components
@@ -46,4 +46,9 @@ export interface DsViewProps<TItem extends DsItem, TRefs = unknown> {
    * saved query yet (or when no storage is provided).
    */
   queryDefaults?: DsQuerySnapshot;
+  /**
+   * Named queries provided by the code, listed in the saved filters popover above the
+   * ones the user saved. The user can apply them but neither edit nor delete them.
+   */
+  predefinedFilters?: DsPredefinedFilter[];
 }
