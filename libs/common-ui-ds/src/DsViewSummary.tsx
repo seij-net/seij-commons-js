@@ -1,12 +1,4 @@
-import {
-  makeStyles,
-  mergeClasses,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  tokens,
-} from "@fluentui/react-components";
+import { makeStyles, mergeClasses, Table, TableBody, TableCell, TableRow, tokens } from "@fluentui/react-components";
 import type { Row } from "@tanstack/react-table";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Loader } from "@seij/common-ui";

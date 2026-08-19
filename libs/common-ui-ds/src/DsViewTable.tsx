@@ -1,9 +1,4 @@
-import {
-  makeStyles,
-  mergeClasses,
-  Text,
-  tokens,
-} from "@fluentui/react-components";
+import { makeStyles, mergeClasses, Text, tokens } from "@fluentui/react-components";
 import type { Row } from "@tanstack/react-table";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Loader } from "@seij/common-ui";
@@ -186,15 +181,14 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
   );
   const firstVisibleColumnId = visibleColumns[0]?.id;
 
+  /** DsColumnPicker decides the display order: no need to sort here. */
   const pickerOptions = useMemo(
     () =>
-      columns
-        .map((column) => ({
-          id: column.id,
-          label: labelByColumnId.get(column.id) ?? column.id,
-          checked: visibleColumnIds.includes(column.id),
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)),
+      columns.map((column) => ({
+        id: column.id,
+        label: labelByColumnId.get(column.id) ?? column.id,
+        checked: visibleColumnIds.includes(column.id),
+      })),
     [columns, labelByColumnId, visibleColumnIds],
   );
 
@@ -232,12 +226,7 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
           <colgroup>
             {visibleColumns.map((column) => {
               const width = widthByColumnId.get(column.id) ?? DEFAULT_COLUMN_MIN_WIDTH;
-              return (
-                <col
-                  key={column.id}
-                  style={{ width: `${width}px`, minWidth: `${width}px` }}
-                />
-              );
+              return <col key={column.id} style={{ width: `${width}px`, minWidth: `${width}px` }} />;
             })}
           </colgroup>
           <thead>
@@ -309,10 +298,7 @@ export function DsViewTable<T extends DsItem, TRefs = unknown>({
             })}
             {controller.paddingBottom > 0 && (
               <tr>
-                <td
-                  colSpan={visibleColumnCount}
-                  style={{ height: `${controller.paddingBottom}px`, padding: 0 }}
-                />
+                <td colSpan={visibleColumnCount} style={{ height: `${controller.paddingBottom}px`, padding: 0 }} />
               </tr>
             )}
           </tbody>
@@ -343,11 +329,7 @@ function DsViewTableVirtualRow<T extends DsItem>({
   const backgroundColor = rowIndex % 2 === 1 ? tokens.colorNeutralBackground2 : tokens.colorNeutralBackground1;
 
   return (
-    <tr
-      ref={measureElement}
-      data-index={index}
-      style={{ backgroundColor }}
-    >
+    <tr ref={measureElement} data-index={index} style={{ backgroundColor }}>
       {row.getVisibleCells().map((cell) => {
         const width = widthByColumnId.get(cell.column.id) ?? DEFAULT_COLUMN_MIN_WIDTH;
         const isFirstColumn = cell.column.id === firstVisibleColumnId;
@@ -376,7 +358,10 @@ function DsViewTableVirtualRow<T extends DsItem>({
   );
 }
 
-function normalizeInitialVisibleColumnIds(snapshot: DsQuerySnapshot | undefined | null, allColumnIds: string[]): string[] {
+function normalizeInitialVisibleColumnIds(
+  snapshot: DsQuerySnapshot | undefined | null,
+  allColumnIds: string[],
+): string[] {
   if (!snapshot?.visibleColumnIds) return allColumnIds;
   const knownIds = new Set(allColumnIds);
   return snapshot.visibleColumnIds.filter((id) => knownIds.has(id));

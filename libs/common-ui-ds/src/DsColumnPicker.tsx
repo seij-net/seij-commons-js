@@ -43,17 +43,18 @@ export function DsColumnPicker({
   const [checkedFirstIds, setCheckedFirstIds] = useState<string[]>([]);
   const styles = useStyles();
 
-  /** Les colonnes cochées à l'ouverture restent en tête, sans se réordonner au fil des clics. */
+  /**
+   * Display order is decided here: callers pass options in whatever order they
+   * like. Columns already checked when the popover opens stay on top, without
+   * reshuffling as the user clicks.
+   */
   const rank = (id: string) => (checkedFirstIds.includes(id) ? 0 : 1);
 
   const term = search.trim().toLowerCase();
   const visibleOptions = options
     .filter((option) => option.label.toLowerCase().includes(term))
     .slice()
-    .sort(
-      (a, b) =>
-        rank(a.id) - rank(b.id) || a.label.localeCompare(b.label, "fr", { sensitivity: "base" }),
-    );
+    .sort((a, b) => rank(a.id) - rank(b.id) || a.label.localeCompare(b.label, "fr", { sensitivity: "base" }));
 
   return (
     <Popover

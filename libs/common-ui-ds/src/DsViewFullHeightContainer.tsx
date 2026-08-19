@@ -15,10 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-export function DsViewFullHeightContainer({
-  children,
-  className,
-}: PropsWithChildren<{ className?: string }>) {
+export function DsViewFullHeightContainer({ children, className }: PropsWithChildren<{ className?: string }>) {
   const styles = useStyles();
 
   return <div className={mergeClasses(styles.root, className)}>{children}</div>;

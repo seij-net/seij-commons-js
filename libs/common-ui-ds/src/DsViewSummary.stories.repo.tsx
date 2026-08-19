@@ -536,7 +536,7 @@ export const SAMPLE_TASKS: Task[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Repository — types propres, ne connaît pas DsQuery
+// Repository — its own types, unaware of DsQuery
 // ---------------------------------------------------------------------------
 
 type RepoFilter = {

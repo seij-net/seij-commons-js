@@ -1,9 +1,9 @@
 /**
- * Augmentation partagée par toutes les vues bâties sur TanStack Table.
+ * Module augmentation shared by every view built on TanStack Table.
  *
- * Elle vit dans son propre module parce qu'une augmentation ne peut être déclarée
- * qu'une seule fois : deux vues qui répéteraient ce bloc feraient échouer la
- * compilation sur un identifiant dupliqué.
+ * It lives in its own module because an augmentation can only be declared once:
+ * two views repeating this block would fail compilation on a duplicate
+ * identifier.
  */
 import type { RowData } from "@tanstack/react-table";
 
